@@ -46,7 +46,7 @@ ggplot(data = plot_data)+
     theme_classic()
 ```
 
-<img src="man/figures/README-ecology-1.png" width="100%" />
+![](man/figures/README-ecology-1.png)<!-- -->
 
 ### Spatial data example
 
@@ -80,7 +80,7 @@ ggplot(states, aes(x = long, y = lat)) +
    scale_fill_brewer(palette = 'Dark2')
 ```
 
-<img src="man/figures/README-spatial-1.png" width="100%" />
+![](man/figures/README-spatial-1.png)<!-- -->
 
 ### Compositions example
 
@@ -107,4 +107,4 @@ disease_data %>%
      theme_minimal()
 ```
 
-<img src="man/figures/README-compositions-1.png" width="100%" />
+![](man/figures/README-compositions-1.png)<!-- -->
