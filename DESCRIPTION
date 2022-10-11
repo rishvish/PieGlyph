@@ -1,0 +1,15 @@
+Package: PieGlyph
+Title: Axis Invariant Scatter Pie Plots
+Version: 0.1.0
+Authors@R: 
+    c(person("Rishabh", "Vishwakarma", email = "vishwakr@tcd.ie", role = c("aut", "cre"),
+             comment = c(ORCID = "0000-0002-4847-3494")),
+      person("Catherine", "Hurley", role = "aut"),
+      person("Caroline", "Brophy", role = "aut"))
+Description: This packages creates pie-scatter plots with pies invariant to plot dimensions to avoid distortions of the pies. 
+License: GPL (>= 3)
+Encoding: UTF-8
+Imports: ggplot2, dplyr, tidyr, rlang, ggforce
+Suggests: DImodels, compositions
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1

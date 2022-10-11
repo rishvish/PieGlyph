@@ -1,18 +1,28 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # PieGlyph
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of PieGlyph is to create pie-scatter plots with pies invariant
-to plot dimensions to avoid any distortions of the pies.
+The goal of PieGlyph is to create pie-scatter plots with pies invariant to plot dimensions to avoid any distortions of the pies.
 
 ## Installation
 
-You can install the development version of PieGlyph from
-[GitHub](https://github.com/) with:
+You can install the development version of PieGlyph from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -22,8 +32,7 @@ devtools::install_github("rishvish/PieGlyph")
 ## Examples
 
 ### Ecology example
-
-``` r
+```{r, warning = F, message=F}
 #install.packages(DImodels)
 library(PieGlyph)
 library(DImodels)
@@ -46,11 +55,9 @@ ggplot(data = plot_data)+
     theme_classic()
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
 
 ### Spatial data example
-
-``` r
+```{r, warning = F, message=F}
 library(dplyr)
 library(ggplot2)
 
@@ -78,13 +85,12 @@ ggplot(states, aes(x = long, y = lat)) +
    labs(x = 'Longitude', y ='Latitude')+
    theme(panel.background = element_rect(fill = 'lightsteelblue2'))+
    scale_fill_brewer(palette = 'Dark2')
+
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
 ### Compositions example
-
-``` r
+```{r, warning = F, message=F}
 #install.packages('compositions')
 
 ## Load data
@@ -107,4 +113,3 @@ disease_data %>%
      theme_minimal()
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
