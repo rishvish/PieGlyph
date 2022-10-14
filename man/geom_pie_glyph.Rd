@@ -24,7 +24,7 @@ geom_pie_glyph(
 
 \item{categories}{Columns in the data with the categories for the pies (can also be a single column if data is in long format). To be specified either as column indices or column names}
 
-\item{values}{Column with values for the categories of the pies (if data is in long format). The default is \code{NA} if data not in long format.}
+\item{values}{Column with values for the categories of the pies (if data is in long format). The default is \code{NA} (if data not in long format).}
 
 \item{stat}{The statistical transformation to use on the data for this layer, as a string}
 
@@ -36,7 +36,7 @@ geom_pie_glyph(
 
 \item{inherit.aes}{If FALSE, overrides the default aesthetics, rather than combining with them}
 
-\item{...}{Other arguments passed on to layer(). These are often aesthetics, used to set an aesthetic to a fixed value, like colour = "red" or size = 3. They may also be parameters to the paired geom/stat.}
+\item{...}{Other arguments passed on to layer(). These are often aesthetics, used to set an aesthetic to a fixed value, like colour = "red" or radius = 1. They may also be parameters to the paired geom/stat.}
 }
 \value{
 layer
@@ -51,10 +51,10 @@ geom_pie_glyph understands the following aesthetics (required aesthetics are in 
 \item \strong{x} - variable to be shown on X-axis
 \item \strong{y} - variable to be shown on Y-axis
 \item alpha - adjust opacity of the pies
-\item size - adjust the radius of the pies (in cm)
+\item radius - adjust the radius of the pies (in cm)
 \item colour - colour of border of pies
 \item linetype - style of pie borders
-\item lwd - width of pie borders (in mm)
+\item size - width of pie borders (in mm)
 }
 }
 
@@ -67,20 +67,25 @@ library(PieGlyph)
 library(DImodels)
 library(tidyr)
 library(ggplot2)
+library(dplyr)
 
 ## Load the data
 data(sim1)
 
 ## Convert data into long-format
-plot_data <- pivot_longer(data = sim1, cols = paste0('p',1:4),
+plot_data <- sim1 \%>\%
+             mutate(Richness = rowSums(.[, paste0('p',1:4)] != 0),
+                    Evenness = DI_data_E_AV(prop = 3:6, data = .)$E) \%>\%
+             pivot_longer(cols = paste0('p',1:4),
                           names_to = 'Species', values_to = 'Prop')
 
 ## Create plot
 ggplot(data = plot_data)+
-    geom_pie_glyph(aes(x = community, y = response), categories = 'Species',
-                   values = 'Prop', size = 0.7, colour = NA)+
+    geom_pie_glyph(aes(x = Richness, y = response, group = Evenness),
+    categories = 'Species', values = 'Prop', colour = NA,
+    position = position_dodge(1))+
     facet_wrap(~block)+
-    labs(y = 'Response', x = 'Community')+
+    labs(y = 'Response', x = 'Richness')+
     theme_classic()
 
 
@@ -101,14 +106,16 @@ arrests <- arrests \%>\% mutate(region = tolower(rownames(USArrests)),
 ## Merge map data with arrests data to get coordinates to place pies
 choro <- merge(states, arrests, sort = FALSE, by = "region")
 pie_data <- choro \%>\% group_by(region) \%>\% slice(1) \%>\%
-                      select(region, pie_lat, pie_long, Murder, Assault, Rape)
+                      select(region, pie_lat, pie_long,
+                             Murder, Assault, Rape)
 
 ## Create plot (Can also create without converting data in long format)
 ggplot(states, aes(x = long, y = lat)) +
-   geom_polygon(aes(group = group), fill = 'darkseagreen', colour = 'black')+
+   geom_polygon(aes(group = group),
+                fill = 'darkseagreen', colour = 'black')+
    geom_pie_glyph(aes(y = pie_lat, x = pie_long),
                   data = pie_data, categories = 4:6,
-                  size = 0.75, colour = 'black', alpha = 0.7)+
+                  radius = 1, colour = 'black', alpha = 0.7)+
    coord_map("albers",  lat0 = 45.5, lat1 = 29.5)+
    labs(x = 'Longitude', y ='Latitude')+
    theme(panel.background = element_rect(fill = 'lightsteelblue2'))+
@@ -123,18 +130,22 @@ ggplot(states, aes(x = long, y = lat)) +
 data("SerumProtein", package = 'compositions')
 
 ## Fit Logistic regression model
-disease_data <- as_tibble(SerumProtein) \%>\% mutate(Type = factor(ifelse(Type == 1, 'Yes', 'No')))
-m1 <- glm(Type ~ a + b + c + d, data = disease_data, family=binomial(link='logit'))
+disease_data <- as_tibble(SerumProtein) \%>\%
+                    mutate(Type = factor(ifelse(Type == 1, 'Yes', 'No')))
+m1 <- glm(Type ~ a + b + c + d, data = disease_data,
+          family=binomial(link='logit'))
 
 ## Create plot
 disease_data \%>\%
    mutate('prediction' = predict(m1, type = 'response')) \%>\%
    arrange(desc(prediction)) \%>\%
    mutate('n' = 1:nrow(.)) \%>\%
-   pivot_longer(cols = c('a','b','c','d'), names_to = 'Marker', values_to = 'Proportion') \%>\%
+   pivot_longer(cols = c('a','b','c','d'), names_to = 'Marker',
+                values_to = 'Proportion') \%>\%
    ggplot(data = ., aes(x = n, y = prediction, fill = Marker))+
      geom_segment(aes(yend = 0, xend = n))+
-     geom_pie_glyph(categories = 'Marker', values = 'Proportion', size = 0.5)+
+     geom_pie_glyph(categories = 'Marker', values = 'Proportion',
+                    radius = 0.75)+
      labs(y = 'Prob(Having Disease)', x = 'Case')+
      theme_minimal()
 }
