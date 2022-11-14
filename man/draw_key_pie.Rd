@@ -18,7 +18,7 @@ display in this key}
 A grid grob
 }
 \description{
-Key for Pie Glyphs
+Controls the aesthetics of the legend entries for the pie glyphs
 }
 \seealso{
 \code{\link[ggplot2:draw_key]{draw_key}}

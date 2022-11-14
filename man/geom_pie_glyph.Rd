@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_pie_glyph.R
 \name{geom_pie_glyph}
 \alias{geom_pie_glyph}
-\title{geom_pie_glyph}
+\title{Scatter plot with pie glyphs}
 \usage{
 geom_pie_glyph(
   mapping = NULL,
@@ -18,31 +18,31 @@ geom_pie_glyph(
 )
 }
 \arguments{
-\item{mapping}{Set of aes mappings created by \code{\link[ggplot2:aes]{aes()}} or \code{\link[ggplot2:aes_]{aes_()}}}
+\item{mapping}{Set of aesthetic (see Aesthetics below) mappings to be created by \code{\link[ggplot2:aes]{aes()}} or \code{\link[ggplot2:aes_]{aes_()}}. If specified and inherit.aes = TRUE (the default), it is combined with the default mapping at the top level of the plot. You must supply mapping if there is no plot mapping.}
 
-\item{data}{The data to be displayed in this layer. The default, \code{NULL}, inherits the plot data specified in the \code{\link[ggplot2:ggplot]{ggplot()}} call.}
+\item{data}{The data to be displayed in this layer of the plot. The default, \code{NULL}, inherits the plot data specified in the \code{\link[ggplot2:ggplot]{ggplot()}} call.}
 
-\item{categories}{Columns in the data with the categories for the pies (can also be a single column if data is in long format). To be specified either as column indices or column names}
+\item{categories}{Each pie glyph in the plot shows the relative abundances of a set of categories; those categories are specified by this argument. The names of the categories can be stacked and contained in a single column (long format using \code{\link[tidyr:pivot_longer]{pivot_longer()}}) or can be the names of individual columns (wide format). The categories can also be specified as the numeric indices of the columns.}
 
-\item{values}{Column with values for the categories of the pies (if data is in long format). The default is \code{NA} (if data not in long format).}
+\item{values}{If the categories are stacked in one column, this parameter describes the column for the values of the categories shown in the pie glyphs. The values should be numeric and the proportions of the different categories within each observation will be calculated automatically. The default is \code{NA} assuming that the categories are in separate columns.}
 
 \item{stat}{The statistical transformation to use on the data for this layer, as a string}
 
-\item{position}{Position adjustment to avoid overlapping of pies.}
+\item{position}{Position adjustment to avoid overlapping of pie glyphs.}
 
-\item{na.rm}{If FALSE, the default, missing values are removed with a warning. If TRUE, missing values are silently removed.}
+\item{na.rm}{If all categories for an observation are NA, the observation is dropped while if at least one category is not NA, the other categories are assumed to be 0. This parameter indicates whether the user is notified about these changes. If FALSE, the default, user is given a warning. If TRUE, observations are silently removed/modified to 0, without notifying the user.}
 
-\item{show.legend}{logical. Should this layer be included in the legends? NA, the default, includes if any aesthetics are mapped. FALSE never includes, and TRUE always includes.}
+\item{show.legend}{Logical. Should this layer be included in the legends? NA, the default, includes if any aesthetics are mapped. FALSE never includes, and TRUE always includes.}
 
 \item{inherit.aes}{If FALSE, overrides the default aesthetics, rather than combining with them}
 
 \item{...}{Other arguments passed on to layer(). These are often aesthetics, used to set an aesthetic to a fixed value, like colour = "red" or radius = 1. They may also be parameters to the paired geom/stat.}
 }
 \value{
-layer
+A ggplot layer
 }
 \description{
-geom_pie_glyph
+This geom helps to replace the points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories. The pie glyphs are independent of the plot dimensions, so won't distort when the plot is scaled.
 }
 \section{Aesthetics}{
 
@@ -50,17 +50,21 @@ geom_pie_glyph understands the following aesthetics (required aesthetics are in 
 \itemize{
 \item \strong{x} - variable to be shown on X-axis
 \item \strong{y} - variable to be shown on Y-axis
-\item alpha - adjust opacity of the pies
-\item radius - adjust the radius of the pies (in cm)
-\item colour - colour of border of pies
-\item linetype - style of pie borders
-\item size - width of pie borders (in mm)
+\item alpha - adjust opacity of the pie glyphs
+\item radius - adjust the radius of the pie glyphs (in cm)
+\item colour - specify colour of the border of pie glyphs
+\item linetype - specify style of pie glyph borders
+\item size - specify width of pie glyph borders (in mm)
 }
 }
 
 \examples{
 
-########### Examples from ecology
+########### Example from ecology
+
+### Create a pie-scatter plot of the response vs richness in an ecosystem
+### with each pie representing the proportion of the different species
+### in a particular community
 
 #install.packages(DImodels)
 library(PieGlyph)
@@ -70,16 +74,25 @@ library(ggplot2)
 library(dplyr)
 
 ## Load the data
+## This data consists of 4 species named p1, p2, p3 and p4 comprised of 15
+## communities with varying proportions of each species. Each of these 15
+## communities is then replicated across 4 blocking structures. The
+## response can be assumed to be the yield of each community.
 data(sim1)
+species <- paste0('p',1:4)
 
-## Convert data into long-format
+## Add richness (number of species) and evenness (measure of uniformity
+## between species proportions) to the data and stack species proportions
+## together for plotting
 plot_data <- sim1 \%>\%
-             mutate(Richness = rowSums(.[, paste0('p',1:4)] != 0),
-                    Evenness = DI_data_E_AV(prop = 3:6, data = .)$E) \%>\%
-             pivot_longer(cols = paste0('p',1:4),
+             filter(block \%in\% c(1,2)) \%>\%
+             mutate(Richness = rowSums(.[, species] != 0),
+                    Evenness = DI_data(prop = species, what = 'E', data = .)) \%>\%
+             pivot_longer(cols = all_of(species),
                           names_to = 'Species', values_to = 'Prop')
 
-## Create plot
+## Create a response vs richness plot with points replaced by pie glyphs
+## depicting the proportions of the different species in the community
 ggplot(data = plot_data)+
     geom_pie_glyph(aes(x = Richness, y = response, group = Evenness),
     categories = 'Species', values = 'Prop', colour = NA,
@@ -91,25 +104,37 @@ ggplot(data = plot_data)+
 
 ############# Spatial example
 
+### Creating a map of the US states with pie charts at the center of each
+### state representing the proportions of arrests in the state across murder,
+### rape and assault
+
+#install.packages('maps')
 library(dplyr)
 library(ggplot2)
 
-## Get US map data
+## All datasets available in base R
+## Get latitude and longitude values for US states
 states <- map_data("state")
 
-## Data showing breakdown of the arrests in all US states
+## Data showing counts of arrests per 100,000 residents for assault, murder,
+## and rape in each of the 50 US states in 1973
 arrests <- USArrests
-arrests <- arrests \%>\% mutate(region = tolower(rownames(USArrests)),
-                              pie_lat = state.center$y,
-                              pie_long = state.center$x)
 
-## Merge map data with arrests data to get coordinates to place pies
+## Data showing the geographical center of US states
+centers <- state.center
+
+## Add state centers to arrests data
+arrests <- arrests \%>\% mutate(region = tolower(rownames(USArrests)),
+                              pie_lat = centers$y,
+                              pie_long = centers$x)
+
+## Merge map data with arrests data to get coordinates to place pie glyphs
 choro <- merge(states, arrests, sort = FALSE, by = "region")
 pie_data <- choro \%>\% group_by(region) \%>\% slice(1) \%>\%
                       select(region, pie_lat, pie_long,
                              Murder, Assault, Rape)
 
-## Create plot (Can also create without converting data in long format)
+## Create plot (Can also create without stacking the category values together)
 ggplot(states, aes(x = long, y = lat)) +
    geom_polygon(aes(group = group),
                 fill = 'darkseagreen', colour = 'black')+
@@ -124,28 +149,47 @@ ggplot(states, aes(x = long, y = lat)) +
 
 ############# Compositions example
 
+### Create a lollipop plot showing relationship between probability of having
+### a disease and the abundances of four different proteins in the blood
+
 #install.packages('compositions')
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(forcats)
+
 
 ## Load data
+## This data records the proportions of the 4 serum proteins from blood
+## samples of 30 patients, 14 with known disease A, 16 with known disease B,
+## and 6 new cases.
 data("SerumProtein", package = 'compositions')
 
-## Fit Logistic regression model
+## Fit Logistic regression model to assess relationship between probability
+## of having disease A and the four protein types
 disease_data <- as_tibble(SerumProtein) \%>\%
                     mutate(Type = factor(ifelse(Type == 1, 'Yes', 'No')))
 m1 <- glm(Type ~ a + b + c + d, data = disease_data,
           family=binomial(link='logit'))
+summary(m1)
 
-## Create plot
-disease_data \%>\%
-   mutate('prediction' = predict(m1, type = 'response')) \%>\%
+## Prepare data for plotting by adding the predicted probability of having
+## the disease to the data and case number
+## The data is then arranged in descending order of the predicted probabilities
+## and the marker proportions are stacked together for plotting
+plot_data <- disease_data \%>\%
+   mutate('prediction' = predict(m1, type = 'response'),
+          'n' = as.character(1:nrow(.))) \%>\%
    arrange(desc(prediction)) \%>\%
-   mutate('n' = 1:nrow(.)) \%>\%
+   mutate(n = fct_inorder(n)) \%>\%
    pivot_longer(cols = c('a','b','c','d'), names_to = 'Marker',
-                values_to = 'Proportion') \%>\%
-   ggplot(data = ., aes(x = n, y = prediction, fill = Marker))+
-     geom_segment(aes(yend = 0, xend = n))+
-     geom_pie_glyph(categories = 'Marker', values = 'Proportion',
-                    radius = 0.75)+
-     labs(y = 'Prob(Having Disease)', x = 'Case')+
-     theme_minimal()
+                values_to = 'Proportion')
+
+## Create lollipop plot
+ggplot(data = plot_data, aes(x = n, y = prediction, fill = Marker))+
+  geom_segment(aes(yend = 0, xend = n))+
+  geom_pie_glyph(categories = 'Marker', values = 'Proportion',
+                 radius = 0.75, colour = 'black')+
+  labs(y = 'Prob(Having Disease)', x = 'Case')+
+  theme_minimal()
 }

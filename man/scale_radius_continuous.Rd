@@ -53,7 +53,7 @@ expand the scale by 5\% on each side for continuous variables, and by
 \item{range}{a numeric vector of length 2 that specifies the minimum and
 maximum size of the plotting symbol after transformation.}
 
-\item{unit}{Unit for the radius of the pies. Default is 'cm', but other units like 'in', 'mm', etc. can be used.}
+\item{unit}{Unit for the radius of the pie glyphs. Default is 'cm', but other units like 'in', 'mm', etc. can be used.}
 
 \item{values}{a set of aesthetic values to map data values to. The values
 will be matched in order (usually alphabetical) with the limits of the
