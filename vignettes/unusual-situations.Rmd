@@ -1,0 +1,156 @@
+---
+title: "Unusual situations"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{unusual-situations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{css, echo = F}
+body {
+  text-align: justify;
+}
+
+p {
+  font-weight: 'normal';
+  font-size: '16px;
+  text-align: justify;
+}
+```
+
+<p>This vignette shows examples of potential unusual situations that can be encountered when using the `PieGlyph` package and how they are handled within the package</p>
+
+##### Load library
+```{r setup, warning = F, message=F}
+library(PieGlyph)
+library(tidyverse)
+library(ggforce)
+```
+
+
+### Missing values for a particular attribute
+<p>This is the most likely situation that could occur. The data might have missing (NA) values  for some specific attributes for an observation.</p>
+```{r}
+plot_data <- data.frame(x = 1:4, 
+                        y = c(3,1,4,2),
+                        A = c(5, 2, NA, 3),
+                        B = c(NA, 2, 3, NA),
+                        C = c(7, NA, NA, 3))
+head(plot_data)
+```
+
+<p>The package handles this situation be replacing the any NA values with 0 in the data. The user is notified about this via a warning. This warning can be silenced by specifying na.rm as `TRUE`</p>
+```{r, warning = F, fig.align='center', fig.width=7}
+ggplot()+
+  geom_pie_glyph(aes(x = x, y = y),
+                 categories = c('A','B','C'),
+                 data = plot_data)
+```
+
+
+### Missing values for all attributes
+<p>This situation could occur when an observation has missing values for all the attributes. </p>
+```{r}
+plot_data <- data.frame(x = 1:4, 
+                        y = c(3,1,4,2),
+                        A = c(5, 2, NA, 1),
+                        B = c(2, 2, NA, 5),
+                        C = c(7, 3, NA, 3))
+head(plot_data)
+```
+
+<p>The package handles this situation by dropping the observation that has all attributes as missing. The user is notified about this via a warning. This warning can be silenced by specifying na.rm as `TRUE`</p>
+```{r, warning = F, fig.align='center', fig.width=7}
+ggplot()+
+  geom_pie_glyph(aes(x = x, y = y),
+                 categories = c('A','B','C'),
+                 data = plot_data)
+```
+
+
+### Negative values for attributes
+<p>This problem arises because pie-charts cannot distinguish between positive and negative values. This causes unexpected behaviour and might affect interpretation.</p>
+```{r}
+plot_data <- data.frame(x = 1:4, 
+                        y = c(3,1,4,2),
+                        A = c(5, -2, 3, 3),
+                        B = c(2, 2, 0, 0),
+                        C = c(-7, 1, 3, -3))
+head(plot_data)
+```
+
+```{r, warning = F, fig.align='center', fig.width=7}
+ggplot(plot_data %>% pivot_longer(cols = LETTERS[1:3]))+
+  geom_arc_bar(aes(x0 = x, y0 = y,
+                   r0 = 0, r = 0.2, 
+                   amount = value,
+                   fill = name), 
+               stat = 'pie')+
+  coord_fixed()
+```
+<p>Comparing this figure with the fake data above, it is can be seen that the proportions shown in the plot, do not match the values present in the data. Observations 1, 2, and 4 had negative values for one category and it can be seen that the pie-charts can't account for this and show only one attribute.</p>
+
+
+<p>The package handles this situation by notifying the user about any negative values present in the data and asking them to remove them before creating a plot.</p>
+```{r, warning = F, error = T, fig.align='center', fig.width=7}
+ggplot()+
+  geom_pie_glyph(aes(x = x, y = y),
+                 categories = c('A','B','C'),
+                 data = plot_data)
+```
+
+
+### Missing levels within an observation
+<p> This situation can occur if the data supplied to the function is stacked, so that all attributed are present in one column, with their respective values in another. It might happen at times that a particular observation would not have values for all attributes and a particular attribute might be dropped from the data.</p>
+
+<p>As an example</p>
+
+```{r, warning = F, fig.align='center', fig.width=7}
+plot_data <- data.frame('Student' = c(1,1,2,2,3,3,3),
+                        'Subject' = c('Maths','Sci', 'Sci','Eng', 'Maths', 'Sci', 'Eng'),
+                        'Marks' = c(58, 79, 62, 90, 95, 93, 94))
+head(plot_data, 7)
+```
+<p>It can be seen that Students 1 and 2 each have marks for a subject missing and which aren't present in the data.</p>
+
+<p>This incomplete structure of the data causes problems when creating the pie-charts.</p>
+
+<p>If such data is passed to the function, the user is notified about the issue and asked to complete the data.</p>
+
+```{r, error = T}
+ggplot(data = plot_data, aes(x = Student, y = 1))+
+  geom_pie_glyph(categories = 'Subject', values = 'Marks')
+```
+
+
+<p>The missing levels in the data can be added as follows</p>
+```{r, warning = F, fig.align='center', fig.width=7}
+plot_data <- complete(plot_data, Student, Subject, fill = list(Marks = 0))
+head(plot_data, 9)
+```
+```{r, warning = F, fig.align='center', fig.width=7}
+ggplot(data = plot_data, aes(x = Student, y = 1))+
+  geom_pie_glyph(categories = 'Subject', values = 'Marks', radius = 1)
+```
+
+<br>
+<br>
+
+
+
+
+
+
+
+
+
+

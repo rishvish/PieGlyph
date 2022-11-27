@@ -1,49 +1,20 @@
 ---
-output: github_document
+title: "PieGlyph"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{PieGlyph}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-"
+  comment = "#>"
 )
 ```
 
-
-
-```{css, echo = F}
-body {
-  text-align: justify;
-}
-
-p {
-  font-weight: 'normal';
-  font-size: '12px;
-  text-align: justify;
-}
-```
-
-# PieGlyph <img src="man/figures/logo.png" align="right" height="139" />
-
-
-<!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/PieGlyph)](https://CRAN.R-project.org/package=PieGlyph)
-[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-<!-- badges: end -->
-
 `PieGlyph` is an R package aimed at replacing points in a plot with pie-charts glyphs, showing the relative proportions of different categories. The pie-chart glyphs are invariant to the axes and plot dimensions to prevent distortions when the plot dimensions are changed.
-
-## Installation
-
-You can install the development version of `PieGlyph` from [GitHub](https://github.com/) with:
-
-``` r
-# install.packages("devtools")
-devtools::install_github("rishvish/PieGlyph")
-```
 
 ## Examples
 
@@ -146,4 +117,3 @@ ggplot(data = plot_data_stacked, aes(x = system, y = response))+
   geom_pie_glyph(categories = 'Attributes', values = 'values')+
   theme_minimal()
 ```
-

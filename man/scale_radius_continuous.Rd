@@ -5,7 +5,7 @@
 \alias{scale_radius_manual}
 \alias{scale_radius_continuous}
 \alias{scale_radius}
-\title{Scales for the pie radius}
+\title{Scales for the pie glyph radius}
 \usage{
 scale_radius_discrete(..., range = c(0.5, 1.5), unit = "cm")
 
@@ -78,40 +78,48 @@ Also accepts rlang \link[rlang:as_function]{lambda} function notation.
 \code{scale_radius_*()} is useful for adjusting the radius of the pie glyphs.
 }
 \examples{
+## Load libraries
+library(tidyverse)
 library(PieGlyph)
-library(DImodels)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
 
-## Load the data
-data(sim1)
-sim1$Evenness <- DI_data_E_AV(prop = 3:6, data = sim1)$E
+## Simulate raw data
+set.seed(789)
+plot_data <- data.frame(y = rnorm(10, 100, 30),
+                        x = 1:10,
+                        group = sample(size = 10,
+                                       x = c(1, 2, 3),
+                                       replace = TRUE),
+                        A = round(runif(10, 3, 9), 2),
+                        B = round(runif(10, 1, 5), 2),
+                        C = round(runif(10, 3, 7), 2),
+                        D = round(runif(10, 1, 9), 2))
 
-## Convert data into long-format
-plot_data <- sim1 \%>\% filter(block == 1) \%>\%
-                      pivot_longer(cols = paste0('p',1:4),
-                                   names_to = 'Species', values_to = 'Prop')
+head(plot_data)
+
 
 ## Create plot
-p <- ggplot(data = plot_data)+
-    geom_pie_glyph(aes(x = community, y = response, radius = Evenness),
-    categories = 'Species', values = 'Prop', colour = NA)+
-    labs(y = 'Response', x = 'Community')+
+p <- ggplot()+
+    geom_pie_glyph(aes(x = x, y = y, radius = group),
+    categories = c('A', 'B', 'C', 'D'), colour = NA,
+    data = plot_data)+
+    labs(y = 'Response', x = 'System',
+         fill = 'Attributes')+
     theme_classic()
 
 p + scale_radius_continuous(range = c(1, 2))
 
 q <- ggplot(data = plot_data)+
-    geom_pie_glyph(aes(x = community, y = response,
-                       radius = as.factor(Evenness)),
-                 categories = 'Species', values = 'Prop', colour = 'black')+
-    labs(y = 'Response', x = 'Community')+
+    geom_pie_glyph(aes(x = x, y = y,
+                       radius = as.factor(group)),
+                   categories = c('A', 'B', 'C', 'D'),
+                   colour = NA, data = plot_data)+
+    labs(y = 'Response', x = 'System',
+         fill = 'Attributes', radius = 'Group')+
     theme_classic()
 
 q + scale_radius_discrete(range = c(0.1, 0.2), unit = 'in',
-                          name = 'Evenness')
+                          name = 'Group')
 
-q + scale_radius_manual(values = c(5, 20, 10, 15), unit = 'mm',
-                        labels = LETTERS[1:4], name = 'E')
+q + scale_radius_manual(values = c(5, 20, 10), unit = 'mm',
+                        labels = paste0('G', 1:3), name = 'G')
 }

@@ -1,4 +1,4 @@
-#' Key for Pie Glyphs
+#' Legend key for the pie glyphs
 #' @description Controls the aesthetics of the legend entries for the pie glyphs
 #' @inheritParams ggplot2::draw_key
 #'
@@ -48,6 +48,7 @@ draw_key_pie <- function (data, params, size) {
 #' @importFrom stats as.formula
 #' @importFrom rlang sym syms !! !!!
 #' @importFrom ggforce geom_arc_bar
+#' @importFrom forcats fct_inorder
 #' @importFrom ggplot2 ggproto Geom draw_key_polygon aes_ aes ggplotGrob ggplot theme_void
 #' @export
 NULL
@@ -58,11 +59,21 @@ GeomPieGlyph <- ggproto('GeomPieGlyph', Geom,
                         ),
                         draw_key = draw_key_pie,
                         setup_data = function(data, params){
+                          # Order categories by appearance (for legend)
+                          data$categories <- fct_inorder(data$categories)
+
+                          # If factor levels in data are not complete
+                          if(length(unique(table(data$categories))) != 1){
+                            stop('Certain levels in categories column are missing, possibly due to having 0 or NA values.\nAttempting to add the missing levels, but this might not always work.\nUser is recommended to use complete() function from dplyr to add the missing levels back in the data.\nSee the "unusual-situations" vignette for an example.')
+                          }
+
                           # If an explicit group wasn't specified, group data by each pie glyph
                           if(all(data$group == 1)){
                             nCat <- length(unique(data[, 'categories']))
                             data$group <- rep(1:(nrow(data)/nCat), each = nCat)
                           }
+
+                          # Whether or not the user should be warned about removing NAs
                           data$warn <- !params$na.rm
                           data
                         },
@@ -95,6 +106,16 @@ GeomPieGlyph <- ggproto('GeomPieGlyph', Geom,
                             }
                             coords <- coords %>% mutate(values = ifelse(is.na(values), 0, values))
                           }
+
+                          # Check to ensure numeric values
+                          if(!is.numeric(coords$values)){
+                            stop("The categories values should all be numeric.")
+                          }
+                          # Check if values aren't negative
+                          if(any(coords$values < 0)){
+                            stop('Data contains negative values. Remove them before plotting.')
+                          }
+
                           # Construct pies for the unique communities in the data
                           pies <- get_pies(data = coords)
                           #my_pies <<- pies
@@ -108,7 +129,7 @@ GeomPieGlyph <- ggproto('GeomPieGlyph', Geom,
                           obj <- do.call(grid::grobTree, grobs)
                         })
 
-#' @title Scatter plot with pie glyphs
+#' @title Scatter plot with pie-chart glyphs
 #' @description This geom helps to replace the points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories. The pie glyphs are independent of the plot dimensions, so won't distort when the plot is scaled.
 #'
 #' @param mapping Set of aesthetic (see Aesthetics below) mappings to be created by \code{\link[ggplot2:aes]{aes()}} or \code{\link[ggplot2:aes_]{aes_()}}. If specified and inherit.aes = TRUE (the default), it is combined with the default mapping at the top level of the plot. You must supply mapping if there is no plot mapping.
@@ -138,137 +159,75 @@ GeomPieGlyph <- ggproto('GeomPieGlyph', Geom,
 #'
 #' @examples
 #'
-#' ########### Example from ecology
-#'
-#' ### Create a pie-scatter plot of the response vs richness in an ecosystem
-#' ### with each pie representing the proportion of the different species
-#' ### in a particular community
-#'
-#' #install.packages(DImodels)
+#' ## Load libraries
+#' library(tidyverse)
 #' library(PieGlyph)
-#' library(DImodels)
-#' library(tidyr)
-#' library(ggplot2)
-#' library(dplyr)
 #'
-#' ## Load the data
-#' ## This data consists of 4 species named p1, p2, p3 and p4 comprised of 15
-#' ## communities with varying proportions of each species. Each of these 15
-#' ## communities is then replicated across 4 blocking structures. The
-#' ## response can be assumed to be the yield of each community.
-#' data(sim1)
-#' species <- paste0('p',1:4)
+#' ## Simulate raw data
+#' set.seed(123)
+#' plot_data <- data.frame(response = rnorm(10, 100, 30),
+#'                         system = 1:10,
+#'                         group = sample(size = 10,
+#'                                        x = c('G1', 'G2', 'G3'),
+#'                                        replace = TRUE),
+#'                         A = round(runif(10, 3, 9), 2),
+#'                         B = round(runif(10, 1, 5), 2),
+#'                         C = round(runif(10, 3, 7), 2),
+#'                         D = round(runif(10, 1, 9), 2))
 #'
-#' ## Add richness (number of species) and evenness (measure of uniformity
-#' ## between species proportions) to the data and stack species proportions
-#' ## together for plotting
-#' plot_data <- sim1 %>%
-#'              filter(block %in% c(1,2)) %>%
-#'              mutate(Richness = rowSums(.[, species] != 0),
-#'                     Evenness = DI_data(prop = species, what = 'E', data = .)) %>%
-#'              pivot_longer(cols = all_of(species),
-#'                           names_to = 'Species', values_to = 'Prop')
+#' head(plot_data)
 #'
-#' ## Create a response vs richness plot with points replaced by pie glyphs
-#' ## depicting the proportions of the different species in the community
-#' ggplot(data = plot_data)+
-#'     geom_pie_glyph(aes(x = Richness, y = response, group = Evenness),
-#'     categories = 'Species', values = 'Prop', colour = NA,
-#'     position = position_dodge(1))+
-#'     facet_wrap(~block)+
-#'     labs(y = 'Response', x = 'Richness')+
-#'     theme_classic()
+#' ## Basic plot
+#' ggplot(data = plot_data, aes(x = system, y = response))+
+#'    geom_pie_glyph(categories = c('A', 'B', 'C', 'D'),
+#'                   data = plot_data)+
+#'    theme_minimal()
 #'
 #'
-#' ############# Spatial example
-#'
-#' ### Creating a map of the US states with pie charts at the center of each
-#' ### state representing the proportions of arrests in the state across murder,
-#' ### rape and assault
-#'
-#' #install.packages('maps')
-#' library(dplyr)
-#' library(ggplot2)
-#'
-#' ## All datasets available in base R
-#' ## Get latitude and longitude values for US states
-#' states <- map_data("state")
-#'
-#' ## Data showing counts of arrests per 100,000 residents for assault, murder,
-#' ## and rape in each of the 50 US states in 1973
-#' arrests <- USArrests
-#'
-#' ## Data showing the geographical center of US states
-#' centers <- state.center
-#'
-#' ## Add state centers to arrests data
-#' arrests <- arrests %>% mutate(region = tolower(rownames(USArrests)),
-#'                               pie_lat = centers$y,
-#'                               pie_long = centers$x)
-#'
-#' ## Merge map data with arrests data to get coordinates to place pie glyphs
-#' choro <- merge(states, arrests, sort = FALSE, by = "region")
-#' pie_data <- choro %>% group_by(region) %>% slice(1) %>%
-#'                       select(region, pie_lat, pie_long,
-#'                              Murder, Assault, Rape)
-#'
-#' ## Create plot (Can also create without stacking the category values together)
-#' ggplot(states, aes(x = long, y = lat)) +
-#'    geom_polygon(aes(group = group),
-#'                 fill = 'darkseagreen', colour = 'black')+
-#'    geom_pie_glyph(aes(y = pie_lat, x = pie_long),
-#'                   data = pie_data, categories = 4:6,
-#'                   radius = 1, colour = 'black', alpha = 0.7)+
-#'    coord_map("albers",  lat0 = 45.5, lat1 = 29.5)+
-#'    labs(x = 'Longitude', y ='Latitude')+
-#'    theme(panel.background = element_rect(fill = 'lightsteelblue2'))+
-#'    scale_fill_brewer(palette = 'Dark2')
+#' ## Change pie radius and border colour
+#' ggplot(data = plot_data, aes(x = system, y = response))+
+#'        # Can also specify categories as column indices
+#'        geom_pie_glyph(categories = 4:7, data = plot_data,
+#'                       colour = 'black', radius = 1)+
+#'        theme_minimal()
 #'
 #'
-#' ############# Compositions example
-#'
-#' ### Create a lollipop plot showing relationship between probability of having
-#' ### a disease and the abundances of four different proteins in the blood
-#'
-#' #install.packages('compositions')
-#' library(dplyr)
-#' library(ggplot2)
-#' library(tidyr)
-#' library(forcats)
+#' ## Map size to a variable
+#' p <- ggplot(data = plot_data, aes(x = system, y = response))+
+#' geom_pie_glyph(aes(radius = group),
+#'             categories = c('A', 'B', 'C', 'D'),
+#'             data = plot_data, colour = 'black')+
+#'             theme_minimal()
+#' p
 #'
 #'
-#' ## Load data
-#' ## This data records the proportions of the 4 serum proteins from blood
-#' ## samples of 30 patients, 14 with known disease A, 16 with known disease B,
-#' ## and 6 new cases.
-#' data("SerumProtein", package = 'compositions')
+#' ## Add custom labels
+#' p <- p + labs(x = 'System', y = 'Response',
+#'               fill = 'Attributes', radius = 'Group')
+#' p
 #'
-#' ## Fit Logistic regression model to assess relationship between probability
-#' ## of having disease A and the four protein types
-#' disease_data <- as_tibble(SerumProtein) %>%
-#'                     mutate(Type = factor(ifelse(Type == 1, 'Yes', 'No')))
-#' m1 <- glm(Type ~ a + b + c + d, data = disease_data,
-#'           family=binomial(link='logit'))
-#' summary(m1)
 #'
-#' ## Prepare data for plotting by adding the predicted probability of having
-#' ## the disease to the data and case number
-#' ## The data is then arranged in descending order of the predicted probabilities
-#' ## and the marker proportions are stacked together for plotting
-#' plot_data <- disease_data %>%
-#'    mutate('prediction' = predict(m1, type = 'response'),
-#'           'n' = as.character(1:nrow(.))) %>%
-#'    arrange(desc(prediction)) %>%
-#'    mutate(n = fct_inorder(n)) %>%
-#'    pivot_longer(cols = c('a','b','c','d'), names_to = 'Marker',
-#'                 values_to = 'Proportion')
+#' ## Change category colours
+#' p + scale_fill_manual(values = c('#56B4E9', '#CC79A7',
+#'                                  '#F0E442', '#D55E00'))
 #'
-#' ## Create lollipop plot
-#' ggplot(data = plot_data, aes(x = n, y = prediction, fill = Marker))+
-#'   geom_segment(aes(yend = 0, xend = n))+
-#'   geom_pie_glyph(categories = 'Marker', values = 'Proportion',
-#'                  radius = 0.75, colour = 'black')+
-#'   labs(y = 'Prob(Having Disease)', x = 'Case')+
+#'
+#'
+#' ##### Stack the attributes in one column
+#' # The attributes can also be stacked into one column to generate
+#' # the plot. The benefit of doing this is that we do not need to
+#' # specify the data again in the geom_pie_glyph function
+#'
+#' plot_data_stacked <- plot_data %>%
+#'                         pivot_longer(cols = c('A','B','C','D'),
+#'                                      names_to = 'Attributes',
+#'                                      values_to = 'values')
+#' head(plot_data_stacked, 8)
+#'
+#'
+#' ggplot(data = plot_data_stacked, aes(x = system, y = response))+
+#'   # Along with categories column, values column is also needed now
+#'   geom_pie_glyph(categories = 'Attributes', values = 'values')+
 #'   theme_minimal()
 geom_pie_glyph <- function(mapping = NULL, data = NULL, categories, values = NA,
                            stat = "identity", position = "identity", na.rm = FALSE,
@@ -285,7 +244,10 @@ geom_pie_glyph <- function(mapping = NULL, data = NULL, categories, values = NA,
       categories <- colnames(data)[categories]
     }
 
-    data <- data %>% tidyr::pivot_longer(cols = categories, names_to = 'Categories', values_to = 'Values')
+    data <- data %>%
+              tidyr::pivot_longer(cols = categories, names_to = 'Categories', values_to = 'Values') %>%
+              mutate(Categories = fct_inorder(Categories))
+
     values <- 'Values'
     categories <- 'Categories'
   }
@@ -354,7 +316,7 @@ get_pie <- function(data){
 #' @usage NULL
 pie_aes <- function(point, pies) {
   pie.grob <- grid::grobTree(
-    pies[[unique(point$ID)]],
+    pies[[as.character(unique(point$ID))]],
     vp = viewport(), gp = gpar())
 
   # Radius of pies
@@ -406,7 +368,7 @@ scale_radius_manual <- function (..., values, unit = 'cm', breaks = waiver(), na
 }
 
 
-#' Scales for the pie radius
+#' Scales for the pie glyph radius
 #'
 #' @description \code{scale_radius_*()} is useful for adjusting the radius of the pie glyphs.
 #'
@@ -415,42 +377,50 @@ scale_radius_manual <- function (..., values, unit = 'cm', breaks = waiver(), na
 #'
 #' @export
 #' @examples
+#' ## Load libraries
+#' library(tidyverse)
 #' library(PieGlyph)
-#' library(DImodels)
-#' library(tidyr)
-#' library(dplyr)
-#' library(ggplot2)
 #'
-#' ## Load the data
-#' data(sim1)
-#' sim1$Evenness <- DI_data_E_AV(prop = 3:6, data = sim1)$E
+#' ## Simulate raw data
+#' set.seed(789)
+#' plot_data <- data.frame(y = rnorm(10, 100, 30),
+#'                         x = 1:10,
+#'                         group = sample(size = 10,
+#'                                        x = c(1, 2, 3),
+#'                                        replace = TRUE),
+#'                         A = round(runif(10, 3, 9), 2),
+#'                         B = round(runif(10, 1, 5), 2),
+#'                         C = round(runif(10, 3, 7), 2),
+#'                         D = round(runif(10, 1, 9), 2))
 #'
-#' ## Convert data into long-format
-#' plot_data <- sim1 %>% filter(block == 1) %>%
-#'                       pivot_longer(cols = paste0('p',1:4),
-#'                                    names_to = 'Species', values_to = 'Prop')
+#' head(plot_data)
+#'
 #'
 #' ## Create plot
-#' p <- ggplot(data = plot_data)+
-#'     geom_pie_glyph(aes(x = community, y = response, radius = Evenness),
-#'     categories = 'Species', values = 'Prop', colour = NA)+
-#'     labs(y = 'Response', x = 'Community')+
+#' p <- ggplot()+
+#'     geom_pie_glyph(aes(x = x, y = y, radius = group),
+#'     categories = c('A', 'B', 'C', 'D'), colour = NA,
+#'     data = plot_data)+
+#'     labs(y = 'Response', x = 'System',
+#'          fill = 'Attributes')+
 #'     theme_classic()
 #'
 #' p + scale_radius_continuous(range = c(1, 2))
 #'
 #' q <- ggplot(data = plot_data)+
-#'     geom_pie_glyph(aes(x = community, y = response,
-#'                        radius = as.factor(Evenness)),
-#'                  categories = 'Species', values = 'Prop', colour = 'black')+
-#'     labs(y = 'Response', x = 'Community')+
+#'     geom_pie_glyph(aes(x = x, y = y,
+#'                        radius = as.factor(group)),
+#'                    categories = c('A', 'B', 'C', 'D'),
+#'                    colour = NA, data = plot_data)+
+#'     labs(y = 'Response', x = 'System',
+#'          fill = 'Attributes', radius = 'Group')+
 #'     theme_classic()
 #'
 #' q + scale_radius_discrete(range = c(0.1, 0.2), unit = 'in',
-#'                           name = 'Evenness')
+#'                           name = 'Group')
 #'
-#' q + scale_radius_manual(values = c(5, 20, 10, 15), unit = 'mm',
-#'                         labels = LETTERS[1:4], name = 'E')
+#' q + scale_radius_manual(values = c(5, 20, 10), unit = 'mm',
+#'                         labels = paste0('G', 1:3), name = 'G')
 scale_radius_continuous <- function(..., range = c(.5, 1.5), unit = "cm") {
   range <- grid::convertWidth(unit(range, unit), "cm", valueOnly = TRUE)
   ggplot2::continuous_scale(

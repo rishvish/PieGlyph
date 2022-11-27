@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_pie_glyph.R
 \name{draw_key_pie}
 \alias{draw_key_pie}
-\title{Key for Pie Glyphs}
+\title{Legend key for the pie glyphs}
 \usage{
 draw_key_pie(data, params, size)
 }

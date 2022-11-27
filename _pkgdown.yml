@@ -1,0 +1,19 @@
+url: ~
+template:
+  bootstrap: 5
+  bootswatch: zephyr
+navbar:
+  bg: dark
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github]
+articles:
+- title: Vignettes
+  navbar: ~
+  contents:
+  - time-series-example
+  - spatial-example
+  - pie-lollipop-example
+  - compositions-example
+  - unusual-situations
+

@@ -6,52 +6,50 @@
 \alias{PieGlyph-package}
 \title{PieGlyph: Axis invariant scatter pie plots}
 \description{
-This packages helps to replace the points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories. The pie glyphs are independent of the plot dimensions, so won't distort when the plot is scaled.
+This packages helps to replace the points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories. The pie glyphs are independent of the axes and plot dimensions to prevent distortions when the plot dimensions are changed.
 }
 \examples{
-############# Spatial example
+## Load libraries
+library(tidyverse)
+library(PieGlyph)
 
-### Creating a map of the US states with pie charts at the center of each
-### state representing the proportions of arrests in the state across murder,
-### rape and assault
+## Simulate raw data
+set.seed(123)
+plot_data <- data.frame(response = rnorm(30, 100, 30),
+                        system = 1:30,
+                        group = sample(size = 30,
+                                       x = c('G1', 'G2', 'G3'),
+                                       replace = TRUE),
+                        A = round(runif(30, 3, 9), 2),
+                        B = round(runif(30, 1, 5), 2),
+                        C = round(runif(30, 3, 7), 2),
+                        D = round(runif(30, 1, 9), 2))
 
-#install.packages('maps')
-library(dplyr)
-library(ggplot2)
+head(plot_data)
 
-## All datasets available in base R
-## Get latitude and longitude values for US states
-states <- map_data("state")
+## Basic plot
+ggplot(data = plot_data, aes(x = system, y = response))+
+   geom_pie_glyph(categories = c('A', 'B', 'C', 'D'),
+                  data = plot_data)+
+   theme_minimal()
 
-## Data showing counts of arrests per 100,000 residents for assault, murder,
-## and rape in each of the 50 US states in 1973
-arrests <- USArrests
 
-## Data showing the geographical center of US states
-centers <- state.center
+##### Stack the attributes in one column
+# The attributes can also be stacked into one column to generate
+# the plot. The benefit of doing this is that we do not need to
+# specify the data again in the geom_pie_glyph function
 
-## Add state centers to arrests data
-arrests <- arrests \%>\% mutate(region = tolower(rownames(USArrests)),
-                              pie_lat = centers$y,
-                              pie_long = centers$x)
+plot_data_stacked <- plot_data \%>\%
+                        pivot_longer(cols = c('A','B','C','D'),
+                                     names_to = 'Attributes',
+                                     values_to = 'values')
+head(plot_data_stacked, 8)
 
-## Merge map data with arrests data to get coordinates to place pie glyphs
-choro <- merge(states, arrests, sort = FALSE, by = "region")
-pie_data <- choro \%>\% group_by(region) \%>\% slice(1) \%>\%
-                      select(region, pie_lat, pie_long,
-                             Murder, Assault, Rape)
 
-## Create plot (Can also create without stacking the category values together)
-ggplot(states, aes(x = long, y = lat)) +
-   geom_polygon(aes(group = group),
-                fill = 'darkseagreen', colour = 'black')+
-   geom_pie_glyph(aes(y = pie_lat, x = pie_long),
-                  data = pie_data, categories = 4:6,
-                  radius = 1, colour = 'black', alpha = 0.7)+
-   coord_map("albers",  lat0 = 45.5, lat1 = 29.5)+
-   labs(x = 'Longitude', y ='Latitude')+
-   theme(panel.background = element_rect(fill = 'lightsteelblue2'))+
-   scale_fill_brewer(palette = 'Dark2')
+ggplot(data = plot_data_stacked, aes(x = system, y = response))+
+  # Along with categories column, values column is also needed now
+  geom_pie_glyph(categories = 'Attributes', values = 'values')+
+  theme_minimal()
 }
 \author{
 \strong{Maintainter}: Rishabh Vishwakarma \email{vishwakr@tcd.ie} (\href{https://orcid.org/0000-0002-4847-3494}{ORCID})

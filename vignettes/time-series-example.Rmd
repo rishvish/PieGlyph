@@ -1,0 +1,99 @@
+---
+title: "Time-series example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{time-series-example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{css, echo = F}
+body {
+  text-align: justify;
+}
+
+p {
+  font-weight: 'normal';
+  font-size: '16px
+}
+```
+<p> This examples shows the use of the use of the `PieGlyph` package to replace the points in a time series plot with pie charts showing the proportions of different attributes. Generally, time series plots don't have an aspect ratio of 1 as the width of the plot is very large compared to the height. Due to this wide nature of time series plots previous attempts at adding pie-charts in the plot either resulted in the pie-charts getting converted into ellipses or forced the user to make the plot have equal dimensions, resulting in plots becoming squashed between white space. Both these approaches cause problems when interpreting from the plots.</p>
+
+<p> The `PieGlyph` package attempts to solve this problem by creating axis invariant pie-charts which wouldn't get squashed into ellipses and also wouldn't get scaled along with the plot dimensions. </p>
+
+### Load Packages
+```{r setup, warning=F, message=F}
+library(scatterpie)
+library(PieGlyph)
+library(tidyverse)
+```
+
+### Simulate data
+
+```{r simulate-data}
+plot_data <- data.frame(time = 1:60, 
+                        output = rnorm(60, c(seq(300, 200, length.out = 20), 
+                                             seq(200, 700, length.out = 20),
+                                             seq(700, 500, length.out = 20)), 100),
+                        A = seq(6, 3, length.out = 60),
+                        B = seq(4, 1, length.out = 60),
+                        C = seq(0, 6, length.out = 60))
+```
+
+<p>  The simulated data has 60 rows and 5 columns and shows the performance of a particular system at 60 different time points. The variable `output` contains the system performance while `time` measures the different time points. The variables `A`, `B`, and `C` measure the attributes of the system over time. </p> 
+
+```{r show-data}
+head(plot_data)
+```
+
+<p> The attributes are assumed to be related to the system performance and they too change over time. It would be difficult to visualise the performance of the system over time, whilst also showing the evolution of the system attributes over time using a simple time series plot. However, if we replace the points in the plot with pie-charts we can simulataneously visualise both, the performance and system attributes over time. </p>
+
+### Create Plots
+
+```{r scatterpie, fig.align='center', fig.width=7}
+p <- ggplot(plot_data)+
+      geom_line(aes(x = time, y = output), size = 1)+
+      geom_scatterpie(aes(x = time, y = output),
+                      cols = LETTERS[1:3],
+                      data = plot_data,
+                      pie_scale = 3)
+p
+```
+
+<p>  As expected, due to the plot dimensions, the individual pies are heavily squished and it is difficult to read the proportions of the different attributes. A common suggestion in these cases is to use the function `coord_equal()`, which forces the plot width and height to be equal causing the pies to represented as circles. This works fine in some cases, but often it further aggravates the problems and renders the plot uninterpretable as shown below. </p> 
+
+```{r scatterpie-fixed, fig.align='center', fig.width=7}
+p + coord_equal()
+```
+
+<p> Pie Glyph fixes this problem by creating the pie charts independently of the plot axes and thus the plot dimensions have no effects on the pie charts </p>
+
+```{r Pie-glyph-plot, fig.align='center', fig.width=7}
+pl <- ggplot(plot_data)+
+        geom_line(aes(x = time, y = output), size = 1)+
+        geom_pie_glyph(aes(x = time, y = output),
+                       colour = 'black', categories = 3:5,
+                       data = plot_data, size = 0.75, radius = 0.5)+
+        theme_minimal()
+pl    
+```
+
+<p> We can then adjust any aesthetics of our choice in the plot using the usual ggplot functions </p> 
+
+```{r aesthetics, fig.align='center', fig.width=7}
+pl + 
+  # Colours of the pie-sectors
+  scale_fill_manual(values = c('#56B4E9','#F0E442','#CC79A7'))+
+  # Axis and legend titles
+  labs(x = 'Time', y = 'System Performance', fill = 'Components')
+```
+<br>
+
+<br>

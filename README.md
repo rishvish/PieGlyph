@@ -1,17 +1,24 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# PieGlyph
+# PieGlyph <img src="man/figures/logo.png" align="right" height="139" />
 
 <!-- badges: start -->
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/PieGlyph)](https://CRAN.R-project.org/package=PieGlyph)
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
-The goal of PieGlyph is to create pie-scatter plots with pies invariant
-to plot dimensions to avoid any distortions of the pies.
+`PieGlyph` is an R package aimed at replacing points in a plot with
+pie-charts glyphs, showing the relative proportions of different
+categories. The pie-chart glyphs are invariant to the axes and plot
+dimensions to prevent distortions when the plot dimensions are changed.
 
 ## Installation
 
-You can install the development version of PieGlyph from
+You can install the development version of `PieGlyph` from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -21,160 +28,148 @@ devtools::install_github("rishvish/PieGlyph")
 
 ## Examples
 
-### Ecology example
+#### Load libraries
 
 ``` r
-########### Example from ecology
-
-### Create a pie-scatter plot of the response vs richness in an ecosystem with each pie representing the proportion of the different species in a particular community
-
-#install.packages(DImodels)
+library(tidyverse)
 library(PieGlyph)
-library(DImodels)
-library(tidyr)
-library(ggplot2)
-library(dplyr)
-
-## Load the data
-## This data consists of 4 species named p1, p2, p3 and p4 comprised of 15 communities with varying proportions of each species. Each of these 15 communities is then replicated across 4 blocking structures. The response can be assumed to be the yield of each community.
-data(sim1)
-species <- paste0('p',1:4)
-
-## Add richness (number of species) and evenness (measure of uniformity between species proportions) to the data and stack species proportions together for plotting
-plot_data <- sim1 %>%
-            filter(block %in% c(1,2)) %>%
-            mutate(Richness = rowSums(.[, species] != 0),
-                  Evenness = DI_data(prop = species, what = 'E', data = .)) %>%
-            pivot_longer(cols = all_of(species),
-                         names_to = 'Species', values_to = 'Prop')
-
-## Create a response vs richness plot with points replaced by pie glyphs depicting the proportions of the different species in the community
-ggplot(data = plot_data)+
-   geom_pie_glyph(aes(x = Richness, y = response, group = Evenness),
-                  categories = 'Species', values = 'Prop', colour = NA,
-                  position = position_dodge(1))+
-   facet_wrap(~block)+
-   labs(y = 'Response', x = 'Richness')+
-   theme_classic()
 ```
 
-![](man/figures/README-ecology-1.png)<!-- -->
-
-### Spatial data example
+#### Simulate raw data
 
 ``` r
-
-############# Spatial example
-
-### Creating a map of the US states with pie charts at the center of each state representing the proportions of arrests in the state across murder, rape, and assault
-
-#install.packages('maps')
-library(dplyr)
-library(ggplot2)
-
-## All datasets available in base R
-## Get latitude and longitude values for US states
-states <- map_data("state")
-
-## Data showing counts of arrests per 100,000 residents for assault, murder, and rape in each of the 50 US states in 1973
-arrests <- USArrests
-
-## Data showing the geographical center of US states
-centers <- state.center
-
-## Add state centers to arrests data
-arrests <- arrests %>% mutate(region = tolower(rownames(USArrests)),
-                              pie_lat = centers$y,
-                              pie_long = centers$x)
-## Merge map data with arrests data to get coordinates to place pie glyphs
-choro <- merge(states, arrests, sort = FALSE, by = "region")
-pie_data <- choro %>% group_by(region) %>% slice(1) %>%
-                      select(region, pie_lat, pie_long,
-                             Murder, Assault, Rape)
-
-## Create plot (Can also create without stacking the category values together)
-ggplot(states, aes(x = long, y = lat)) +
-  geom_polygon(aes(group = group),
-               fill = 'darkseagreen', colour = 'black')+
-  geom_pie_glyph(aes(y = pie_lat, x = pie_long),
-                 data = pie_data, categories = 4:6,
-                 radius = 1, colour = 'black', alpha = 0.7)+
-  coord_map("albers",  lat0 = 45.5, lat1 = 29.5)+
-  labs(x = 'Longitude', y ='Latitude')+
-  theme(panel.background = element_rect(fill = 'lightsteelblue2'))+
-  scale_fill_brewer(palette = 'Dark2')
+set.seed(123)
+plot_data <- data.frame(response = rnorm(30, 100, 30),
+                        system = 1:30,
+                        group = sample(size = 30, x = c('G1', 'G2', 'G3'), replace = T),
+                        A = round(runif(30, 3, 9), 2),
+                        B = round(runif(30, 1, 5), 2),
+                        C = round(runif(30, 3, 7), 2),
+                        D = round(runif(30, 1, 9), 2))
 ```
 
-![](man/figures/README-spatial-1.png)<!-- -->
-
-### Compositions example
+<p>
+The data has 30 observations and seven columns. `response` is a
+continuous variable measuring system output while `system` describes the
+30 individual systems of interest. Each system is placed in one of three
+groups shown in `group`. Columns `A`, `B`, `C`, and `D` measure system
+attributes.
+</p>
 
 ``` r
+head(plot_data)
+#>    response system group    A    B    C    D
+#> 1  83.18573      1    G1 5.80 1.57 4.78 8.31
+#> 2  93.09468      2    G3 6.07 3.76 3.87 8.21
+#> 3 146.76125      3    G1 6.60 3.48 5.01 3.19
+#> 4 102.11525      4    G2 5.00 4.57 4.42 3.57
+#> 5 103.87863      5    G1 5.93 3.69 5.60 8.89
+#> 6 151.45195      6    G1 8.73 3.95 4.50 5.96
+```
 
-############# Compositions example
+#### Create scatter plot with pie-charts
 
-### Create a lollipop plot showing relationship between probability of having a disease and the abundances of four different proteins in the blood
+<p>
+We can plot the outputs for each system as a scatterplot and replace the
+points with pie-chart glyphs showing the relative proportions of the
+four system attributes
+</p>
 
-#install.packages('compositions')
-library(dplyr)
-library(ggplot2)
-library(tidyr)
-library(forcats)
+#### Basic plot
 
-
-## Load data
-## This data records the proportions of the 4 serum proteins from blood samples of 30 patients, 14 with known disease A, 16 with known disease B, and 6 new cases.
-data("SerumProtein", package = 'compositions')
-
-## Fit Logistic regression model to assess relationship between probability of having disease A and the four protein types
-disease_data <- as_tibble(SerumProtein) %>%
-                     mutate(Type = factor(ifelse(Type == 1, 'Yes', 'No')))
-m1 <- glm(Type ~ a + b + c + d, data = disease_data,
-          family=binomial(link='logit'))
-summary(m1)
-#> 
-#> Call:
-#> glm(formula = Type ~ a + b + c + d, family = binomial(link = "logit"), 
-#>     data = disease_data)
-#> 
-#> Deviance Residuals: 
-#>      Min        1Q    Median        3Q       Max  
-#> -1.81195  -0.30675  -0.01756   0.37482   2.47650  
-#> 
-#> Coefficients:
-#>             Estimate Std. Error z value Pr(>|z|)  
-#> (Intercept)   -7.775     43.705  -0.178   0.8588  
-#> a              1.238     44.510   0.028   0.9778  
-#> b             92.429     62.862   1.470   0.1415  
-#> c             93.685     65.544   1.429   0.1529  
-#> d           -114.080     56.479  -2.020   0.0434 *
-#> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> 
-#> (Dispersion parameter for binomial family taken to be 1)
-#> 
-#>     Null deviance: 48.114  on 35  degrees of freedom
-#> Residual deviance: 21.092  on 31  degrees of freedom
-#> AIC: 31.092
-#> 
-#> Number of Fisher Scoring iterations: 7
-
-## Prepare data for plotting by adding the predicted probability of having the disease to the data and case number. The data is then arranged in descending order of the predicted probabilities and the marker proportions are stacked together for plotting
-plot_data <- disease_data %>%
-    mutate('prediction' = predict(m1, type = 'response'),
-           'n' = as.character(1:nrow(.))) %>%
-    arrange(desc(prediction)) %>%
-    mutate(n = fct_inorder(n)) %>%
-    pivot_longer(cols = c('a','b','c','d'), names_to = 'Marker',
-                 values_to = 'Proportion')
-
-## Create lollipop plot
-ggplot(data = plot_data, aes(x = n, y = prediction, fill = Marker))+
-  geom_segment(aes(yend = 0, xend = n))+
-  geom_pie_glyph(categories = 'Marker', values = 'Proportion',
-                 radius = 0.75, colour = 'black')+
-  labs(y = 'Prob(Having Disease)', x = 'Case')+
+``` r
+ggplot(data = plot_data, aes(x = system, y = response))+
+  geom_pie_glyph(categories = c('A', 'B', 'C', 'D'), data = plot_data)+
   theme_minimal()
 ```
 
-![](man/figures/README-compositions-1.png)<!-- -->
+<img src="man/figures/README-basic-1.png" style="display: block; margin: auto;" />
+
+#### Change pie radius and border colour
+
+``` r
+ggplot(data = plot_data, aes(x = system, y = response))+
+  # Can also specify categories as column indices
+  geom_pie_glyph(categories = 4:7, data = plot_data, colour = 'black', radius = 1)+ 
+  theme_minimal()
+```
+
+<img src="man/figures/README-border-1.png" style="display: block; margin: auto;" />
+
+#### Map size to a variable
+
+``` r
+p <- ggplot(data = plot_data, aes(x = system, y = response))+
+        geom_pie_glyph(aes(radius = group), 
+                       categories = c('A', 'B', 'C', 'D'), 
+                       data = plot_data, colour = 'black')+
+        theme_minimal()
+p
+```
+
+<img src="man/figures/README-map-1.png" style="display: block; margin: auto;" />
+
+#### Adjust radius for groups
+
+``` r
+p <- p + scale_radius_manual(values = c(0.5, 0.75, 1), unit = 'cm')
+p
+```
+
+<img src="man/figures/README-radius-1.png" style="display: block; margin: auto;" />
+
+#### Add custom labels
+
+``` r
+p <- p + labs(x = 'System', y = 'Response', fill = 'Attributes', radius = 'Group')
+p
+```
+
+<img src="man/figures/README-labels-1.png" style="display: block; margin: auto;" />
+
+#### Change category colours
+
+``` r
+p + scale_fill_manual(values = c('#56B4E9', '#CC79A7', '#F0E442', '#D55E00'))
+```
+
+<img src="man/figures/README-colours-1.png" style="display: block; margin: auto;" />
+
+### Alternative specification
+
+<p>
+The attributes can also be stacked into one column to generate the plot.
+The benefit of doing this is that we don’t need to specify the data
+again in the geom_pie_glyph function.
+</p>
+
+#### Stack the attributes in one column
+
+``` r
+plot_data_stacked <- plot_data %>% pivot_longer(cols = c('A','B','C','D'), 
+                                                names_to = 'Attributes', 
+                                                values_to = 'values')
+head(plot_data_stacked, 8)
+#> # A tibble: 8 × 5
+#>   response system group Attributes values
+#>      <dbl>  <int> <chr> <chr>       <dbl>
+#> 1     83.2      1 G1    A            5.8 
+#> 2     83.2      1 G1    B            1.57
+#> 3     83.2      1 G1    C            4.78
+#> 4     83.2      1 G1    D            8.31
+#> 5     93.1      2 G3    A            6.07
+#> 6     93.1      2 G3    B            3.76
+#> 7     93.1      2 G3    C            3.87
+#> 8     93.1      2 G3    D            8.21
+```
+
+#### Create plot
+
+``` r
+ggplot(data = plot_data_stacked, aes(x = system, y = response))+
+  # Along with categories column, values column is also needed now
+  geom_pie_glyph(categories = 'Attributes', values = 'values')+
+  theme_minimal()
+```
+
+<img src="man/figures/README-stacked-1.png" style="display: block; margin: auto;" />

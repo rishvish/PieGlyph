@@ -1,0 +1,134 @@
+---
+title: "Pie-chart lollipop plots"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{pie-lollipop-example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{css, echo = F}
+body {
+  text-align: justify;
+}
+
+p {
+  font-weight: 'normal';
+  font-size: '16px;
+  text-align: justify;
+}
+```
+
+<p>This example shows the use of `PieGlyph` package to create lollipop plots where the centre of the lollipop is replaced by a pie-chart showing proportion of different attributes.</p>
+
+<p>The example is set up to showcase that even if the attributes to be shown in the pie-charts are not in proportions or percentages, the function would calculate those automatically. Further the attributes don't always have to be in separate columns, they can also be stacked in one column with their corresponding values in another column.</p>
+
+### Load libraries
+```{r setup, message =F, warn = F, fig.align='center', fig.width=7}
+library(PieGlyph)
+library(tidyverse)
+```
+
+### Simulate fake data
+```{r data}
+model_data <- data.frame('ID' = paste0('P', 1:20),
+                         'A' = c(90, 60, 30, 75, 85, 
+                                 30, 50, 70, 65, 65, 
+                                 40, 115, 165, 40, 175, 
+                                 200, 185, 250, 190, 175),
+                         'B' = c(170, 180, 130, 325, 180,
+                                 220, 335, 285, 85, 125,
+                                 250, 190, 60, 205, 125, 
+                                 90, 95, 25, 60, 20),
+                         'C' = c(60, 35, 95, 50, 15, 
+                                 190, 15, 80, 310, 280, 
+                                 185, 115, 220, 190, 155, 
+                                 135, 180, 120, 100, 140),
+                         'D' = c(180, 225, 245, 50, 220, 
+                                 60, 100, 65, 40, 30, 
+                                 25, 80, 55, 65, 45,
+                                 75, 30, 105, 150, 165),
+                         'Disease' = factor(c(rep(c('Yes'), 10),
+                                              rep(c('No'), 10))))
+```
+
+<p> The data contains proportions of four protein markers in the blood for 20 different patients. `ID` is a unique identifier for each patients while columns `A`, `B`, `C`, and `D` describe the scores of each patient across the four markers and `disease` describes whether of not the patient has a disease</p>
+
+```{r data-subset, warn = F, fig.align='center', fig.width=7}
+head(model_data)
+```
+
+### Fit regression model
+
+<p> We fit a logistic regression model using the four protein markers as predictors for the probability of having the disease</p>
+```{r model, warning = F, fig.align='center', fig.width=7}
+m1 <- glm(Disease ~ A + B + C + D + 0,
+          data = model_data,
+          family = binomial(link = 'logit'))
+```
+
+<p> The model summary shows that marker `A` is significant in predicting the probability of having the disease.</p>
+```{r summary, warning = F, fig.align='center', fig.width=7}
+summary(m1)
+```
+
+### Model predictions
+<p>We can now predict the probability of a patient having the disease give their scores on the four protein markers.</p>
+
+<p>After making the predictions, the data is sorted in descending order of the probability of having the disease. Further the marker columns are stacked together into one column.</p>
+```{r predictions, warn = F, fig.align='center', fig.width=7}
+plot_data <- model_data %>%
+  # Add predictions
+  mutate('prediction' = predict(m1, type = 'response')) %>%
+  # Sort in descending order of prediction
+  arrange(desc(prediction)) %>% 
+  # Relevel ID for plotting in descending order
+  mutate(ID = fct_inorder(ID)) %>% 
+  # Stack the four markers in one column
+  pivot_longer(cols = c('A', 'B', 'C','D'), names_to = 'Marker',
+               values_to = 'Proportion')
+
+head(plot_data, 8)
+```
+
+### Bar plot
+<p>The probability of each patient in our sample having the disease can be visualised with a bar chart as follows.</p>
+```{r barplot, warn = F, fig.align='center', fig.width=7}
+ggplot(data = plot_data)+
+  geom_col(aes(x = ID, y = prediction))+
+  # Add axis titles
+  labs(y = 'Prob(Having Disease)', x = 'Patient')+
+  # Values to show on y-axis
+  scale_y_continuous(labels = c(0, 0.25, 0.5, 0.75, 1))+
+  theme_minimal()
+```
+
+### Lollipop plot with pie-charts
+
+<p>The bar plot is not that useful in this example as it gives only the probability of having the disease and gives no information about the model predictors (scores for protein markers in this case).</p>
+
+<p>We can improve this plot by converting it into a lollipop plot where the centre of the lollipop shows the proportions of the four protein markers. This enables us to view both, the response as well as the predictors for model simultaneously.</p>
+```{r lollipop, warn = F, fig.align='center', fig.width=7}
+ggplot(data = plot_data, aes(x = ID, y = prediction, fill = Marker))+
+  # Vertical line of lollipop
+  geom_segment(aes(yend = 0, xend = ID))+
+  # Pies-charts at the centre of the lollipop
+  geom_pie_glyph(categories = 'Marker', values = 'Proportion',
+                 radius = 0.6, colour = 'black')+
+  # Axis titles
+  labs(y = 'Prob(Having Disease)', x = 'Patient')+
+  # Colours for sectors of the pie-chart
+  scale_fill_manual(values = c('#56B4E9','#F0E442',
+                               '#D55E00','#CC79A7'))+
+  theme_minimal()
+```
+
+<br>
+<br>
