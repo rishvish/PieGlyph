@@ -1,0 +1,12 @@
+pandoc: '2.18'
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  compositions-example: compositions-example.html
+  pie-lollipop-example: pie-lollipop-example.html
+  PieGlyph: PieGlyph.html
+  spatial-example: spatial-example.html
+  time-series-example: time-series-example.html
+  unusual-situations: unusual-situations.html
+last_built: 2022-11-27T15:21Z
+
