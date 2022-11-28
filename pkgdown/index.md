@@ -37,7 +37,7 @@ You can install the development version of `PieGlyph` from
       geom_pie_glyph(categories = c('A', 'B', 'C', 'D'), data = plot_data)+
       theme_minimal()
 
-<img src="man/figures/README-basic-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/index-basic-1.png" style="display: block; margin: auto;" />
 
 ### Alternative specification
 
@@ -72,4 +72,4 @@ again in the geom\_pie\_glyph function.
       geom_pie_glyph(categories = 'Attributes', values = 'values')+
       theme_minimal()
 
-<img src="man/figures/README-stacked-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/index-stacked-1.png" style="display: block; margin: auto;" />
