@@ -61,10 +61,14 @@ plot_data <- data.frame(response = rnorm(15, 100, 30),
 
 #### Create plot
 
-```{r basic, fig.align='center', fig.width=8}
+```{r basic, fig.align='center', fig.width=8, eval = FALSE}
 ggplot(data = plot_data, aes(x = system, y = response))+
   geom_pie_glyph(categories = c('A', 'B', 'C', 'D'), data = plot_data)+
   theme_minimal()
+```
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('man/figures/README-basic-1.png')
 ```
 
 ### Alternative specification
@@ -82,9 +86,13 @@ head(plot_data_stacked, 8)
 
 #### Create plot
 
-```{r stacked, fig.align='center', fig.width=8}
+```{r stacked, fig.align='center', fig.width=8, eval=FALSE}
 ggplot(data = plot_data_stacked, aes(x = system, y = response))+
   # Along with categories column, values column is also needed now
   geom_pie_glyph(categories = 'Attributes', values = 'values')+
   theme_minimal()
+```
+
+```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
+knitr::include_graphics('man/figures/README-stacked-1.png')
 ```
