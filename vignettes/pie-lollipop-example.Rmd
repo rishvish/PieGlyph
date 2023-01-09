@@ -1,8 +1,10 @@
 ---
 title: "Pie-chart lollipop plots"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    check_title: FALSE
 vignette: >
-  %\VignetteIndexEntry{pie-lollipop-example}
+  %\VignetteIndexEntry{Pie-chart lollipop plots}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -31,7 +33,7 @@ p {
 <p>The example is set up to showcase that even if the attributes to be shown in the pie-charts are not in proportions or percentages, the function would calculate those automatically. Further the attributes don't always have to be in separate columns, they can also be stacked in one column with their corresponding values in another column.</p>
 
 ### Load libraries
-```{r setup, message =F, warn = F, fig.align='center', fig.width=7}
+```{r setup, message =F, warning = F, fig.align='center', fig.width=7}
 library(PieGlyph)
 library(tidyverse)
 ```
@@ -83,7 +85,7 @@ summary(m1)
 <p>We can now predict the probability of a patient having the disease give their scores on the four protein markers.</p>
 
 <p>After making the predictions, the data is sorted in descending order of the probability of having the disease. Further the marker columns are stacked together into one column.</p>
-```{r predictions, warn = F, fig.align='center', fig.width=7}
+```{r predictions, warning = F, fig.align='center', fig.width=7}
 plot_data <- model_data %>%
   # Add predictions
   mutate('prediction' = predict(m1, type = 'response')) %>%
@@ -120,8 +122,8 @@ ggplot(data = plot_data, aes(x = ID, y = prediction, fill = Marker))+
   # Vertical line of lollipop
   geom_segment(aes(yend = 0, xend = ID))+
   # Pies-charts at the centre of the lollipop
-  geom_pie_glyph(categories = 'Marker', values = 'Proportion',
-                 radius = 0.6, colour = 'black')+
+  geom_pie_glyph(slices = 'Marker', values = 'Proportion',
+                 radius = 0.3, colour = 'black')+
   # Axis titles
   labs(y = 'Prob(Having Disease)', x = 'Patient')+
   # Colours for sectors of the pie-chart
@@ -130,5 +132,3 @@ ggplot(data = plot_data, aes(x = ID, y = prediction, fill = Marker))+
   theme_minimal()
 ```
 
-<br>
-<br>

@@ -9,14 +9,19 @@ Authors@R:
 Description: This packages helps to replace the points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories. The pie glyphs are independent of the axes and plot dimensions, to prevent distortions when the plot dimensions are changed.
 License: GPL (>= 3)
 Encoding: UTF-8
-Imports: ggplot2, dplyr, tidyr, rlang, ggforce, forcats
+Imports: ggplot2, dplyr, tidyr, rlang, ggforce, forcats, plyr, grid, scales, cli, utils
 Suggests: 
     DImodels,
+    ranger,
     compositions,
     knitr,
-    rmarkdown
+    tidyverse,
+    rmarkdown,
+    ggnewscale,
+    metR,
+    scatterpie
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 URL: https://github.com/rishvish/PieGlyph
 BugReports: https://github.com/rishvish/PieGlyph/issues

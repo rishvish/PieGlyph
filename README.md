@@ -1,5 +1,16 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<style type="text/css">
+body {
+  text-align: justify;
+}
+
+p {
+  font-weight: 'normal';
+  font-size: '12px;
+  text-align: justify;
+}
+</style>
 
 # PieGlyph <img src="man/figures/logo.png" align="right" height="139" />
 
@@ -79,7 +90,7 @@ four system attributes
 
 ``` r
 ggplot(data = plot_data, aes(x = system, y = response))+
-  geom_pie_glyph(categories = c('A', 'B', 'C', 'D'), data = plot_data)+
+  geom_pie_glyph(slices = c('A', 'B', 'C', 'D'))+
   theme_minimal()
 ```
 
@@ -89,20 +100,20 @@ ggplot(data = plot_data, aes(x = system, y = response))+
 
 ``` r
 ggplot(data = plot_data, aes(x = system, y = response))+
-  # Can also specify categories as column indices
-  geom_pie_glyph(categories = 4:7, data = plot_data, colour = 'black', radius = 1)+ 
+  # Can also specify slices as column indices
+  geom_pie_glyph(slices = 4:7, colour = 'black', radius = 0.5)+ 
   theme_minimal()
 ```
 
 <img src="man/figures/README-border-1.png" style="display: block; margin: auto;" />
 
-#### Map size to a variable
+#### Map radius to a variable
 
 ``` r
 p <- ggplot(data = plot_data, aes(x = system, y = response))+
         geom_pie_glyph(aes(radius = group), 
-                       categories = c('A', 'B', 'C', 'D'), 
-                       data = plot_data, colour = 'black')+
+                       slices = c('A', 'B', 'C', 'D'), 
+                       colour = 'black')+
         theme_minimal()
 p
 ```
@@ -112,7 +123,7 @@ p
 #### Adjust radius for groups
 
 ``` r
-p <- p + scale_radius_manual(values = c(0.5, 0.75, 1), unit = 'cm')
+p <- p + scale_radius_manual(values = c(0.25, 0.5, 0.75), unit = 'cm')
 p
 ```
 
@@ -139,16 +150,18 @@ p + scale_fill_manual(values = c('#56B4E9', '#CC79A7', '#F0E442', '#D55E00'))
 
 <p>
 The attributes can also be stacked into one column to generate the plot.
-The benefit of doing this is that we don’t need to specify the data
-again in the geom_pie_glyph function.
+This variant of the function is useful for situations when the data is
+in tidy format. See `vignette('tidy-data')` and `vignette('pivot')` for
+more information.
 </p>
 
 #### Stack the attributes in one column
 
 ``` r
-plot_data_stacked <- plot_data %>% pivot_longer(cols = c('A','B','C','D'), 
-                                                names_to = 'Attributes', 
-                                                values_to = 'values')
+plot_data_stacked <- plot_data %>% 
+  pivot_longer(cols = c('A','B','C','D'), 
+               names_to = 'Attributes', 
+               values_to = 'values')
 head(plot_data_stacked, 8)
 #> # A tibble: 8 × 5
 #>   response system group Attributes values
@@ -168,7 +181,7 @@ head(plot_data_stacked, 8)
 ``` r
 ggplot(data = plot_data_stacked, aes(x = system, y = response))+
   # Along with categories column, values column is also needed now
-  geom_pie_glyph(categories = 'Attributes', values = 'values')+
+  geom_pie_glyph(slices = 'Attributes', values = 'values')+
   theme_minimal()
 ```
 

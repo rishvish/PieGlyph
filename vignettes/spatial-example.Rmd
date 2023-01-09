@@ -1,8 +1,10 @@
 ---
 title: "Spatial data example"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    check_title: FALSE
 vignette: >
-  %\VignetteIndexEntry{spatial-example}
+  %\VignetteIndexEntry{Spatial data example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -144,7 +146,7 @@ map +
   # Add pie-charts for each state
   geom_pie_glyph(aes(y = pie_lat, x = pie_long),
                  data = votes_data, colour = 'black',
-                 categories = c('Democratic','Republic','Other'))+
+                 slices = c('Democratic','Republic','Other'))+
   # Colours of the pie sectors
   scale_fill_manual(values = c('#047db7','#c52d25', 'grey'), name = 'Party')+
   # Different map projection
@@ -155,14 +157,11 @@ map +
 map + 
   # Add pie-charts for each state
   geom_pie_glyph(aes(y = pie_lat, x = pie_long),
-                 data = votes_data, colour = 'black', radius = 0.5,
-                 categories = c('Democratic','Republic','Other'))+
+                 data = votes_data, colour = 'black', radius = 0.25,
+                 slices = c('Democratic','Republic','Other'))+
   # Colours of the pie sectors
   scale_fill_manual(values = c('#047db7','#c52d25', 'grey'), name = 'Party')+
   # Different map projection
   coord_map('gnomonic')
 ```
 
-<br>
-
-<br>

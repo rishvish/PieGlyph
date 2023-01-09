@@ -1,8 +1,10 @@
 ---
 title: "Compositional data example"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    check_title: FALSE
 vignette: >
-  %\VignetteIndexEntry{compositions-example}
+  %\VignetteIndexEntry{Compositional data example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -27,6 +29,12 @@ p.note {
 }
 ```
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 <p>This example shows a use-case of the `PieGlyph` package with compositional data. These datasets contain non-negative values giving the relative information between different attributes of a particular system. There is also often a constant-sum (usually sum to 1) constraint on these values and they are often represented as proportions or percentages. </p>
 
 <p>The `PieGlyph` package work best with compositional data as pie-charts are good at showing relative proportions.</p>
@@ -63,11 +71,11 @@ head(raw_data)
 <p>We can visualise the raw data as a scatterplot of response vs community, where each point will be a pie-chart showing the proportions of the three species. </p>
 
 ```{r raw-data, warning = F, fig.align='center', fig.width=7, fig.height = 6}
-ggplot()+
+ggplot(data = raw_data)+
   # Pie-charts 
   geom_pie_glyph(aes(x = richness, y = response),
-                 categories = c('p1','p2','p3','p4','p5','p6'),
-                 colour = 'black', data = raw_data)+
+                 slices = c('p1','p2','p3','p4','p5','p6'),
+                 colour = 'black')+
   # Axis and legend titles
   labs(x = 'Richness', y = 'Response', fill = 'Species')+
   # Colours for segments of the pie-chart
@@ -116,7 +124,8 @@ summary(m1)
 
 ### Visualising model predictions
 
-##### Creating raw data for visualising the ternary diagram</p>
+<p> Creating raw data for visualising the ternary diagram</p>
+
 ```{r, ternary-data}
 # Create grid of points across 2-d space
 tern_data <- expand.grid(base=seq(0,1,l=100*2),
@@ -149,7 +158,7 @@ head(tern_data)
 
 ##### Ternary diagram with predictions across the 3-d simplex
 
-```{r ternary-plot, fig.width=7, fig.height=5.5}
+```{r ternary-plot, warning = F,fig.width=7, fig.height=5.5}
 # breaks for contour plot
 breaks <-  round(seq(min(tern_data$pred), max(tern_data$pred), length.out = 8), 1)
 
@@ -170,7 +179,7 @@ tern_plot <- ggplot(data = tern_data,
                                      yend = c(0, sqrt(3)/2, sqrt(3)/2), 
                                      pred = 0),
                  aes(x = x, y = y, xend=xend, yend=yend),
-                 size=1)+
+                 linewidth=1)+
       # Add labels for the ternary 
       geom_text(data = data.frame(base = c(0, 0.5, 1),
                                   high = c(0, sqrt(3)/2, 0),
@@ -212,8 +221,8 @@ tern_plot +
     # Add a new scale for colour the species proportions
     ggnewscale::new_scale_fill()+
     # Add a pie-chart for the selected communities
-    geom_pie_glyph(data = best_com, radius = 0.75,
-                   categories = c('p1','p2','p3','p4','p5','p6'), 
+    geom_pie_glyph(data = best_com, radius = 0.5,
+                   slices = c('p1','p2','p3','p4','p5','p6'), 
                    colour = 'black', alpha = .95)+
     # Colour the sectors of the pies
     scale_fill_manual(values = c('#8ecdf0','#156c9e',
@@ -240,8 +249,8 @@ tern_plot +
     # Add a new scale for colour the species proportions
     ggnewscale::new_scale_fill()+
     # Add a pie-chart for the selected communities
-    geom_pie_glyph(data = com_interest, radius = 0.75, 
-                   categories = c('p1','p2','p3','p4','p5','p6'), 
+    geom_pie_glyph(data = com_interest, radius = 0.5, 
+                   slices = c('p1','p2','p3','p4','p5','p6'), 
                    colour = 'black', alpha = .95)+
     # Colour the sectors of the pies
     scale_fill_manual(values = c('#8ecdf0', '#156c9e',
@@ -254,8 +263,3 @@ tern_plot +
 
 
 <p>This idea can be also generalized to other situations with compositional data, where we reduce the dimensionality of the data by taking linear combinations of the certain variables and then visualise those linear combinations to get a general idea about the data. We could then overlay the plot with pie-charts at specific locations to get information about the original dimensions of the data. This could help us to reduce the tradeoff between dimensionality reduction and axis-interpretablity and visualise high dimensional data more effectively.</p>
-
-<br>
-<br>
-
-

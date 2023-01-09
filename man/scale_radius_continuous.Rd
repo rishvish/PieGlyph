@@ -7,13 +7,13 @@
 \alias{scale_radius}
 \title{Scales for the pie glyph radius}
 \usage{
-scale_radius_discrete(..., range = c(0.5, 1.5), unit = "cm")
+scale_radius_discrete(..., range = c(0.25, 0.6), unit = "cm")
 
 scale_radius_manual(..., values, unit = "cm", breaks = waiver(), na.value = NA)
 
-scale_radius_continuous(..., range = c(0.5, 1.5), unit = "cm")
+scale_radius_continuous(..., range = c(0.25, 0.6), unit = "cm")
 
-scale_radius(..., range = c(0.5, 1.5), unit = "cm")
+scale_radius(..., range = c(0.25, 0.6), unit = "cm")
 }
 \arguments{
 \item{...}{
@@ -98,26 +98,24 @@ head(plot_data)
 
 
 ## Create plot
-p <- ggplot()+
+p <- ggplot(data = plot_data)+
     geom_pie_glyph(aes(x = x, y = y, radius = group),
-    categories = c('A', 'B', 'C', 'D'), colour = NA,
-    data = plot_data)+
+                   slices = c('A', 'B', 'C', 'D'))+
     labs(y = 'Response', x = 'System',
          fill = 'Attributes')+
     theme_classic()
 
-p + scale_radius_continuous(range = c(1, 2))
+p + scale_radius_continuous(range = c(0.5, 1))
 
 q <- ggplot(data = plot_data)+
     geom_pie_glyph(aes(x = x, y = y,
                        radius = as.factor(group)),
-                   categories = c('A', 'B', 'C', 'D'),
-                   colour = NA, data = plot_data)+
+                   slices = c('A', 'B', 'C', 'D'))+
     labs(y = 'Response', x = 'System',
          fill = 'Attributes', radius = 'Group')+
     theme_classic()
 
-q + scale_radius_discrete(range = c(0.1, 0.2), unit = 'in',
+q + scale_radius_discrete(range = c(0.05, 0.1), unit = 'in',
                           name = 'Group')
 
 q + scale_radius_manual(values = c(5, 20, 10), unit = 'mm',

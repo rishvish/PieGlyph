@@ -2,12 +2,12 @@
 % Please edit documentation in R/geom_pie_glyph.R
 \name{geom_pie_glyph}
 \alias{geom_pie_glyph}
-\title{Scatter plot with pie-chart glyphs}
+\title{Scatter plot with points replaced by axis-invariant pie-chart glyphs}
 \usage{
 geom_pie_glyph(
   mapping = NULL,
   data = NULL,
-  categories,
+  slices,
   values = NA,
   stat = "identity",
   position = "identity",
@@ -20,21 +20,24 @@ geom_pie_glyph(
 \arguments{
 \item{mapping}{Set of aesthetic (see Aesthetics below) mappings to be created by \code{\link[ggplot2:aes]{aes()}} or \code{\link[ggplot2:aes_]{aes_()}}. If specified and inherit.aes = TRUE (the default), it is combined with the default mapping at the top level of the plot. You must supply mapping if there is no plot mapping.}
 
-\item{data}{The data to be displayed in this layer of the plot. The default, \code{NULL}, inherits the plot data specified in the \code{\link[ggplot2:ggplot]{ggplot()}} call.}
+\item{data}{The data to be displayed in this layer of the plot. \cr
+The default, \code{NULL}, inherits the plot data specified in the \code{\link[ggplot2:ggplot]{ggplot()}} call. \cr
+A \code{data.frame}, or other object, will override the plot data. All objects will be fortified to produce a data frame. See \code{\link[ggplot2:fortify]{fortify()}} for which variables will be created. \cr
+A \code{function} will be called with a single argument, the plot data. The return value must be a \code{data.frame}, and will be used as the layer data. A \code{function} can be created from a \code{formula} (e.g. ~ \code{head(.x, 10)}).}
 
-\item{categories}{Each pie glyph in the plot shows the relative abundances of a set of categories; those categories are specified by this argument. The names of the categories can be stacked and contained in a single column (long format using \code{\link[tidyr:pivot_longer]{pivot_longer()}}) or can be the names of individual columns (wide format). The categories can also be specified as the numeric indices of the columns.}
+\item{slices}{Each pie glyph in the plot shows the relative abundances of a set of categories; those categories are specified by this argument and should contain numeric and non-negative values. The names of the categories can be the names of individual columns (wide format) or can be stacked and contained in a single column (long format using \code{\link[tidyr:pivot_longer]{pivot_longer()}}). The categories can also be specified as the numeric indices of the columns.}
 
-\item{values}{If the categories are stacked in one column, this parameter describes the column for the values of the categories shown in the pie glyphs. The values should be numeric and the proportions of the different categories within each observation will be calculated automatically. The default is \code{NA} assuming that the categories are in separate columns.}
+\item{values}{This parameter is not needed if the data is in wide format. The default is \code{NA} assuming that the categories are in separate columns. However, if the pie categories are stacked in one column, this parameter describes the column for the values of the categories shown in the pie glyphs. The values should be numeric and non-negative and the proportions of the different slices within each observation will be calculated automatically.}
 
-\item{stat}{The statistical transformation to use on the data for this layer, as a string}
+\item{stat}{The statistical transformation to use on the data for this layer, either as a \code{ggproto Geom} subclass or as a string naming the stat stripped of the \code{stat_} prefix (e.g. \code{"count"} rather than \code{"stat_count"})}
 
-\item{position}{Position adjustment to avoid overlapping of pie glyphs.}
+\item{position}{Position adjustment, either as a string naming the adjustment (e.g. \code{"jitter"} to use \code{position_jitter}), or the result of a call to a position adjustment function. Use the latter if you need to change the settings of the adjustment.}
 
-\item{na.rm}{If all categories for an observation are NA, the observation is dropped while if at least one category is not NA, the other categories are assumed to be 0. This parameter indicates whether the user is notified about these changes. If FALSE, the default, user is given a warning. If TRUE, observations are silently removed/modified to 0, without notifying the user.}
+\item{na.rm}{If all slices for an observation are \code{NA}, the observation is dropped while if at least one slice is not NA, the other slices are assumed to be 0. This parameter indicates whether the user is notified about these changes. If \code{FALSE}, the default, user is given a warning. If \code{TRUE}, observations are silently removed/modified to 0, without notifying the user.}
 
-\item{show.legend}{Logical. Should this layer be included in the legends? NA, the default, includes if any aesthetics are mapped. FALSE never includes, and TRUE always includes.}
+\item{show.legend}{Logical. Should this layer be included in the legends? \code{NA}, the default, includes if any aesthetics are mapped. \code{FALSE} never includes, and \code{TRUE} always includes.}
 
-\item{inherit.aes}{If FALSE, overrides the default aesthetics, rather than combining with them}
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather than combining with them}
 
 \item{...}{Other arguments passed on to layer(). These are often aesthetics, used to set an aesthetic to a fixed value, like colour = "red" or radius = 1. They may also be parameters to the paired geom/stat.}
 }
@@ -42,7 +45,7 @@ geom_pie_glyph(
 A ggplot layer
 }
 \description{
-This geom helps to replace the points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories. The pie glyphs are independent of the plot dimensions, so won't distort when the plot is scaled.
+This geom replaces the points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories. The pie-chart glyphs are independent of the plot dimensions, so won't distort when the plot is scaled. The ideal dataset for this geom would contain columns with non-negative values showing the magnitude of the different categories to be shown in the pie glyphs (The proportions of the different categories within the pie glyph will be calculated automatically). The different categories can also be stacked together into a single column according to the rules of tidy-data (see vignette('tidy-data') or vignette('pivot') for more information).
 }
 \section{Aesthetics}{
 
@@ -54,7 +57,9 @@ geom_pie_glyph understands the following aesthetics (required aesthetics are in 
 \item radius - adjust the radius of the pie glyphs (in cm)
 \item colour - specify colour of the border of pie glyphs
 \item linetype - specify style of pie glyph borders
-\item size - specify width of pie glyph borders (in mm)
+\item linewidth - specify width of pie glyph borders (in mm)
+\item group - specify grouping structure for the observations (see \code{\link[ggplot2:aes_group_order]{grouping}} for more details)
+\item pie_group - manually specify a grouping variable for separating pie-glyphs with identical x and y coordinates (see \code{vignette("unusual-situations")} for more information)
 }
 }
 
@@ -80,23 +85,23 @@ head(plot_data)
 
 ## Basic plot
 ggplot(data = plot_data, aes(x = system, y = response))+
-   geom_pie_glyph(categories = c('A', 'B', 'C', 'D'),
+   geom_pie_glyph(slices = c('A', 'B', 'C', 'D'),
                   data = plot_data)+
    theme_minimal()
 
 
 ## Change pie radius and border colour
 ggplot(data = plot_data, aes(x = system, y = response))+
-       # Can also specify categories as column indices
-       geom_pie_glyph(categories = 4:7, data = plot_data,
-                      colour = 'black', radius = 1)+
+       # Can also specify slices as column indices
+       geom_pie_glyph(slices = 4:7, data = plot_data,
+                      colour = 'black', radius = 0.5)+
        theme_minimal()
 
 
-## Map size to a variable
+## Map radius to a variable
 p <- ggplot(data = plot_data, aes(x = system, y = response))+
 geom_pie_glyph(aes(radius = group),
-            categories = c('A', 'B', 'C', 'D'),
+            slices = c('A', 'B', 'C', 'D'),
             data = plot_data, colour = 'black')+
             theme_minimal()
 p
@@ -108,7 +113,7 @@ p <- p + labs(x = 'System', y = 'Response',
 p
 
 
-## Change category colours
+## Change slice colours
 p + scale_fill_manual(values = c('#56B4E9', '#CC79A7',
                                  '#F0E442', '#D55E00'))
 
@@ -116,8 +121,9 @@ p + scale_fill_manual(values = c('#56B4E9', '#CC79A7',
 
 ##### Stack the attributes in one column
 # The attributes can also be stacked into one column to generate
-# the plot. The benefit of doing this is that we do not need to
-# specify the data again in the geom_pie_glyph function
+# the plot. This variant of the function is useful for situations
+# when the data is in tidy format. See vignette('tidy-data') and
+# vignette('pivot') for more information.
 
 plot_data_stacked <- plot_data \%>\%
                         pivot_longer(cols = c('A','B','C','D'),
@@ -127,7 +133,7 @@ head(plot_data_stacked, 8)
 
 
 ggplot(data = plot_data_stacked, aes(x = system, y = response))+
-  # Along with categories column, values column is also needed now
-  geom_pie_glyph(categories = 'Attributes', values = 'values')+
+  # Along with slices column, values column is also needed now
+  geom_pie_glyph(slices = 'Attributes', values = 'values')+
   theme_minimal()
 }

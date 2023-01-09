@@ -1,0 +1,90 @@
+---
+title: "Multinomial Classification"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Multinomial Classification}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{css, echo = F}
+body {
+  text-align: justify;
+}
+
+p {
+  font-weight: 'normal';
+  font-size: '16px;
+  text-align: justify;
+}
+
+p.note {
+  font-weight: 'normal';
+  font-size: '12px;
+  font-family: 'Serif';
+  text-align: justify;
+}
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+<p>This example presents the application of the PieGlyph package to show the predicted probabilities of different classes in a multinomial classification problem. This example could be useful for clustering problems which gives probabilities, e.g. `mclust`.</p>
+
+
+### Load libraries
+```{r setup, warning = F, message = FALSE}
+library(ranger)
+library(ggplot2)
+library(PieGlyph)
+library(dplyr)
+```
+
+### Load data
+
+<p>We are using `iris` dataset which gives the measurements of the sepal length, sepal width, petal length and petal width for 50 flowers from each of <i>Iris setosa, Iris versicolor, </i> and <i>Iris virginica </i></p>
+```{r data,warning = F, message = FALSE}
+head(iris)
+```
+
+### Classification model
+
+<p> We use the random forest algorithm for classifying the samples into the three species according to the four measurements described above.</p>
+
+```{r model, warning = F}
+rf <- ranger(Species ~ Petal.Length + Petal.Width + 
+                        Sepal.Length + Sepal.Width, 
+             data=iris, probability=TRUE)
+```
+
+<p>We get the predicted probabilities of each sample belonging to a particular species.</p>
+
+```{r predictions, warning = F}
+preds <- as.data.frame(predict(rf, iris)$predictions)
+head(preds)
+```
+
+<p>Combine the predicted probabilities with the original data for plotting</p>
+```{r plot_data, warning = F}
+plot_data <- cbind(iris, preds)
+head(plot_data)
+```
+
+### Create plot
+
+```{r prob-plot, warning = F, fig.align='center', fig.width=7}
+ggplot(data=plot_data,
+       aes(x=Sepal.Length, y=Sepal.Width))+
+  # Pies-charts showing predicted probabilities of the different species
+  geom_pie_glyph(slices = names(preds), colour = 'black')+
+  # Colours for sectors of the pie-chart
+  scale_fill_manual(values = c('#56B4E9', '#D55E00','#CC79A7'))+
+  # Labels for axes and legend
+  labs(y = 'Sepal Width', x = 'Sepal Length', fill = 'Prob (Species)')+
+  theme_minimal()
+```
+

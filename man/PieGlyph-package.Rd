@@ -4,9 +4,9 @@
 \name{PieGlyph-package}
 \alias{PieGlyph}
 \alias{PieGlyph-package}
-\title{PieGlyph: Axis invariant scatter pie plots}
+\title{PieGlyph: Creating scatter plots with points replaced with axis invariant pie-glyphs}
 \description{
-This packages helps to replace the points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories. The pie glyphs are independent of the axes and plot dimensions to prevent distortions when the plot dimensions are changed.
+This packages replaces the points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories (presented as columns with non-negative values in the dataset). The pie glyphs are independent of the axes and plot dimensions to prevent distortions when the plot dimensions are changed.
 }
 \examples{
 ## Load libraries
@@ -14,6 +14,7 @@ library(tidyverse)
 library(PieGlyph)
 
 ## Simulate raw data
+
 set.seed(123)
 plot_data <- data.frame(response = rnorm(30, 100, 30),
                         system = 1:30,
@@ -27,29 +28,55 @@ plot_data <- data.frame(response = rnorm(30, 100, 30),
 
 head(plot_data)
 
-## Basic plot
+## The data has 30 observations and seven columns. `response` is a continuous
+## variable measuring system output while `system` describes the 30
+## individual systems of interest. Each system is placed in one of three
+## groups shown in `group`. Columns `A`, `B`, `C`, and `D` measure system attributes.
+
+## Basic plot showing the outputs for each system as a scatterplot and
+## replacing the points with pie-chart glyphs showing the relative proportions
+## of the four system attributes
+
 ggplot(data = plot_data, aes(x = system, y = response))+
-   geom_pie_glyph(categories = c('A', 'B', 'C', 'D'),
-                  data = plot_data)+
+   geom_pie_glyph(slices = c('A', 'B', 'C', 'D'))+
    theme_minimal()
 
 
 ##### Stack the attributes in one column
-# The attributes can also be stacked into one column to generate
-# the plot. The benefit of doing this is that we do not need to
-# specify the data again in the geom_pie_glyph function
+## The four attributes can also be stacked and combined into one column
+## to generate the plot.
 
 plot_data_stacked <- plot_data \%>\%
                         pivot_longer(cols = c('A','B','C','D'),
                                      names_to = 'Attributes',
                                      values_to = 'values')
-head(plot_data_stacked, 8)
 
+## This is the same data as before, just that the four attributes
+## are combined into a single column, i.e. each system is now represented
+## by four rows instead of the one row from before.
+
+head(plot_data_stacked, 8)
+head(plot_data, 2)
+
+## This is the same plot as before showing a scatter plot of the different
+## systems and their outputs with pie-chart glyphs showing the proportions
+## of the different system attributes.
+
+## This version of the function is useful for situation when the data is in
+## tidy format. See vignette('tidy-data') and vignette('pivot') for more information.
 
 ggplot(data = plot_data_stacked, aes(x = system, y = response))+
-  # Along with categories column, values column is also needed now
-  geom_pie_glyph(categories = 'Attributes', values = 'values')+
+  # Along with slices column, values column is also needed now
+  geom_pie_glyph(slices = 'Attributes', values = 'values')+
   theme_minimal()
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/rishvish/PieGlyph}
+  \item Report bugs at \url{https://github.com/rishvish/PieGlyph/issues}
+}
+
 }
 \author{
 \strong{Maintainter}: Rishabh Vishwakarma \email{vishwakr@tcd.ie} (\href{https://orcid.org/0000-0002-4847-3494}{ORCID})
