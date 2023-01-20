@@ -1,16 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<style type="text/css">
-body {
-  text-align: justify;
-}
-
-p {
-  font-weight: 'normal';
-  font-size: '12px;
-  text-align: justify;
-}
-</style>
 
 # PieGlyph <img src="man/figures/logo.png" align="right" height="139" />
 

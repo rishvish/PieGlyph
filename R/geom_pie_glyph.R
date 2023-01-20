@@ -23,7 +23,7 @@ draw_key_pie <- function (data, params, size) {
   # Point legend (to show different radii)
   if(names(data)[1] == 'radius'){
     data$shape <- 19
-    radius <- data$radius*4
+    radius <- (data$radius)*10
     pointsGrob(0.5, 0.5,
                pch = data$shape,
                gp = gpar(col = alpha(data$colour %||% "black", data$alpha),
@@ -37,7 +37,7 @@ draw_key_pie <- function (data, params, size) {
     rectGrob(width = unit(1, "npc") - unit(lwd, "mm"),
              height = unit(1, "npc") - unit(lwd, "mm"),
              gp = gpar(col = data$colour %||%  NA,
-                       fill = alpha(data$fill %||% "grey20", data$alpha),
+                       fill = alpha(data$fill %||% "grey", data$alpha),
                        lty = data$linetype %||% 1,
                        lwd = (data$linewidth/3 %||% 0.5) * .pt,
                        linejoin = params$linejoin %||% "mitre",
@@ -50,7 +50,7 @@ draw_key_pie <- function (data, params, size) {
 #' @usage NULL
 #' @importFrom grid gpar viewport grobTree unit rectGrob pointsGrob grid.draw grid.newpage
 #' @importFrom tidyr pivot_longer pivot_wider %>%
-#' @importFrom dplyr mutate near distinct select
+#' @importFrom dplyr mutate near distinct select is.grouped_df ungroup all_of
 #' @importFrom plyr unrowname
 #' @importFrom stats as.formula
 #' @importFrom rlang sym syms !! !!!
@@ -437,6 +437,11 @@ setup_layer_data <- function(self, plot_data) {
     data <- self$data
   }
 
+  # If data is rowwise or if it is grouped then ungroup it
+  if(inherits(data, 'rowwise_df') | is.grouped_df(data)){
+    data <- data %>% ungroup()
+  }
+
   # Additional code for modifying data if it is in wide format
   slices <- self$params$slices
   values <- self$params$values
@@ -448,7 +453,7 @@ setup_layer_data <- function(self, plot_data) {
     }
     data <- data %>%
       mutate('pie_group' = factor(1:nrow(data))) %>%
-      tidyr::pivot_longer(cols = slices, names_to = 'Slices', values_to = 'Values')
+      tidyr::pivot_longer(cols = all_of(slices), names_to = 'Slices', values_to = 'Values')
     data$Slices <- fct_inorder(data$Slices)
   }
 

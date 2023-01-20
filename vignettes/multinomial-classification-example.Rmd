@@ -74,17 +74,39 @@ plot_data <- cbind(iris, preds)
 head(plot_data)
 ```
 
+<p>Add a column indicating whether the sample was classified correctly or not</p>
+
+```{r}
+plot_data <- plot_data %>% 
+              # Do operations on a row basis              
+              rowwise() %>% 
+              # Select the species with the highest predicted probability as the classified species
+              mutate(Predicted = colnames(.)[5 + which.max(c(setosa, versicolor, virginica))]) %>% 
+              # Compare whether the selected species is same as the original
+              mutate('Classification' = ifelse(Species == Predicted, 'Correct', 'Incorrect')) %>% 
+              ungroup()
+```
+
 ### Create plot
 
-```{r prob-plot, warning = F, fig.align='center', fig.width=7}
+<p>The plot shows a scatterplot of the sepal width and sepal length for the samples in the `iris` dataset. The predicted probabilities of belonging to a particular species for each sample are shown by the pie-chart glyphs. The borders of the pie charts show whether or not the sample was classified correctly.</p>
+
+```{r prob-plot, warning = F, fig.align='center', fig.height = 5, fig.width=7}
 ggplot(data=plot_data,
        aes(x=Sepal.Length, y=Sepal.Width))+
-  # Pies-charts showing predicted probabilities of the different species
-  geom_pie_glyph(slices = names(preds), colour = 'black')+
-  # Colours for sectors of the pie-chart
-  scale_fill_manual(values = c('#56B4E9', '#D55E00','#CC79A7'))+
-  # Labels for axes and legend
-  labs(y = 'Sepal Width', x = 'Sepal Length', fill = 'Prob (Species)')+
-  theme_minimal()
+       # Pies-charts showing predicted probabilities of the different species
+       # Using the pie-border to highlight if the same was classified correctly
+       geom_pie_glyph(aes(linetype = Classification,  colour = Classification), slices = names(preds)) +
+       # Colours for sectors of the pie-chart
+       scale_fill_manual(values = c('#56B4E9', '#D55E00','#CC79A7'))+
+       # Labels for axes and legend
+       labs(y = 'Sepal Width', x = 'Sepal Length', fill = 'Prob (Species)')+
+       # Adjusting the borders colours and linetypes 
+       scale_linetype_manual(values = c(1, 3))+
+       scale_colour_manual(values = c('black', 'white'))+
+       # Theme of the plot
+       theme_minimal()+
+       theme(panel.grid = element_line(colour = 'darkgrey'),
+             plot.background = element_rect(fill = 'grey', colour = NA))
 ```
 
