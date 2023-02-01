@@ -50,7 +50,7 @@ draw_key_pie <- function (data, params, size) {
 #' @usage NULL
 #' @importFrom grid gpar viewport grobTree unit rectGrob pointsGrob grid.draw grid.newpage
 #' @importFrom tidyr pivot_longer pivot_wider %>%
-#' @importFrom dplyr mutate near distinct select is.grouped_df ungroup all_of
+#' @importFrom dplyr mutate near distinct select is.grouped_df ungroup all_of group_by filter
 #' @importFrom plyr unrowname
 #' @importFrom stats as.formula
 #' @importFrom rlang sym syms !! !!!
@@ -318,7 +318,7 @@ is.waive <- utils::getFromNamespace('is.waive',
 #' ggplot(data = plot_data, aes(x = system, y = response))+
 #'    geom_pie_glyph(slices = c('A', 'B', 'C', 'D'),
 #'                   data = plot_data)+
-#'    theme_minimal()
+#'    theme_classic()
 #'
 #'
 #' ## Change pie radius and border colour
@@ -326,7 +326,7 @@ is.waive <- utils::getFromNamespace('is.waive',
 #'        # Can also specify slices as column indices
 #'        geom_pie_glyph(slices = 4:7, data = plot_data,
 #'                       colour = 'black', radius = 0.5)+
-#'        theme_minimal()
+#'        theme_classic()
 #'
 #'
 #' ## Map radius to a variable
@@ -334,7 +334,7 @@ is.waive <- utils::getFromNamespace('is.waive',
 #' geom_pie_glyph(aes(radius = group),
 #'             slices = c('A', 'B', 'C', 'D'),
 #'             data = plot_data, colour = 'black')+
-#'             theme_minimal()
+#'             theme_classic()
 #' p
 #'
 #'
@@ -366,7 +366,7 @@ is.waive <- utils::getFromNamespace('is.waive',
 #' ggplot(data = plot_data_stacked, aes(x = system, y = response))+
 #'   # Along with slices column, values column is also needed now
 #'   geom_pie_glyph(slices = 'Attributes', values = 'values')+
-#'   theme_minimal()
+#'   theme_classic()
 geom_pie_glyph <- function(mapping = NULL, data = NULL, slices, values = NA,
                            stat = "identity", position = "identity", na.rm = FALSE,
                            show.legend = NA, inherit.aes = TRUE, ...) {

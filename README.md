@@ -12,7 +12,7 @@ stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://
 <!-- badges: end -->
 
 `PieGlyph` is an R package aimed at replacing points in a plot with
-pie-charts glyphs, showing the relative proportions of different
+pie-chart glyphs, showing the relative proportions of different
 categories. The pie-chart glyphs are invariant to the axes and plot
 dimensions to prevent distortions when the plot dimensions are changed.
 
@@ -80,7 +80,7 @@ four system attributes
 ``` r
 ggplot(data = plot_data, aes(x = system, y = response))+
   geom_pie_glyph(slices = c('A', 'B', 'C', 'D'))+
-  theme_minimal()
+  theme_classic()
 ```
 
 <img src="man/figures/README-basic-1.png" style="display: block; margin: auto;" />
@@ -91,7 +91,7 @@ ggplot(data = plot_data, aes(x = system, y = response))+
 ggplot(data = plot_data, aes(x = system, y = response))+
   # Can also specify slices as column indices
   geom_pie_glyph(slices = 4:7, colour = 'black', radius = 0.5)+ 
-  theme_minimal()
+  theme_classic()
 ```
 
 <img src="man/figures/README-border-1.png" style="display: block; margin: auto;" />
@@ -103,7 +103,7 @@ p <- ggplot(data = plot_data, aes(x = system, y = response))+
         geom_pie_glyph(aes(radius = group), 
                        slices = c('A', 'B', 'C', 'D'), 
                        colour = 'black')+
-        theme_minimal()
+        theme_classic()
 p
 ```
 
@@ -171,7 +171,7 @@ head(plot_data_stacked, 8)
 ggplot(data = plot_data_stacked, aes(x = system, y = response))+
   # Along with categories column, values column is also needed now
   geom_pie_glyph(slices = 'Attributes', values = 'values')+
-  theme_minimal()
+  theme_classic()
 ```
 
 <img src="man/figures/README-stacked-1.png" style="display: block; margin: auto;" />

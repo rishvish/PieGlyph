@@ -54,7 +54,6 @@
     <a class="dropdown-item" href="../articles/time-series-example.html">Time-series example</a>
     <a class="dropdown-item" href="../articles/spatial-example.html">Spatial data example</a>
     <a class="dropdown-item" href="../articles/pie-lollipop-example.html">Pie-chart lollipop plots</a>
-    <a class="dropdown-item" href="../articles/compositions-example.html">Compositional data example</a>
     <a class="dropdown-item" href="../articles/multinomial-classification-example.html">Multinomial Classification</a>
     <a class="dropdown-item" href="../articles/unusual-situations.html">Unusual Situations</a>
   </div>
@@ -109,21 +108,25 @@ lollipop plots where the centre of the lollipop is replaced by a
 pie-chart showing proportion of different attributes.
 </p>
 <p>
-The example is set up to showcase that even if the attributes to be
-shown in the pie-charts are not in proportions or percentages, the
-function would calculate those automatically. Further the attributes
-don’t always have to be in separate columns, they can also be stacked in
-one column with their corresponding values in another column.
+This examples highlights that proportions or percentages are not
+required for the attribute values in the raw data; the package will take
+counts or other attribute values and automatically convert them to
+proportions to generate the graph. Further, the attributes don’t always
+have to be in separate columns, they can also be stacked in one column
+with their corresponding values in another column.
 </p>
 <div class="section level3">
 <h3 id="load-libraries">Load libraries<a class="anchor" aria-label="anchor" href="#load-libraries"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rishvish/PieGlyph" class="external-link">PieGlyph</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://forcats.tidyverse.org/" class="external-link">forcats</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="simulate-fake-data">Simulate fake data<a class="anchor" aria-label="anchor" href="#simulate-fake-data"></a>
+<h3 id="create-fake-data">Create fake data<a class="anchor" aria-label="anchor" href="#create-fake-data"></a>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="st">'ID'</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'P'</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span>,</span>
@@ -151,7 +154,7 @@ The data contains proportions of four protein markers in the blood for
 patients while columns <code>A</code>, <code>B</code>, <code>C</code>,
 and <code>D</code> describe the scores of each patient across the four
 markers and <code>disease</code> describes whether of not the patient
-has a disease
+has a disease.
 </p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">model_data</span><span class="op">)</span></span>
@@ -164,14 +167,14 @@ has a disease
 <span><span class="co">#&gt; 6 P6 30 220 190  60     Yes</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="fit-regression-model">Fit regression model<a class="anchor" aria-label="anchor" href="#fit-regression-model"></a>
+<h3 id="fit-logistic-regression-model">Fit logistic regression model<a class="anchor" aria-label="anchor" href="#fit-logistic-regression-model"></a>
 </h3>
 <p>
-We fit a logistic regression model using the four protein markers as
-predictors for the probability of having the disease
+We fit a logistic regression model with no intercept using the four
+protein markers as predictors for the probability of having the disease.
 </p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">Disease</span> <span class="op">~</span> <span class="va">A</span> <span class="op">+</span> <span class="va">B</span> <span class="op">+</span> <span class="va">C</span> <span class="op">+</span> <span class="va">D</span> <span class="op">+</span> <span class="fl">0</span>,</span>
+<code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">Disease</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="va">A</span> <span class="op">+</span> <span class="va">B</span> <span class="op">+</span> <span class="va">C</span> <span class="op">+</span> <span class="va">D</span>,</span>
 <span>          data <span class="op">=</span> <span class="va">model_data</span>,</span>
 <span>          family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">'logit'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>
@@ -182,7 +185,7 @@ predicting the probability of having the disease.
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; glm(formula = Disease ~ A + B + C + D + 0, family = binomial(link = "logit"), </span></span>
+<span><span class="co">#&gt; glm(formula = Disease ~ 0 + A + B + C + D, family = binomial(link = "logit"), </span></span>
 <span><span class="co">#&gt;     data = model_data)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Deviance Residuals: </span></span>
@@ -251,12 +254,11 @@ The probability of each patient in our sample having the disease can be
 visualised with a bar chart as follows.
 </p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">plot_data</span><span class="op">)</span><span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="co"># Filtering the data as each prediction is replicated 4 times, once for each marker </span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">plot_data</span>, <span class="va">Marker</span> <span class="op">==</span> <span class="st">'A'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ID</span>, y <span class="op">=</span> <span class="va">prediction</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="co"># Add axis titles</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">'Prob(Having Disease)'</span>, x <span class="op">=</span> <span class="st">'Patient'</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="co"># Values to show on y-axis</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pie-lollipop-example_files/figure-html/barplot-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>

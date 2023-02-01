@@ -27,7 +27,7 @@ p {
 }
 ```
 
-<p>This example is one of the most useful applications of scatter pie-charts. Sections (states, counties, countries, etc.) on a map are overlaid with pie charts that show the proportions of specific attributes of the particular region on the map.</p>
+<p>In this example we illustrate the capabilities of the `PieGlyph` package to overlay pie-chart glyphs on a map to illustrate spatial patterns in attributes.</p>
 
 <p>We show an example where the proportion of votes received by the Republic and Democratic parties in each US state is show for a hypothetical election.</p>
 
@@ -35,9 +35,9 @@ p {
 
 ### Load Packages
 ```{r setup, warning=F, message=F}
-library(scatterpie)
 library(PieGlyph)
-library(tidyverse)
+library(ggplot2)
+library(dplyr)
 ```
 
 ### Create data
@@ -77,7 +77,7 @@ votes_data <- votes_data %>%
 votes_data <- votes_data %>% filter(State %in% unique(states_boundaries$region))
 ```
 
-<p>The dataset contains 48 rows describing the percentage of votes different parties got in the respective state. `State` describes the state name, `Democaratic`, `Republic` and `Other` describe the percent of votes the parties got in the state. `pie_lat` and `pie_long` describe the geographical centre of each state (this is where the pie will be placed on the plot).  
+<p>The dataset contains 48 rows describing the percentage of votes different parties got in the respective state. `State` describes the state name, `Democaratic`, `Republic` and `Other` describe the percent of votes the parties got in the state. `pie_lat` and `pie_long` describe the geographical centre of each state (this is where the pie will be placed on the plot). </p>  
 
 ```{r votes_data}
 head(votes_data)
@@ -101,66 +101,29 @@ map
 ```
 
 ##### Add pie charts showing proportion of votes for different in each states
-```{r scatter, warning = F, fig.align='center', fig.width=7}
-map + 
-  # Add pie-charts for each state
-  geom_scatterpie(aes(y = pie_lat, x = pie_long),
-                  data = votes_data,
-                  cols = c('Democratic','Republic','Other'))+
-  # Colours of the pie sectors
-  scale_fill_manual(values = c('#047db7','#c52d25', 'grey'), name = 'Party')+
-  # Fix aspect ratio of plot
-  coord_fixed()
 
-```
-
-<p>As mentioned before, this works perfectly fine with other functions. However, we still need to use coord_fixed to fix the pie-charts. Further, if the user wishes to use a different map projection, the pie-charts will change dimensions depending on the projection</p>
-
-```{r scatter-albers, warning = F, fig.align='center', fig.width=7}
-map + 
-  # Add pie-charts for each state
-  geom_scatterpie(aes(y = pie_lat, x = pie_long),
-                  data = votes_data,
-                  cols = c('Democratic','Republic','Other'))+
-  # Colours of the pie sectors
-  scale_fill_manual(values = c('#047db7','#c52d25', 'grey'), name = 'Party')+
-  # Different map projection
-  coord_map("albers", lat0 = 45.5, lat1 = 29.5)
-```
-
-```{r scatter-gnomonic, warning = F, fig.align='center', fig.width=7}
-map + 
-  # Add pie-charts for each state
-  geom_scatterpie(aes(y = pie_lat, x = pie_long),
-                  data = votes_data,
-                  cols = c('Democratic','Republic','Other'))+
-  # Colours of the pie sectors
-  scale_fill_manual(values = c('#047db7','#c52d25', 'grey'), name = 'Party')+
-  # Different map projection
-  coord_map("gnomonic")
-```
-
-<p>As the pie-charts are created independent of the axes and plot dimensions in `PieGlyph`, they are unaffected by any change in the map projection</p>
-```{r glyph-albers, warning = F, fig.align='center', fig.width=7}
-map + 
+```{r glyph-merc, warning = F, fig.align='center', fig.width=7, warning = F}
+plot <- map + 
   # Add pie-charts for each state
   geom_pie_glyph(aes(y = pie_lat, x = pie_long),
                  data = votes_data, colour = 'black',
                  slices = c('Democratic','Republic','Other'))+
   # Colours of the pie sectors
   scale_fill_manual(values = c('#047db7','#c52d25', 'grey'), name = 'Party')+
+  # Place legend on top of the plot
+  theme(legend.position = 'top')
+plot
+```
+
+<p>As the pie-charts are created independent of the axes and plot dimensions in `PieGlyph`, they are unaffected by any change in the map projection</p>
+```{r glyph-albers, warning = F, fig.align='center', fig.width=7, warning = F, message = F}
+plot +
   # Different map projection
   coord_map('albers', lat0 = 45.5, lat1 = 29.5)
 ```
 
-```{r glyph-gnomonic, warning = F, fig.align='center', fig.width=7}
-map + 
-  # Add pie-charts for each state
-  geom_pie_glyph(aes(y = pie_lat, x = pie_long),
-                 data = votes_data, colour = 'black', radius = 0.25,
-                 slices = c('Democratic','Republic','Other'))+
-  # Colours of the pie sectors
-  scale_fill_manual(values = c('#047db7','#c52d25', 'grey'), name = 'Party')+
+```{r glyph-gnomonic, warning = F, fig.align='center', fig.width=7, warning = F, message = F}
+plot +
   # Different map projection
   coord_map('gnomonic')
 ```

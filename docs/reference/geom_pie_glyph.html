@@ -30,7 +30,6 @@
     <a class="dropdown-item" href="../articles/time-series-example.html">Time-series example</a>
     <a class="dropdown-item" href="../articles/spatial-example.html">Spatial data example</a>
     <a class="dropdown-item" href="../articles/pie-lollipop-example.html">Pie-chart lollipop plots</a>
-    <a class="dropdown-item" href="../articles/compositions-example.html">Compositional data example</a>
     <a class="dropdown-item" href="../articles/multinomial-classification-example.html">Multinomial Classification</a>
     <a class="dropdown-item" href="../articles/unusual-situations.html">Unusual Situations</a>
   </div>
@@ -183,7 +182,7 @@ A <code>function</code> will be called with a single argument, the plot data. Th
 <span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">plot_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">system</span>, y <span class="op">=</span> <span class="va">response</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span></span>
 <span class="r-in"><span>   <span class="fu">geom_pie_glyph</span><span class="op">(</span>slices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'A'</span>, <span class="st">'B'</span>, <span class="st">'C'</span>, <span class="st">'D'</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                  data <span class="op">=</span> <span class="va">plot_data</span><span class="op">)</span><span class="op">+</span></span></span>
-<span class="r-in"><span>   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="geom_pie_glyph-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
@@ -192,7 +191,7 @@ A <code>function</code> will be called with a single argument, the plot data. Th
 <span class="r-in"><span>       <span class="co"># Can also specify slices as column indices</span></span></span>
 <span class="r-in"><span>       <span class="fu">geom_pie_glyph</span><span class="op">(</span>slices <span class="op">=</span> <span class="fl">4</span><span class="op">:</span><span class="fl">7</span>, data <span class="op">=</span> <span class="va">plot_data</span>,</span></span>
 <span class="r-in"><span>                      colour <span class="op">=</span> <span class="st">'black'</span>, radius <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">+</span></span></span>
-<span class="r-in"><span>       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="geom_pie_glyph-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
@@ -201,7 +200,7 @@ A <code>function</code> will be called with a single argument, the plot data. Th
 <span class="r-in"><span><span class="fu">geom_pie_glyph</span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="va">group</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>            slices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'A'</span>, <span class="st">'B'</span>, <span class="st">'C'</span>, <span class="st">'D'</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>            data <span class="op">=</span> <span class="va">plot_data</span>, colour <span class="op">=</span> <span class="st">'black'</span><span class="op">)</span><span class="op">+</span></span></span>
-<span class="r-in"><span>            <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>            <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p</span></span></span>
 <span class="r-plt img"><img src="geom_pie_glyph-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -247,7 +246,7 @@ A <code>function</code> will be called with a single argument, the plot data. Th
 <span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">plot_data_stacked</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">system</span>, y <span class="op">=</span> <span class="va">response</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="co"># Along with slices column, values column is also needed now</span></span></span>
 <span class="r-in"><span>  <span class="fu">geom_pie_glyph</span><span class="op">(</span>slices <span class="op">=</span> <span class="st">'Attributes'</span>, values <span class="op">=</span> <span class="st">'values'</span><span class="op">)</span><span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="geom_pie_glyph-6.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

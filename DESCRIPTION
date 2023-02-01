@@ -11,15 +11,10 @@ License: GPL (>= 3)
 Encoding: UTF-8
 Imports: ggplot2, dplyr, tidyr, rlang, ggforce, forcats, plyr, grid, scales, cli, utils
 Suggests: 
-    DImodels,
     ranger,
-    compositions,
     knitr,
     tidyverse,
-    rmarkdown,
-    ggnewscale,
-    metR,
-    scatterpie
+    rmarkdown
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr

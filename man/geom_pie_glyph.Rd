@@ -87,7 +87,7 @@ head(plot_data)
 ggplot(data = plot_data, aes(x = system, y = response))+
    geom_pie_glyph(slices = c('A', 'B', 'C', 'D'),
                   data = plot_data)+
-   theme_minimal()
+   theme_classic()
 
 
 ## Change pie radius and border colour
@@ -95,7 +95,7 @@ ggplot(data = plot_data, aes(x = system, y = response))+
        # Can also specify slices as column indices
        geom_pie_glyph(slices = 4:7, data = plot_data,
                       colour = 'black', radius = 0.5)+
-       theme_minimal()
+       theme_classic()
 
 
 ## Map radius to a variable
@@ -103,7 +103,7 @@ p <- ggplot(data = plot_data, aes(x = system, y = response))+
 geom_pie_glyph(aes(radius = group),
             slices = c('A', 'B', 'C', 'D'),
             data = plot_data, colour = 'black')+
-            theme_minimal()
+            theme_classic()
 p
 
 
@@ -135,5 +135,5 @@ head(plot_data_stacked, 8)
 ggplot(data = plot_data_stacked, aes(x = system, y = response))+
   # Along with slices column, values column is also needed now
   geom_pie_glyph(slices = 'Attributes', values = 'values')+
-  theme_minimal()
+  theme_classic()
 }

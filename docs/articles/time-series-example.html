@@ -54,7 +54,6 @@
     <a class="dropdown-item" href="../articles/time-series-example.html">Time-series example</a>
     <a class="dropdown-item" href="../articles/spatial-example.html">Spatial data example</a>
     <a class="dropdown-item" href="../articles/pie-lollipop-example.html">Pie-chart lollipop plots</a>
-    <a class="dropdown-item" href="../articles/compositions-example.html">Compositional data example</a>
     <a class="dropdown-item" href="../articles/multinomial-classification-example.html">Multinomial Classification</a>
     <a class="dropdown-item" href="../articles/unusual-situations.html">Unusual Situations</a>
   </div>
@@ -103,16 +102,16 @@ p {
 }
 </style>
 <p>
-This example shows the use of the use of the <code>PieGlyph</code>
-package to replace the points in a time series plot with pie charts
-showing the proportions of different variables. Generally, time series
-plots don’t have an aspect ratio of 1 as the width of the plot is very
-large compared to the height. Due to this wide nature of time series
-plots previous attempts at adding pie-charts in the plot either resulted
-in the pie-charts getting converted into ellipses or forced the user to
-make the plot have equal dimensions, resulting in plots becoming
-squashed between white space. Both these approaches cause problems when
-interpreting from the plots.
+This example shows the use of <code>PieGlyph</code> package to replace
+the points in a time series plot with pie charts showing the proportions
+of different variables. Generally, time series plots don’t have an
+aspect ratio of 1 as the width of the plot is very large compared to the
+height. Due to this wide nature of time series plots previous attempts
+at adding pie-charts to the plot resulted in the circular pie-charts
+getting flattened into ellipses. This could be rectified by forcing the
+user to make the plot have equal dimensions, however that caused more
+problems as the resultant plots then became squashed between white
+space. These issues rendered the plots uninterpretable.
 </p>
 <p>
 The <code>PieGlyph</code> package attempts to solve this problem by
@@ -123,12 +122,11 @@ ellipses and also wouldn’t get scaled along with the plot dimensions.
 <h3 id="load-packages">Load Packages<a class="anchor" aria-label="anchor" href="#load-packages"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">scatterpie</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rishvish/PieGlyph" class="external-link">PieGlyph</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rishvish/PieGlyph" class="external-link">PieGlyph</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="simulate-data">Simulate data<a class="anchor" aria-label="anchor" href="#simulate-data"></a>
+<h3 id="load-data">Load data<a class="anchor" aria-label="anchor" href="#load-data"></a>
 </h3>
 <p>
 The data used for this example is the Seatbelts data which shows the
@@ -146,17 +144,17 @@ from Jan 1969 to Dec 1984 in Great Britain.
 <span><span class="co">#&gt; 5           119    1632   991  454 11823   0.1010197        10   0 1969.333</span></span>
 <span><span class="co">#&gt; 6           106    1511   945  427 12391   0.1005812        13   0 1969.417</span></span></code></pre></div>
 <p>
-The variable <code>DriversKillled</code> gives the number of car drivers
-in each month killed over the 15 years, <code>drivers</code> describes
-the number of car drivers killed or seriously injured,
-<code>front</code> gives the number of front-seat passengers killed or
-seriously injured and <code>rear</code> gives the number of rear-seat
-passengers killed or seriously injured. <code>VanKilled</code> contains
-the number of van (‘light goods vehicle’) drivers killed in each month.
-<code>kms</code> gives the number of kilometers driven in the particular
-month while <code>PetrolPrice</code> contains the price of petrol in
-that month. <code>law</code> describes whether or not it was compulsory
-to wear seat belts in that month.
+For each month over the 15 years the variables
+<code>DriversKillled</code> gives the number of car drivers killed,
+<code>drivers</code> describes the number of car drivers killed or
+seriously injured, <code>front</code> gives the number of front-seat
+passengers killed or seriously injured and <code>rear</code> gives the
+number of rear-seat passengers killed or seriously injured,
+<code>VanKilled</code> contains the number of van (‘light goods
+vehicle’) drivers killed, <code>kms</code> gives the number of
+kilometers driven in the particular month while <code>PetrolPrice</code>
+contains the price of petrol. Finally, <code>law</code> describes
+whether or not it was compulsory to wear seat belts.
 </p>
 <p>
 For the visualisation we’ll be using a subset of the Seatbelts data from
@@ -177,41 +175,14 @@ The number of kilometers driven in each month changes over time. It
 would be difficult to visualise this change over time whilst also
 showing the proportion of drivers/passengers injured over the time
 period using a simple time series plot. However, if we replace the
-points in the plot with pie-charts we can simultaneously visualise both,
-the distance travelled and the proportion of injuries over time.
+points in the plot with pie-charts we can simultaneously visualise both
+the distance traveled and the proportion of injuries over time.
 </p>
 </div>
 <div class="section level3">
 <h3 id="create-plots">Create Plots<a class="anchor" aria-label="anchor" href="#create-plots"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">plot_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">kms</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
-<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/pkg/scatterpie/man/geom_scatterpie.html" class="external-link">geom_scatterpie</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">kms</span><span class="op">)</span>, </span>
-<span>                        colour <span class="op">=</span> <span class="st">'black'</span>, </span>
-<span>                        data <span class="op">=</span> <span class="va">plot_data</span>,</span>
-<span>                        cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'drivers'</span>,<span class="st">'front'</span>, <span class="st">'rear'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">p</span></span></code></pre></div>
-<p><img src="time-series-example_files/figure-html/scatterpie-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>
-As expected, due to the plot dimensions, the individual pies are heavily
-squished and it is difficult to read the proportions of the different
-attributes. A common suggestion in these cases is to use the function
-<code><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_equal()</a></code>, which forces the plot width and height to be
-equal causing the pies to represented as circles. This works fine in
-some cases, but often it further aggravates the problems and renders the
-plot uninterpretable as shown below.
-</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_equal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="time-series-example_files/figure-html/scatterpie-fixed-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>
-PieGlyph fixes this problem by creating the pie charts independently of
-the plot axes and thus the plot dimensions have no effects on the pie
-charts
-</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">plot_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">kms</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>        <span class="co"># Add the lines joining the pie-charts</span></span>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span></span>
@@ -223,10 +194,10 @@ charts
 <span><span class="va">pl</span>    </span></code></pre></div>
 <p><img src="time-series-example_files/figure-html/Pie-glyph-plot-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>
-We can also adjust visualise the months where the seatbelt law was in
-effect, by mapping them to the pie-borders.
+We can also highlight the months where the seatbelt law was in effect,
+by mapping them to the pie-borders.
 </p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">plot_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">kms</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>        <span class="co"># Add the lines joining the pie-charts</span></span>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span></span>
@@ -244,9 +215,9 @@ effect, by mapping them to the pie-borders.
 <p><img src="time-series-example_files/figure-html/pie-borders-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>
 We can then adjust any aesthetics of our choice in the plot using the
-usual ggplot functions
+usual ggplot functions.
 </p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pl</span> <span class="op">+</span> </span>
 <span>  <span class="co"># Colours of the pie-sectors</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'#56B4E9'</span>,<span class="st">'#F0E442'</span>,<span class="st">'#CC79A7'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>

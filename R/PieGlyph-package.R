@@ -6,13 +6,15 @@
 #' **Maintainter**: Rishabh Vishwakarma \email{vishwakr@@tcd.ie} (\href{https://orcid.org/0000-0002-4847-3494}{ORCID})
 #'
 #' Authors:
-#' - Catherine Hurley
 #' - Caroline Brophy
+#' - Catherine Hurley
 #'
 #' @examples
 #' ## Load libraries
-#' library(tidyverse)
+#' library(dplyr)
+#' library(tidyr)
 #' library(PieGlyph)
+#' library(ggplot2)
 #'
 #' ## Simulate raw data
 #'

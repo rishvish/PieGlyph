@@ -54,7 +54,6 @@
     <a class="dropdown-item" href="../articles/time-series-example.html">Time-series example</a>
     <a class="dropdown-item" href="../articles/spatial-example.html">Spatial data example</a>
     <a class="dropdown-item" href="../articles/pie-lollipop-example.html">Pie-chart lollipop plots</a>
-    <a class="dropdown-item" href="../articles/compositions-example.html">Compositional data example</a>
     <a class="dropdown-item" href="../articles/multinomial-classification-example.html">Multinomial Classification</a>
     <a class="dropdown-item" href="../articles/unusual-situations.html">Unusual Situations</a>
   </div>
@@ -103,10 +102,9 @@ p {
 }
 </style>
 <p>
-This example is one of the most useful applications of scatter
-pie-charts. Sections (states, counties, countries, etc.) on a map are
-overlaid with pie charts that show the proportions of specific
-attributes of the particular region on the map.
+In this example we illustrate the capabilities of the
+<code>PieGlyph</code> package to overlay pie-chart glyphs on a map to
+illustrate spatial patterns in attributes.
 </p>
 <p>
 We show an example where the proportion of votes received by the
@@ -124,9 +122,9 @@ into ellipses. <code>PieGlyph</code> offers a solution to this problem.
 <h3 id="load-packages">Load Packages<a class="anchor" aria-label="anchor" href="#load-packages"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">scatterpie</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rishvish/PieGlyph" class="external-link">PieGlyph</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rishvish/PieGlyph" class="external-link">PieGlyph</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="create-data">Create data<a class="anchor" aria-label="anchor" href="#create-data"></a>
@@ -181,14 +179,14 @@ Create fake elections results each state in
 <span><span class="co"># Filter out any states that weren't present in the map_data</span></span>
 <span><span class="va">votes_data</span> <span class="op">&lt;-</span> <span class="va">votes_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">states_boundaries</span><span class="op">$</span><span class="va">region</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>
-</p>
-<p>The dataset contains 48 rows describing the percentage of votes
+The dataset contains 48 rows describing the percentage of votes
 different parties got in the respective state. <code>State</code>
 describes the state name, <code>Democaratic</code>,
 <code>Republic</code> and <code>Other</code> describe the percent of
 votes the parties got in the state. <code>pie_lat</code> and
 <code>pie_long</code> describe the geographical centre of each state
-(this is where the pie will be placed on the plot).</p>
+(this is where the pie will be placed on the plot).
+</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">votes_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         State Democratic Republic Other pie_lat  pie_long</span></span>
@@ -225,80 +223,31 @@ votes the parties got in the state. <code>pie_lat</code> and
 states<a class="anchor" aria-label="anchor" href="#add-pie-charts-showing-proportion-of-votes-for-different-in-each-states"></a>
 </h5>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">map</span> <span class="op">+</span> </span>
-<span>  <span class="co"># Add pie-charts for each state</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/scatterpie/man/geom_scatterpie.html" class="external-link">geom_scatterpie</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">pie_lat</span>, x <span class="op">=</span> <span class="va">pie_long</span><span class="op">)</span>,</span>
-<span>                  data <span class="op">=</span> <span class="va">votes_data</span>,</span>
-<span>                  cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Democratic'</span>,<span class="st">'Republic'</span>,<span class="st">'Other'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="co"># Colours of the pie sectors</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'#047db7'</span>,<span class="st">'#c52d25'</span>, <span class="st">'grey'</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">'Party'</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="co"># Fix aspect ratio of plot</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Coordinate system already present. Adding new coordinate system, which will</span></span>
-<span><span class="co">#&gt; replace the existing one.</span></span></code></pre></div>
-<p><img src="spatial-example_files/figure-html/scatter-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>
-As mentioned before, this works perfectly fine with other functions.
-However, we still need to use coord_fixed to fix the pie-charts.
-Further, if the user wishes to use a different map projection, the
-pie-charts will change dimensions depending on the projection
-</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">map</span> <span class="op">+</span> </span>
-<span>  <span class="co"># Add pie-charts for each state</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/scatterpie/man/geom_scatterpie.html" class="external-link">geom_scatterpie</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">pie_lat</span>, x <span class="op">=</span> <span class="va">pie_long</span><span class="op">)</span>,</span>
-<span>                  data <span class="op">=</span> <span class="va">votes_data</span>,</span>
-<span>                  cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Democratic'</span>,<span class="st">'Republic'</span>,<span class="st">'Other'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="co"># Colours of the pie sectors</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'#047db7'</span>,<span class="st">'#c52d25'</span>, <span class="st">'grey'</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">'Party'</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="co"># Different map projection</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_map.html" class="external-link">coord_map</a></span><span class="op">(</span><span class="st">"albers"</span>, lat0 <span class="op">=</span> <span class="fl">45.5</span>, lat1 <span class="op">=</span> <span class="fl">29.5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Coordinate system already present. Adding new coordinate system, which will</span></span>
-<span><span class="co">#&gt; replace the existing one.</span></span></code></pre></div>
-<p><img src="spatial-example_files/figure-html/scatter-albers-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">map</span> <span class="op">+</span> </span>
-<span>  <span class="co"># Add pie-charts for each state</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/scatterpie/man/geom_scatterpie.html" class="external-link">geom_scatterpie</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">pie_lat</span>, x <span class="op">=</span> <span class="va">pie_long</span><span class="op">)</span>,</span>
-<span>                  data <span class="op">=</span> <span class="va">votes_data</span>,</span>
-<span>                  cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Democratic'</span>,<span class="st">'Republic'</span>,<span class="st">'Other'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="co"># Colours of the pie sectors</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'#047db7'</span>,<span class="st">'#c52d25'</span>, <span class="st">'grey'</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">'Party'</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="co"># Different map projection</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_map.html" class="external-link">coord_map</a></span><span class="op">(</span><span class="st">"gnomonic"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Coordinate system already present. Adding new coordinate system, which will</span></span>
-<span><span class="co">#&gt; replace the existing one.</span></span></code></pre></div>
-<p><img src="spatial-example_files/figure-html/scatter-gnomonic-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>
-As the pie-charts are created independent of the axes and plot
-dimensions in <code>PieGlyph</code>, they are unaffected by any change
-in the map projection
-</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">map</span> <span class="op">+</span> </span>
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="va">map</span> <span class="op">+</span> </span>
 <span>  <span class="co"># Add pie-charts for each state</span></span>
 <span>  <span class="fu"><a href="../reference/geom_pie_glyph.html">geom_pie_glyph</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">pie_lat</span>, x <span class="op">=</span> <span class="va">pie_long</span><span class="op">)</span>,</span>
 <span>                 data <span class="op">=</span> <span class="va">votes_data</span>, colour <span class="op">=</span> <span class="st">'black'</span>,</span>
 <span>                 slices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Democratic'</span>,<span class="st">'Republic'</span>,<span class="st">'Other'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="co"># Colours of the pie sectors</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'#047db7'</span>,<span class="st">'#c52d25'</span>, <span class="st">'grey'</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">'Party'</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="co"># Place legend on top of the plot</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">'top'</span><span class="op">)</span></span>
+<span><span class="va">plot</span></span></code></pre></div>
+<p><img src="spatial-example_files/figure-html/glyph-merc-1.png" width="672" style="display: block; margin: auto;"></p>
+<p>
+As the pie-charts are created independent of the axes and plot
+dimensions in <code>PieGlyph</code>, they are unaffected by any change
+in the map projection
+</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">+</span></span>
 <span>  <span class="co"># Different map projection</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_map.html" class="external-link">coord_map</a></span><span class="op">(</span><span class="st">'albers'</span>, lat0 <span class="op">=</span> <span class="fl">45.5</span>, lat1 <span class="op">=</span> <span class="fl">29.5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Coordinate system already present. Adding new coordinate system, which will</span></span>
-<span><span class="co">#&gt; replace the existing one.</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_map.html" class="external-link">coord_map</a></span><span class="op">(</span><span class="st">'albers'</span>, lat0 <span class="op">=</span> <span class="fl">45.5</span>, lat1 <span class="op">=</span> <span class="fl">29.5</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatial-example_files/figure-html/glyph-albers-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">map</span> <span class="op">+</span> </span>
-<span>  <span class="co"># Add pie-charts for each state</span></span>
-<span>  <span class="fu"><a href="../reference/geom_pie_glyph.html">geom_pie_glyph</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">pie_lat</span>, x <span class="op">=</span> <span class="va">pie_long</span><span class="op">)</span>,</span>
-<span>                 data <span class="op">=</span> <span class="va">votes_data</span>, colour <span class="op">=</span> <span class="st">'black'</span>, radius <span class="op">=</span> <span class="fl">0.25</span>,</span>
-<span>                 slices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Democratic'</span>,<span class="st">'Republic'</span>,<span class="st">'Other'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="co"># Colours of the pie sectors</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'#047db7'</span>,<span class="st">'#c52d25'</span>, <span class="st">'grey'</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">'Party'</span><span class="op">)</span><span class="op">+</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">+</span></span>
 <span>  <span class="co"># Different map projection</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_map.html" class="external-link">coord_map</a></span><span class="op">(</span><span class="st">'gnomonic'</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Coordinate system already present. Adding new coordinate system, which will</span></span>
-<span><span class="co">#&gt; replace the existing one.</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_map.html" class="external-link">coord_map</a></span><span class="op">(</span><span class="st">'gnomonic'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatial-example_files/figure-html/glyph-gnomonic-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 </div>

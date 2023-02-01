@@ -10,8 +10,10 @@ This packages replaces the points in a scatter plot with pie-chart glyphs showin
 }
 \examples{
 ## Load libraries
-library(tidyverse)
+library(dplyr)
+library(tidyr)
 library(PieGlyph)
+library(ggplot2)
 
 ## Simulate raw data
 
@@ -83,8 +85,8 @@ Useful links:
 
 Authors:
 \itemize{
-\item Catherine Hurley
 \item Caroline Brophy
+\item Catherine Hurley
 }
 }
 \keyword{internal}

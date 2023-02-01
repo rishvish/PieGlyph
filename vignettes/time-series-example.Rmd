@@ -26,18 +26,17 @@ p {
   font-size: '16px
 }
 ```
-<p> This example shows the use of the use of the `PieGlyph` package to replace the points in a time series plot with pie charts showing the proportions of different variables. Generally, time series plots don't have an aspect ratio of 1 as the width of the plot is very large compared to the height. Due to this wide nature of time series plots previous attempts at adding pie-charts in the plot either resulted in the pie-charts getting converted into ellipses or forced the user to make the plot have equal dimensions, resulting in plots becoming squashed between white space. Both these approaches cause problems when interpreting from the plots.</p>
+<p> This example shows the use of `PieGlyph` package to replace the points in a time series plot with pie charts showing the proportions of different variables. Generally, time series plots don't have an aspect ratio of 1 as the width of the plot is very large compared to the height. Due to this wide nature of time series plots previous attempts at adding pie-charts to the plot resulted in the circular pie-charts getting flattened into ellipses. This could be rectified by forcing the user to make the plot have equal dimensions, however that caused more problems as the resultant plots then became squashed between white space. These issues rendered the plots uninterpretable.</p>
 
 <p> The `PieGlyph` package attempts to solve this problem by creating axis invariant pie-charts which wouldn't get squashed into ellipses and also wouldn't get scaled along with the plot dimensions. </p>
 
 ### Load Packages
 ```{r setup, warning=F, message=F}
-library(scatterpie)
 library(PieGlyph)
-library(tidyverse)
+library(ggplot2)
 ```
 
-### Simulate data
+### Load data
 
 <p>The data used for this example is the Seatbelts data which shows the monthly totals of car drivers and passengers killed or seriously injured from Jan 1969 to Dec 1984 in Great Britain.</p>
 
@@ -46,7 +45,7 @@ Seatbelts <- data.frame(Seatbelts, time = time(Seatbelts))
 head(Seatbelts)
 ```
 
-<p>The variable `DriversKillled` gives the number of car drivers in each month killed over the 15 years, `drivers` describes the number of car drivers killed or seriously injured, `front` gives the number of front-seat passengers killed or seriously injured and `rear` gives the number of rear-seat passengers killed or seriously injured. `VanKilled` contains the number of van (‘light goods vehicle’) drivers killed in each month. `kms` gives the number of kilometers driven in the particular month while `PetrolPrice` contains the price of petrol in that month. `law` describes whether or not it was compulsory to wear seat belts in that month.</p>
+<p>For each month over the 15 years the variables `DriversKillled` gives the number of car drivers killed, `drivers` describes the number of car drivers killed or seriously injured, `front` gives the number of front-seat passengers killed or seriously injured and `rear` gives the number of rear-seat passengers killed or seriously injured, `VanKilled` contains the number of van (‘light goods vehicle’) drivers killed, `kms` gives the number of kilometers driven in the particular month while `PetrolPrice` contains the price of petrol. Finally, `law` describes whether or not it was compulsory to wear seat belts.</p>
 
 <p>For the visualisation we'll be using a subset of the Seatbelts data from Jan 1980 to Dec 1984.</p>
 ```{r show-data}
@@ -54,30 +53,11 @@ plot_data <- Seatbelts[133:192, ]
 head(plot_data)
 ```
 
-<p> The number of kilometers driven in each month changes over time. It would be difficult to visualise this change over time whilst also showing the proportion of drivers/passengers injured over the time period using a simple time series plot. However, if we replace the points in the plot with pie-charts we can simultaneously visualise both, the distance travelled and the proportion of injuries over time.</p>
+<p> The number of kilometers driven in each month changes over time. It would be difficult to visualise this change over time whilst also showing the proportion of drivers/passengers injured over the time period using a simple time series plot. However, if we replace the points in the plot with pie-charts we can simultaneously visualise both the distance traveled and the proportion of injuries over time.</p>
 
 ### Create Plots
 
-```{r scatterpie, fig.align='center', fig.width=7}
-p <- ggplot(plot_data, aes(x = time, y = kms))+
-        geom_line(linewidth = 1)+
-        geom_scatterpie(aes(x = time, y = kms), 
-                        colour = 'black', 
-                        data = plot_data,
-                        cols = c('drivers','front', 'rear'))+
-  theme_minimal()
-p
-```
-
-<p>  As expected, due to the plot dimensions, the individual pies are heavily squished and it is difficult to read the proportions of the different attributes. A common suggestion in these cases is to use the function `coord_equal()`, which forces the plot width and height to be equal causing the pies to represented as circles. This works fine in some cases, but often it further aggravates the problems and renders the plot uninterpretable as shown below. </p> 
-
-```{r scatterpie-fixed, fig.align='center', fig.width=7}
-p + coord_equal()
-```
-
-<p> PieGlyph fixes this problem by creating the pie charts independently of the plot axes and thus the plot dimensions have no effects on the pie charts </p>
-
-```{r Pie-glyph-plot, fig.align='center', fig.width=7}
+```{r Pie-glyph-plot, fig.align='center', fig.width=7, warning = F}
 pl <- ggplot(plot_data, aes(x = time, y = kms))+
         # Add the lines joining the pie-charts
         geom_line(linewidth = 1)+
@@ -89,8 +69,8 @@ pl <- ggplot(plot_data, aes(x = time, y = kms))+
 pl    
 ```
 
-<p>We can also adjust visualise the months where the seatbelt law was in effect, by mapping them to the pie-borders.</p>
-```{r pie-borders, fig.align='center', fig.width=7}
+<p>We can also highlight the months where the seatbelt law was in effect, by mapping them to the pie-borders.</p>
+```{r pie-borders, fig.align='center', fig.width=7, warning = F}
 pl <- ggplot(plot_data, aes(x = time, y = kms))+
         # Add the lines joining the pie-charts
         geom_line(linewidth = 1)+
@@ -109,9 +89,8 @@ pl
 ```
 
 
-<p> We can then adjust any aesthetics of our choice in the plot using the usual ggplot functions </p> 
-
-```{r aesthetics, fig.align='center', fig.width=7}
+<p> We can then adjust any aesthetics of our choice in the plot using the usual ggplot functions. </p> 
+```{r aesthetics, fig.align='center', fig.width=7, warning = F}
 pl + 
   # Colours of the pie-sectors
   scale_fill_manual(values = c('#56B4E9','#F0E442','#CC79A7'))+
