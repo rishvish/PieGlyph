@@ -30,7 +30,11 @@ p {
 
 ## Installation
 
-You can install the development version of `PieGlyph` from [GitHub](https://github.com/) with:
+You can install the released version of `PieGlyph` from [CRAN](https://cran.r-project.org/) by running:
+``` r
+install.packages("PieGlyph")
+```
+Alternatively, you can install the development version of `PieGlyph` from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")

@@ -182,7 +182,43 @@ the distance traveled and the proportion of injuries over time.
 <div class="section level3">
 <h3 id="create-plots">Create Plots<a class="anchor" aria-label="anchor" href="#create-plots"></a>
 </h3>
+<div class="section level4">
+<h4 id="problems-with-existing-techniques">Problems with existing techniques<a class="anchor" aria-label="anchor" href="#problems-with-existing-techniques"></a>
+</h4>
+<p>
+Create a pie-chart plot for the Seatbelts data using the
+<code>scatterpie</code> R package.
+</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">plot_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">kms</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span></span>
+<span>        <span class="fu">geom_scatterpie</span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">kms</span><span class="op">)</span>, </span>
+<span>                        colour <span class="op">=</span> <span class="st">'black'</span>, </span>
+<span>                        data <span class="op">=</span> <span class="va">plot_data</span>,</span>
+<span>                        cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'drivers'</span>,<span class="st">'front'</span>, <span class="st">'rear'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="../reference/figures/scatterpie-1.png" width="95%" style="display: block; margin: auto;"></p>
+<p>
+As mentioned before the pie-charts are squished due to the wide nature
+of the plot and are illegible.
+</p>
+<p>
+Using <code><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed()</a></code> to fix the plot dimensions worsens the
+problem further and renders the plot unintelligible.
+</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="../reference/figures/scatterpie-fixed-1.png" width="95%" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="fixing-the-problems-using-pieglyph">Fixing the problems using PieGlyph<a class="anchor" aria-label="anchor" href="#fixing-the-problems-using-pieglyph"></a>
+</h4>
+<p>
+PieGlyph fixes this problem by creating the pie charts independently of
+the plot axes and thus the plot dimensions have no effects on the pie
+charts
+</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">plot_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">kms</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>        <span class="co"># Add the lines joining the pie-charts</span></span>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span></span>
@@ -197,18 +233,18 @@ the distance traveled and the proportion of injuries over time.
 We can also highlight the months where the seatbelt law was in effect,
 by mapping them to the pie-borders.
 </p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">plot_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">kms</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>        <span class="co"># Add the lines joining the pie-charts</span></span>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span></span>
 <span>        <span class="co"># Add pie-chart showing proportion of people injured</span></span>
 <span>        <span class="co"># Also map the pie-borders to show whether seatbelt law was present</span></span>
-<span>        <span class="fu"><a href="../reference/geom_pie_glyph.html">geom_pie_glyph</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">law</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>        <span class="fu"><a href="../reference/geom_pie_glyph.html">geom_pie_glyph</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">law</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                       colour <span class="op">=</span> <span class="st">'black'</span>,</span>
 <span>                       slices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'drivers'</span>, <span class="st">'front'</span>, <span class="st">'rear'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>        <span class="co"># Adjust the style of borders</span></span>
-<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_linetype_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>,</span>
-<span>                              labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Yes'</span>, <span class="st">'No'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_linetype_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                              labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'No'</span>, <span class="st">'Yes'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>        <span class="co"># Plot theme</span></span>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pl</span>    </span></code></pre></div>
@@ -217,7 +253,7 @@ by mapping them to the pie-borders.
 We can then adjust any aesthetics of our choice in the plot using the
 usual ggplot functions.
 </p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pl</span> <span class="op">+</span> </span>
 <span>  <span class="co"># Colours of the pie-sectors</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'#56B4E9'</span>,<span class="st">'#F0E442'</span>,<span class="st">'#CC79A7'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
@@ -225,6 +261,7 @@ usual ggplot functions.
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'Year'</span>, y <span class="op">=</span> <span class="st">'Km driven'</span>,</span>
 <span>       fill <span class="op">=</span> <span class="st">'People Injured'</span>, linetype <span class="op">=</span> <span class="st">'Law in Effect?'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="time-series-example_files/figure-html/aesthetics-1.png" width="672" style="display: block; margin: auto;"></p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

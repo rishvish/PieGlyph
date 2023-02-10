@@ -21,7 +21,7 @@ draw_key_pie <- function (data, params, size) {
   radius <- data$radius*2
 
   # Point legend (to show different radii)
-  if(names(data)[1] == 'radius'){
+  if(names(data)[1] == "radius"){
     data$shape <- 19
     radius <- (data$radius)*10
     pointsGrob(0.5, 0.5,
@@ -59,8 +59,8 @@ draw_key_pie <- function (data, params, size) {
 #' @importFrom ggplot2 ggproto Geom draw_key_polygon aes_ aes ggplotGrob ggplot theme_void waiver
 #' @export
 NULL
-GeomPieGlyph <- ggproto('GeomPieGlyph', Geom,
-                        required_aes = c('x', 'y'),
+GeomPieGlyph <- ggproto("GeomPieGlyph", Geom,
+                        required_aes = c("x", "y"),
                         default_aes = list(
                           colour = NA, radius = 0.25, linewidth = 1, linetype = 1, alpha = 1, slices = NA, values = NA, fill = NA, pie_group = NA
                         ),
@@ -90,7 +90,7 @@ GeomPieGlyph <- ggproto('GeomPieGlyph', Geom,
                           # Check for any missing values of slices in the data
                           if(nrow(coords %>% group_by(pie_group) %>% filter(all(is.na(values)))) != 0){
                             if((coords$warn)[1]){
-                              warning('There were observations with all slices being NAs, those observations have been removed from the data.')
+                              warning("There were observations with all slices being NAs, those observations have been removed from the data.")
                             }
                             coords <- coords %>%
                               group_by(pie_group) %>%
@@ -101,7 +101,7 @@ GeomPieGlyph <- ggproto('GeomPieGlyph', Geom,
                           # Check for observations with all missing values
                           if(any(is.na(coords$values))){
                             if((coords$warn)[1]){
-                              warning('There were observations with some slices being NA, they have been replaced with 0.')
+                              warning("There were observations with some slices being NA, they have been replaced with 0.")
                             }
                             coords <- coords %>% mutate(values = ifelse(is.na(values), 0, values))
                           }
@@ -112,7 +112,7 @@ GeomPieGlyph <- ggproto('GeomPieGlyph', Geom,
                           }
                           # Check if values aren't negative
                           if(any(coords$values < 0)){
-                            stop('Data contains negative values. Remove them before plotting.')
+                            stop("Data contains negative values. Remove them before plotting.")
                           }
 
                           # Create the individual pie-glyphs for each pie-group
@@ -168,13 +168,13 @@ GeomPieGlyph <- ggproto('GeomPieGlyph', Geom,
 #' grid.draw(p3)
 pieGrob <- function(x = .5, y = .5, values,
                     radius = 1,
-                    radius_unit = 'cm', edges = 360,
+                    radius_unit = "cm", edges = 360,
                     col = "black",
                     fill = NA,
                     lwd = 1,
                     lty = 1,
                     alpha = 1,
-                    default.units = 'npc') {
+                    default.units = "npc") {
   # Convert the x and y coordinates into npc coordinates
   if (!grid::is.unit(x))
     x <- unit(x, default.units)
@@ -182,7 +182,7 @@ pieGrob <- function(x = .5, y = .5, values,
     y <- unit(y, default.units)
 
   # Describe how should the slices be joined
-  linejoin <- 'mitre'
+  linejoin <- "mitre"
 
   # Code adapted from geom_arc_bar in ggforce
   # Create the angles and proportions for the different slices
@@ -255,11 +255,11 @@ pieTree <- function(data) {
 upgradeUnit.unit.list <- utils::getFromNamespace("upgradeUnit.unit.list",
                                                  "grid")
 
-manual_scale <- utils::getFromNamespace('manual_scale',
-                                        'ggplot2')
+manual_scale <- utils::getFromNamespace("manual_scale",
+                                        "ggplot2")
 
-is.waive <- utils::getFromNamespace('is.waive',
-                                    'ggplot2')
+is.waive <- utils::getFromNamespace("is.waive",
+                                    "ggplot2")
 
 #' @title Scatter plot with points replaced by axis-invariant pie-chart glyphs
 #' @description This geom replaces the points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories. The pie-chart glyphs are independent of the plot dimensions, so won't distort when the plot is scaled. The ideal dataset for this geom would contain columns with non-negative values showing the magnitude of the different categories to be shown in the pie glyphs (The proportions of the different categories within the pie glyph will be calculated automatically). The different categories can also be stacked together into a single column according to the rules of tidy-data (see vignette('tidy-data') or vignette('pivot') for more information).
@@ -421,6 +421,8 @@ geom_pie_glyph <- function(mapping = NULL, data = NULL, slices, values = NA,
   ll
 }
 
+#' @usage NULL
+NULL
 setup_layer_data <- function(self, plot_data) {
 
   # Same code as the default setup_layer_function
@@ -485,7 +487,10 @@ scale_radius_discrete <-  function (..., range = c(.25, 0.6), unit = 'cm') {
 #'
 #' @inheritParams ggplot2::scale_size_manual
 #' @export
-scale_radius_manual <- function (..., values, unit = 'cm', breaks = waiver(), na.value = NA) {
+scale_radius_manual <- function (..., values, unit = "cm", breaks = waiver(), na.value = NA) {
+  if(missing(values)){
+    stop("Specify the values of the radii for each group in a numeric vector.")
+  }
   values <- grid::convertWidth(unit(values, unit), "cm", valueOnly = TRUE)
 
   manual_scale("radius", values, breaks, ..., na.value = na.value)
@@ -497,8 +502,9 @@ scale_radius_manual <- function (..., values, unit = 'cm', breaks = waiver(), na
 #' @description \code{scale_radius_*()} is useful for adjusting the radius of the pie glyphs.
 #'
 #' @inheritParams ggplot2::scale_size
-#' @param unit Unit for the radius of the pie glyphs. Default is 'cm', but other units like 'in', 'mm', etc. can be used.
+#' @param unit Unit for the radius of the pie glyphs. Default is "cm", but other units like "in", "mm", etc. can be used.
 #'
+#' @return A ggplot scale object adjusting the radii of the pie glyphs
 #' @export
 #' @examples
 #' ## Load libraries
@@ -528,7 +534,7 @@ scale_radius_manual <- function (..., values, unit = 'cm', breaks = waiver(), na
 #'          fill = 'Attributes')+
 #'     theme_classic()
 #'
-#' p + scale_radius_continuous(range = c(0.5, 1))
+#' p + scale_radius_continuous(range = c(0.2, 0.5))
 #'
 #' q <- ggplot(data = plot_data)+
 #'     geom_pie_glyph(aes(x = x, y = y,
@@ -538,10 +544,10 @@ scale_radius_manual <- function (..., values, unit = 'cm', breaks = waiver(), na
 #'          fill = 'Attributes', radius = 'Group')+
 #'     theme_classic()
 #'
-#' q + scale_radius_discrete(range = c(0.05, 0.1), unit = 'in',
+#' q + scale_radius_discrete(range = c(0.05, 0.2), unit = 'in',
 #'                           name = 'Group')
 #'
-#' q + scale_radius_manual(values = c(5, 20, 10), unit = 'mm',
+#' q + scale_radius_manual(values = c(2, 6, 4), unit = 'mm',
 #'                         labels = paste0('G', 1:3), name = 'G')
 scale_radius_continuous <- function(..., range = c(.25, .6), unit = "cm") {
   range <- grid::convertWidth(unit(range, unit), "cm", valueOnly = TRUE)

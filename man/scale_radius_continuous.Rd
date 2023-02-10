@@ -53,7 +53,7 @@ expand the scale by 5\% on each side for continuous variables, and by
 \item{range}{a numeric vector of length 2 that specifies the minimum and
 maximum size of the plotting symbol after transformation.}
 
-\item{unit}{Unit for the radius of the pie glyphs. Default is 'cm', but other units like 'in', 'mm', etc. can be used.}
+\item{unit}{Unit for the radius of the pie glyphs. Default is "cm", but other units like "in", "mm", etc. can be used.}
 
 \item{values}{a set of aesthetic values to map data values to. The values
 will be matched in order (usually alphabetical) with the limits of the
@@ -73,6 +73,9 @@ Also accepts rlang \link[rlang:as_function]{lambda} function notation.
 }}
 
 \item{na.value}{The aesthetic value to use for missing (\code{NA}) values}
+}
+\value{
+A ggplot scale object adjusting the radii of the pie glyphs
 }
 \description{
 \code{scale_radius_*()} is useful for adjusting the radius of the pie glyphs.
@@ -105,7 +108,7 @@ p <- ggplot(data = plot_data)+
          fill = 'Attributes')+
     theme_classic()
 
-p + scale_radius_continuous(range = c(0.5, 1))
+p + scale_radius_continuous(range = c(0.2, 0.5))
 
 q <- ggplot(data = plot_data)+
     geom_pie_glyph(aes(x = x, y = y,
@@ -115,9 +118,9 @@ q <- ggplot(data = plot_data)+
          fill = 'Attributes', radius = 'Group')+
     theme_classic()
 
-q + scale_radius_discrete(range = c(0.05, 0.1), unit = 'in',
+q + scale_radius_discrete(range = c(0.05, 0.2), unit = 'in',
                           name = 'Group')
 
-q + scale_radius_manual(values = c(5, 20, 10), unit = 'mm',
+q + scale_radius_manual(values = c(2, 6, 4), unit = 'mm',
                         labels = paste0('G', 1:3), name = 'G')
 }

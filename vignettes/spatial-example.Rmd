@@ -27,6 +27,14 @@ p {
 }
 ```
 
+```{r, eval = TRUE, echo = F}
+execute <- T
+if(!all(c('maps', 'mapproj') %in% installed.packages())){
+  execute <- F
+  print("This vignetted requires the `maps` and `mapproj` packages to be installed for execution.")
+}
+```
+
 <p>In this example we illustrate the capabilities of the `PieGlyph` package to overlay pie-chart glyphs on a map to illustrate spatial patterns in attributes.</p>
 
 <p>We show an example where the proportion of votes received by the Republic and Democratic parties in each US state is show for a hypothetical election.</p>
@@ -34,7 +42,7 @@ p {
 <p>These plots can be created easily with existing techniques too. However, due to the pie-charts being tied with the plot dimensions it isn't possible to visualise the map in different geographical projections or change the aspect ratio of the plot without converting the pie-charts into ellipses. `PieGlyph` offers a solution to this problem.</p>
 
 ### Load Packages
-```{r setup, warning=F, message=F}
+```{r setup, warning=F, message=F, eval = execute}
 library(PieGlyph)
 library(ggplot2)
 library(dplyr)
@@ -45,18 +53,18 @@ library(dplyr)
 ##### Load Map data
 <p>Load the geographical information including the latitude and longitude for the states in USA.</p>
 
-```{r create-boundaries}
+```{r create-boundaries, eval = execute}
 states_boundaries <- map_data("state")
 ```
 <p>The dataset contains 15537 rows describing the geographical boundaries each state (except Alaska and Hawaii) in USA. The `long`, `lat` and `region` are the columns of interest to us. `long` and `lat` describe the longitude and latitudes respectively of the boundaries of the states, while `region` contains the names of each state.</p>
 
-```{r boundaries}
+```{r boundaries, eval = execute}
 head(states_boundaries)
 ```
 
 <p>Create fake elections results each state in `states_boundaries` data</p>
 
-```{r create-votes}
+```{r create-votes, eval = execute}
 set.seed(123)
 
 # Get names of state names from map data
@@ -79,14 +87,14 @@ votes_data <- votes_data %>% filter(State %in% unique(states_boundaries$region))
 
 <p>The dataset contains 48 rows describing the percentage of votes different parties got in the respective state. `State` describes the state name, `Democaratic`, `Republic` and `Other` describe the percent of votes the parties got in the state. `pie_lat` and `pie_long` describe the geographical centre of each state (this is where the pie will be placed on the plot). </p>  
 
-```{r votes_data}
+```{r votes_data, eval = execute}
 head(votes_data)
 ```
 
 ### Create plot
 ##### Create map
 
-```{r map, warning = F, fig.align='center', fig.width=7}
+```{r map, warning = F, fig.align='center', fig.width=7, eval = execute}
 map <- ggplot(states_boundaries, aes(x = long, y = lat)) +
         # Add states and their borders
         geom_polygon(aes(group = group),
@@ -102,7 +110,7 @@ map
 
 ##### Add pie charts showing proportion of votes for different in each states
 
-```{r glyph-merc, warning = F, fig.align='center', fig.width=7, warning = F}
+```{r glyph-merc, warning = F, fig.align='center', fig.width=7, warning = F, eval = execute}
 plot <- map + 
   # Add pie-charts for each state
   geom_pie_glyph(aes(y = pie_lat, x = pie_long),
@@ -116,13 +124,13 @@ plot
 ```
 
 <p>As the pie-charts are created independent of the axes and plot dimensions in `PieGlyph`, they are unaffected by any change in the map projection</p>
-```{r glyph-albers, warning = F, fig.align='center', fig.width=7, warning = F, message = F}
+```{r glyph-albers, warning = F, fig.align='center', fig.width=7, warning = F, message = F, eval = execute}
 plot +
   # Different map projection
   coord_map('albers', lat0 = 45.5, lat1 = 29.5)
 ```
 
-```{r glyph-gnomonic, warning = F, fig.align='center', fig.width=7, warning = F, message = F}
+```{r glyph-gnomonic, warning = F, fig.align='center', fig.width=7, warning = F, message = F, eval = execute}
 plot +
   # Different map projection
   coord_map('gnomonic')

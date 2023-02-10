@@ -57,7 +57,36 @@ head(plot_data)
 
 ### Create Plots
 
-```{r Pie-glyph-plot, fig.align='center', fig.width=7, warning = F}
+#### Problems with existing techniques
+<p>Create a pie-chart plot for the Seatbelts data using the `scatterpie` R package.</p>
+```{r scatterpie, fig.align='center', fig.width=7, eval = F}
+p <- ggplot(plot_data, aes(x = time, y = kms))+
+        geom_line(linewidth = 1)+
+        geom_scatterpie(aes(x = time, y = kms), 
+                        colour = 'black', 
+                        data = plot_data,
+                        cols = c('drivers','front', 'rear'))+
+        theme_minimal()
+```
+
+```{r scatterpie-figure, fig.align='center', out.width = '95%', eval = T, echo = F}
+knitr::include_graphics("../man/figures/scatterpie-1.png")
+```
+
+
+<p>As mentioned before the pie-charts are squished due to the wide nature of the plot and are illegible.</p>
+<p>Using `coord_fixed()` to fix the plot dimensions worsens the problem further and renders the plot unintelligible.</p>
+```{r scatterpie-fixed, fig.align='center', fig.width=7, eval = F}
+p + coord_fixed()
+```
+
+```{r scatterpie-fixed-figure, fig.align='center', out.width = '95%', eval = T, echo = F}
+knitr::include_graphics("../man/figures/scatterpie-fixed-1.png")
+```
+
+#### Fixing the problems using PieGlyph
+<p>PieGlyph fixes this problem by creating the pie charts independently of the plot axes and thus the plot dimensions have no effects on the pie charts </p>
+```{r Pie-glyph-plot, fig.align='center', fig.width = 7, fig.height=5, warning = F}
 pl <- ggplot(plot_data, aes(x = time, y = kms))+
         # Add the lines joining the pie-charts
         geom_line(linewidth = 1)+
@@ -70,18 +99,18 @@ pl
 ```
 
 <p>We can also highlight the months where the seatbelt law was in effect, by mapping them to the pie-borders.</p>
-```{r pie-borders, fig.align='center', fig.width=7, warning = F}
+```{r pie-borders, fig.align='center', fig.width=7, fig.height=5, warning = F}
 pl <- ggplot(plot_data, aes(x = time, y = kms))+
         # Add the lines joining the pie-charts
         geom_line(linewidth = 1)+
         # Add pie-chart showing proportion of people injured
         # Also map the pie-borders to show whether seatbelt law was present
-        geom_pie_glyph(aes(linetype = as.factor(law)), 
+        geom_pie_glyph(aes(linetype = as.factor(law)),
                        colour = 'black',
                        slices = c('drivers', 'front', 'rear'))+
         # Adjust the style of borders
-        scale_linetype_manual(values = c(1, 3),
-                              labels = c('Yes', 'No'))+
+        scale_linetype_manual(values = c(0, 1),
+                              labels = c('No', 'Yes'))+
         # Plot theme
         theme_minimal()
 pl    
@@ -90,7 +119,7 @@ pl
 
 
 <p> We can then adjust any aesthetics of our choice in the plot using the usual ggplot functions. </p> 
-```{r aesthetics, fig.align='center', fig.width=7, warning = F}
+```{r aesthetics, fig.align='center', fig.width=7, fig.height=5, warning = F}
 pl + 
   # Colours of the pie-sectors
   scale_fill_manual(values = c('#56B4E9','#F0E442','#CC79A7'))+
@@ -98,4 +127,5 @@ pl +
   labs(x = 'Year', y = 'Km driven',
        fill = 'People Injured', linetype = 'Law in Effect?')
 ```
+
 

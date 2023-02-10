@@ -6,12 +6,14 @@ Authors@R:
              comment = c(ORCID = "0000-0002-4847-3494")),
       person("Caroline", "Brophy", role = "aut"),
       person("Catherine", "Hurley", role = "aut"))
-Description: This packages helps to replace the points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories. The pie glyphs are independent of the axes and plot dimensions, to prevent distortions when the plot dimensions are changed.
+Description: Extends 'ggplot2' to help replace points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories. The pie glyphs are independent of the axes and plot dimensions, to prevent distortions when the plot dimensions are changed.
 License: GPL (>= 3)
 Encoding: UTF-8
 Imports: ggplot2, dplyr, tidyr, rlang, ggforce, forcats, plyr, grid, scales, cli, utils
 Suggests: 
     ranger,
+    maps,
+    mapproj,
     knitr,
     tidyverse,
     rmarkdown

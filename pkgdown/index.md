@@ -7,8 +7,13 @@ dimensions to prevent distortions when the plot dimensions are changed.
 
 ## Installation
 
-You can install the development version of `PieGlyph` from
-[GitHub](https://github.com/) with:
+You can install the released version of `PieGlyph` from
+[CRAN](https://cran.r-project.org/) by running:
+
+    install.packages("PieGlyph")
+
+Alternatively, you can install the development version of `PieGlyph`
+from [GitHub](https://github.com/) with:
 
     # install.packages("devtools")
     devtools::install_github("rishvish/PieGlyph")
@@ -34,7 +39,7 @@ You can install the development version of `PieGlyph` from
 #### Create plot
 
     ggplot(data = plot_data, aes(x = system, y = response))+
-      geom_pie_glyph(categories = c('A', 'B', 'C', 'D'), data = plot_data)+
+      geom_pie_glyph(slices = c('A', 'B', 'C', 'D'))+
       theme_minimal()
 
 <img src="man/figures/README-basic-1.png" width="100%" style="display: block; margin: auto;" />
@@ -43,15 +48,17 @@ You can install the development version of `PieGlyph` from
 
 <p>
 The attributes can also be stacked into one column to generate the plot.
-The benefit of doing this is that we don’t need to specify the data
-again in the geom\_pie\_glyph function.
+This variant of the function is useful for situations when the data is
+in tidy format. See `vignette('tidy-data')` and `vignette('pivot')` for
+more information.
 </p>
 
 #### Stack the attributes in one column
 
-    plot_data_stacked <- plot_data %>% pivot_longer(cols = c('A','B','C','D'), 
-                                                    names_to = 'Attributes', 
-                                                    values_to = 'values')
+    plot_data_stacked <- plot_data %>%
+      pivot_longer(cols = c('A','B','C','D'), 
+                   names_to = 'Attributes', 
+                   values_to = 'values')
     head(plot_data_stacked, 8)
     #> # A tibble: 8 × 5
     #>   response system group Attributes values
@@ -68,8 +75,8 @@ again in the geom\_pie\_glyph function.
 #### Create plot
 
     ggplot(data = plot_data_stacked, aes(x = system, y = response))+
-      # Along with categories column, values column is also needed now
-      geom_pie_glyph(categories = 'Attributes', values = 'values')+
+      # Along with slices column, values column is also needed now
+      geom_pie_glyph(slices = 'Attributes', values = 'values')+
       theme_minimal()
 
 <img src="man/figures/README-stacked-1.png" width="100%" style="display: block; margin: auto;" />

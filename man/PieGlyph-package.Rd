@@ -6,7 +6,7 @@
 \alias{PieGlyph-package}
 \title{PieGlyph: Creating scatter plots with points replaced with axis invariant pie-glyphs}
 \description{
-This packages replaces the points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories (presented as columns with non-negative values in the dataset). The pie glyphs are independent of the axes and plot dimensions to prevent distortions when the plot dimensions are changed.
+Extends 'ggplot2' to help replace points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories (presented as columns with non-negative values in the dataset). The pie glyphs are independent of the axes and plot dimensions to prevent distortions when the plot dimensions are changed.
 }
 \examples{
 ## Load libraries
