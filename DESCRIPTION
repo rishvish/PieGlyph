@@ -20,5 +20,5 @@ Suggests:
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr
-URL: https://github.com/rishvish/PieGlyph
+URL: https://rishvish.github.io/PieGlyph/, https://github.com/rishvish/PieGlyph
 BugReports: https://github.com/rishvish/PieGlyph/issues
