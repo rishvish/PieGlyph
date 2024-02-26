@@ -82,7 +82,9 @@ A ggplot scale object adjusting the radii of the pie glyphs
 }
 \examples{
 ## Load libraries
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 library(PieGlyph)
 
 ## Simulate raw data

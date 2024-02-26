@@ -52,8 +52,9 @@ draw_key_pie <- function (data, params, size) {
 #' @importFrom tidyr pivot_longer pivot_wider %>%
 #' @importFrom dplyr mutate near distinct select is.grouped_df ungroup all_of group_by filter
 #' @importFrom plyr unrowname
+#' @importFrom cli cli_abort cli_warn
 #' @importFrom stats as.formula
-#' @importFrom rlang sym syms !! !!!
+#' @importFrom rlang sym syms !! !!! caller_env
 #' @importFrom ggforce geom_arc_bar
 #' @importFrom forcats fct_inorder
 #' @importFrom ggplot2 ggproto Geom draw_key_polygon aes_ aes ggplotGrob ggplot theme_void waiver
@@ -75,7 +76,9 @@ GeomPieGlyph <- ggproto("GeomPieGlyph", Geom,
                               mutate(pie_group = as.numeric(factor(paste(data$x, data$y))))
 
                             if((data$pie_group %>% table() %>% unique() %>% length()) != 1){
-                              warning('Some pie-glyphs have identical x and y coordinates. This can cause issues when creating the glyphs. Consider adding a pie_group variable to distinguish individual glyphs from one another. See vignette("unusual-situations") for more information.')
+                              cli::cli_warn(c("Some pie-glyphs have identical x and y coordinates. This can cause issues when creating the glyphs.",
+                                              "i" = "Consider adding a pie_group variable to distinguish individual glyphs from one another.",
+                                              "i" = "See {.code vignette({.val unusual-situations})} for more information."))
                             }
                           }
 
@@ -90,7 +93,8 @@ GeomPieGlyph <- ggproto("GeomPieGlyph", Geom,
                           # Check for any missing values of slices in the data
                           if(nrow(coords %>% group_by(pie_group) %>% filter(all(is.na(values)))) != 0){
                             if((coords$warn)[1]){
-                              warning("There were observations with all slices being NAs, those observations have been removed from the data.")
+                              cli::cli_warn(c("There were observations with all slices being {.val NA},
+                                              these observations have been removed from the data."))
                             }
                             coords <- coords %>%
                               group_by(pie_group) %>%
@@ -101,18 +105,31 @@ GeomPieGlyph <- ggproto("GeomPieGlyph", Geom,
                           # Check for observations with all missing values
                           if(any(is.na(coords$values))){
                             if((coords$warn)[1]){
-                              warning("There were observations with some slices being NA, they have been replaced with 0.")
+                              cli::cli_warn(c("There were observations with some slices being {.val NA},
+                                              they have been replaced with 0."))
                             }
                             coords <- coords %>% mutate(values = ifelse(is.na(values), 0, values))
                           }
 
+                          # Check for observations with all 0 values and remove them
+                          if(nrow(coords %>% group_by(pie_group) %>% filter(all(values == 0))) != 0){
+                            if((coords$warn)[1]){
+                              cli::cli_warn(c("There were observations with all slices being {.val 0},
+                                              they have been removed from the data before plotting."))
+                            }
+                            coords <- coords %>%
+                              group_by(pie_group) %>%
+                              filter(any(values != 0)) %>%
+                              ungroup()
+                          }
+
                           # Check to ensure numeric values
                           if(!is.numeric(coords$values)){
-                            stop("The slices values should all be numeric.")
+                            cli::cli_abort(c("The slices values should all be numeric."))
                           }
                           # Check if values aren't negative
                           if(any(coords$values < 0)){
-                            stop("Data contains negative values. Remove them before plotting.")
+                            cli::cli_abort(c("Data contains negative values. Remove them before plotting."))
                           }
 
                           # Create the individual pie-glyphs for each pie-group
@@ -184,49 +201,85 @@ pieGrob <- function(x = .5, y = .5, values,
   # Describe how should the slices be joined
   linejoin <- "mitre"
 
-  # Code adapted from geom_arc_bar in ggforce
-  # Create the angles and proportions for the different slices
-  angles <- cumsum(values)
-  sep <- 0.000001
-  seps <- cumsum(sep * seq_along(angles))
-  angles <- angles / max(angles) * (2 * pi - max(seps))
-  start = c(0, angles[-length(angles)]) + c(0, seps[-length(seps)]) + sep / 2
-  end = angles + seps - sep / 2
-  end[start == end] = end[start == end] + sep
-  slice_prop <- ceiling(edges / (2 * pi) * abs(end - start))
-  slice_prop[slice_prop < 3] <- 3
-
-  # Create the points for each slice to pass to polygonGrob
-  slice_x <- slice_y <- slice_id <-  list()
-
-  for (i in 1:length(values)){
-    arcPoints <- seq(start[i], end[i], length.out = slice_prop[i])
-    iter_x <- grid::unit.c(unit(x, "native") + unit(0, radius_unit),
-                           unit(x, "native") + unit(radius * sin(arcPoints), radius_unit))
-    iter_y <- grid::unit.c(unit(y, "native") + unit(0, radius_unit),
-                           unit(y, "native") + unit(radius * cos(arcPoints), radius_unit))
-    id <- rep(i, slice_prop[i])
-
-    slice_x[[i]] <- iter_x
-    slice_y[[i]] <- iter_y
-    slice_id[[i]] <- rep(i, each = slice_prop[i] + 1)
+  # Values and fill (if specified) should have same length
+  if(!all(is.na(fill)) && length(fill) != length(values)){
+    cli::cli_abort(c("{.var values} and {.var fill} should have the same length.",
+                     "i" = "{.var values} has {.val {length(values)}} while {.var fill}
+                     has {.val {length(fill)}} elements, respectively."))
   }
 
-  # Unlist all the values
-  slice_x <- upgradeUnit.unit.list(slice_x)
-  slice_y <- upgradeUnit.unit.list(slice_y)
-  slice_id <- unlist(slice_id)
+  # Values and fill (if specified) should have same length
+  if(all(values == 0)){
+    cli::cli_abort("Cannot create pie-chart if all values in {.var values} are 0.")
+  }
 
-  # Create piechart
-  pieChart <- grid::polygonGrob(x = slice_x,
-                                y = slice_y,
-                                id = slice_id,
-                                gp = grid::gpar(col = col,
-                                                fill = fill,
-                                                lwd = lwd,
-                                                alpha = alpha,
-                                                lty = lty,
-                                                linejoin = linejoin))
+  # Check if only one value is non-zero
+  only_one <- ifelse(length(values[values != 0]) == 1, TRUE, FALSE)
+
+  # If only one non-zero value then return a circleGrob to avoid line in center
+  if(only_one){
+    if(all(is.na(fill))){
+      fill_col <- NA
+    } else {
+      fill_col <- fill[values != 0]
+    }
+    # Create circleGrob
+    pieChart <- grid::circleGrob(x = x,
+                                 y = y,
+                                 r = unit(radius, radius_unit),
+                                 gp = grid::gpar(col = col,
+                                                 fill = fill_col,
+                                                 lwd = lwd,
+                                                 alpha = alpha,
+                                                 lty = lty,
+                                                 linejoin = linejoin))
+  # else return a pie-chart
+  } else {
+    # Code adapted from geom_arc_bar in ggforce
+    # Create the angles and proportions for the different slices
+    angles <- cumsum(values)
+    sep <- 0.000001
+    seps <- cumsum(sep * seq_along(angles))
+    angles <- angles / max(angles) * (2 * pi - max(seps))
+    start = c(0, angles[-length(angles)]) + c(0, seps[-length(seps)]) + sep / 2
+    end = angles + seps - sep / 2
+    end[start == end] = end[start == end] + sep
+    slice_prop <- ceiling(edges / (2 * pi) * abs(end - start))
+    slice_prop[slice_prop < 3] <- 3
+
+    # Create the points for each slice to pass to polygonGrob
+    slice_x <- slice_y <- slice_id <-  list()
+
+    for (i in 1:length(values)){
+      arcPoints <- seq(start[i], end[i], length.out = slice_prop[i])
+      iter_x <- grid::unit.c(unit(x, "native") + unit(0, radius_unit),
+                             unit(x, "native") + unit(radius * sin(arcPoints), radius_unit))
+      iter_y <- grid::unit.c(unit(y, "native") + unit(0, radius_unit),
+                             unit(y, "native") + unit(radius * cos(arcPoints), radius_unit))
+      id <- rep(i, slice_prop[i])
+
+      slice_x[[i]] <- iter_x
+      slice_y[[i]] <- iter_y
+      slice_id[[i]] <- rep(i, each = slice_prop[i] + 1)
+    }
+
+    # Unlist all the values
+    slice_x <- upgradeUnit.unit.list(slice_x)
+    slice_y <- upgradeUnit.unit.list(slice_y)
+    slice_id <- unlist(slice_id)
+
+    # Create piechart
+    pieChart <- grid::polygonGrob(x = slice_x,
+                                  y = slice_y,
+                                  id = slice_id,
+                                  gp = grid::gpar(col = col,
+                                                  fill = fill,
+                                                  lwd = lwd,
+                                                  alpha = alpha,
+                                                  lty = lty,
+                                                  linejoin = linejoin))
+  }
+  return(pieChart)
 }
 
 #' @usage NULL
@@ -297,13 +350,15 @@ is.waive <- utils::getFromNamespace("is.waive",
 #' @examples
 #'
 #' ## Load libraries
-#' library(tidyverse)
+#' library(dplyr)
+#' library(tidyr)
+#' library(ggplot2)
 #' library(PieGlyph)
 #'
 #' ## Simulate raw data
 #' set.seed(123)
 #' plot_data <- data.frame(response = rnorm(10, 100, 30),
-#'                         system = 1:10,
+#'                         system = as.factor(1:10),
 #'                         group = sample(size = 10,
 #'                                        x = c('G1', 'G2', 'G3'),
 #'                                        replace = TRUE),
@@ -321,7 +376,7 @@ is.waive <- utils::getFromNamespace("is.waive",
 #'    theme_classic()
 #'
 #'
-#' ## Change pie radius and border colour
+#' ## Change pie radius using `radius` and border colour using `colour`
 #' ggplot(data = plot_data, aes(x = system, y = response))+
 #'        # Can also specify slices as column indices
 #'        geom_pie_glyph(slices = 4:7, data = plot_data,
@@ -331,10 +386,10 @@ is.waive <- utils::getFromNamespace("is.waive",
 #'
 #' ## Map radius to a variable
 #' p <- ggplot(data = plot_data, aes(x = system, y = response))+
-#' geom_pie_glyph(aes(radius = group),
-#'             slices = c('A', 'B', 'C', 'D'),
-#'             data = plot_data, colour = 'black')+
-#'             theme_classic()
+#'        geom_pie_glyph(aes(radius = group),
+#'                       slices = c('A', 'B', 'C', 'D'),
+#'                       data = plot_data, colour = 'black')+
+#'                       theme_classic()
 #' p
 #'
 #'
@@ -347,7 +402,6 @@ is.waive <- utils::getFromNamespace("is.waive",
 #' ## Change slice colours
 #' p + scale_fill_manual(values = c('#56B4E9', '#CC79A7',
 #'                                  '#F0E442', '#D55E00'))
-#'
 #'
 #'
 #' ##### Stack the attributes in one column
@@ -372,7 +426,7 @@ geom_pie_glyph <- function(mapping = NULL, data = NULL, slices, values = NA,
                            show.legend = NA, inherit.aes = TRUE, ...) {
   # Check if slices argument is passed
   if(missing(slices)){
-    stop('Specify column/columns containing the values to be show in the pie slices.')
+    cli::cli_abort("Specify column/columns containing the values to be show in the pie slices.")
   }
 
   # If global mapping was specified without any local layer mapping
@@ -393,7 +447,7 @@ geom_pie_glyph <- function(mapping = NULL, data = NULL, slices, values = NA,
   # If data is in long format then ensure values parameter is specified
   if (length(slices) == 1){
     if(is.na(values)){
-      stop('Specify column with category values if data is in long format.')
+      cli::cli_abort("Specify column with category values if data is in long format.")
     }
   }
 
@@ -453,6 +507,10 @@ setup_layer_data <- function(self, plot_data) {
     if (is.numeric(slices)){
       slices <- colnames(data)[slices]
     }
+    if(!all(apply(data[, slices], 2, is.numeric))){
+      cli::cli_abort(c("All columns specified in {.var slices} should be numeric",
+                       "i" = "{.val {slices[!apply(data[, slices], 2, is.numeric)]}} {?is/are} not numeric."))
+    }
     data <- data %>%
       mutate('pie_group' = factor(1:nrow(data))) %>%
       tidyr::pivot_longer(cols = all_of(slices), names_to = 'Slices', values_to = 'Values')
@@ -489,7 +547,7 @@ scale_radius_discrete <-  function (..., range = c(.25, 0.6), unit = 'cm') {
 #' @export
 scale_radius_manual <- function (..., values, unit = "cm", breaks = waiver(), na.value = NA) {
   if(missing(values)){
-    stop("Specify the values of the radii for each group in a numeric vector.")
+    cli::cli_abort("Specify the values of the radii for each group as a numeric vector in {.var values}.")
   }
   values <- grid::convertWidth(unit(values, unit), "cm", valueOnly = TRUE)
 
@@ -508,7 +566,9 @@ scale_radius_manual <- function (..., values, unit = "cm", breaks = waiver(), na
 #' @export
 #' @examples
 #' ## Load libraries
-#' library(tidyverse)
+#' library(dplyr)
+#' library(tidyr)
+#' library(ggplot2)
 #' library(PieGlyph)
 #'
 #' ## Simulate raw data

@@ -75,6 +75,7 @@ ggplot(data = plot_data_stacked, aes(x = system, y = response))+
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://rishvish.github.io/PieGlyph/}
   \item \url{https://github.com/rishvish/PieGlyph}
   \item Report bugs at \url{https://github.com/rishvish/PieGlyph/issues}
 }

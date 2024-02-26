@@ -66,13 +66,15 @@ geom_pie_glyph understands the following aesthetics (required aesthetics are in 
 \examples{
 
 ## Load libraries
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 library(PieGlyph)
 
 ## Simulate raw data
 set.seed(123)
 plot_data <- data.frame(response = rnorm(10, 100, 30),
-                        system = 1:10,
+                        system = as.factor(1:10),
                         group = sample(size = 10,
                                        x = c('G1', 'G2', 'G3'),
                                        replace = TRUE),
@@ -90,7 +92,7 @@ ggplot(data = plot_data, aes(x = system, y = response))+
    theme_classic()
 
 
-## Change pie radius and border colour
+## Change pie radius using `radius` and border colour using `colour`
 ggplot(data = plot_data, aes(x = system, y = response))+
        # Can also specify slices as column indices
        geom_pie_glyph(slices = 4:7, data = plot_data,
@@ -100,10 +102,10 @@ ggplot(data = plot_data, aes(x = system, y = response))+
 
 ## Map radius to a variable
 p <- ggplot(data = plot_data, aes(x = system, y = response))+
-geom_pie_glyph(aes(radius = group),
-            slices = c('A', 'B', 'C', 'D'),
-            data = plot_data, colour = 'black')+
-            theme_classic()
+       geom_pie_glyph(aes(radius = group),
+                      slices = c('A', 'B', 'C', 'D'),
+                      data = plot_data, colour = 'black')+
+                      theme_classic()
 p
 
 
@@ -116,7 +118,6 @@ p
 ## Change slice colours
 p + scale_fill_manual(values = c('#56B4E9', '#CC79A7',
                                  '#F0E442', '#D55E00'))
-
 
 
 ##### Stack the attributes in one column
