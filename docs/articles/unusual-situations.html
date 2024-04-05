@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Unusual Situations">
 <meta property="og:description" content="PieGlyph">
@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">PieGlyph</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,6 +57,9 @@
     <a class="dropdown-item" href="../articles/multinomial-classification-example.html">Multinomial Classification</a>
     <a class="dropdown-item" href="../articles/unusual-situations.html">Unusual Situations</a>
   </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -105,13 +108,13 @@ p {
 <p>
 This vignette shows examples of potential unusual situations that can be
 encountered when using the <code>PieGlyph</code> package and how they
-are handled within the package
+are handled within the package.
 </p>
 <div class="section level5">
 <h5 id="load-library">Load library<a class="anchor" aria-label="anchor" href="#load-library"></a>
 </h5>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rishvish/PieGlyph" class="external-link">PieGlyph</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rishvish.github.io/PieGlyph/" class="external-link">PieGlyph</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span></code></pre></div>
@@ -137,8 +140,9 @@ particular attribute in an observation.
 <span><span class="co">#&gt; 4 4 2  3 NA  3</span></span></code></pre></div>
 <p>
 The package handles this situation be replacing the any NA values with 0
-in the data. The user is notified about this via a warning. This warning
-can be silenced by specifying na.rm as <code>TRUE</code>
+in the data. The user is notified about this with a warning. This
+warning can be silenced by specifying <code>na.rm = TRUE</code> in
+<code>geom_pie_glyph</code>.
 </p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span></span>
@@ -148,7 +152,9 @@ can be silenced by specifying na.rm as <code>TRUE</code>
 <span>                 radius <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">4.5</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">4.5</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">4.5</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: There were observations with some slices being <span style="color: #0000BB;">"NA"</span>, they have been replaced</span></span>
+<span><span class="co">#&gt; with 0.</span></span></code></pre></div>
 <p><img src="unusual-situations_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -172,9 +178,9 @@ observation.
 <span><span class="co">#&gt; 4 4 2  1  5  3</span></span></code></pre></div>
 <p>
 The package handles this situation by dropping the observation that has
-all attributes as missing. The user is notified about this via a
-warning. This warning can be silenced by specifying na.rm as
-<code>TRUE</code>
+all attributes as missing. The user is notified about this by a warning.
+This warning can be silenced by specifying <code>na.rm = TRUE</code> in
+<code>geom_pie_glyph</code>.
 </p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">plot_data</span><span class="op">)</span><span class="op">+</span></span>
@@ -183,19 +189,58 @@ warning. This warning can be silenced by specifying na.rm as
 <span>                 radius <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">4.5</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">4.5</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">4.5</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: There were observations with all slices being <span style="color: #0000BB;">"NA"</span>, these observations have</span></span>
+<span><span class="co">#&gt; been removed from the data.</span></span></code></pre></div>
 <p><img src="unusual-situations_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="all-attributes-equal-to-zero">All attributes equal to zero<a class="anchor" aria-label="anchor" href="#all-attributes-equal-to-zero"></a>
+</h3>
+<p>
+It is possible that for a particular observation all attributes will
+have a value of 0.
+</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, </span>
+<span>                        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">2</span><span class="op">)</span>,</span>
+<span>                        A <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                        B <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>,</span>
+<span>                        C <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7</span>, <span class="fl">3</span>, <span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">plot_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   x y A B C</span></span>
+<span><span class="co">#&gt; 1 1 3 5 2 7</span></span>
+<span><span class="co">#&gt; 2 2 1 2 2 3</span></span>
+<span><span class="co">#&gt; 3 3 4 0 0 0</span></span>
+<span><span class="co">#&gt; 4 4 2 1 5 3</span></span></code></pre></div>
+<p>
+The package handles this situation by dropping the observation that has
+all attributes equal to 0. The user is notified about this by a warning.
+This warning can be silenced by specifying <code>na.rm = TRUE</code> in
+<code>geom_pie_glyph</code>.
+</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">plot_data</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_pie_glyph.html">geom_pie_glyph</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
+<span>                 slices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'A'</span>,<span class="st">'B'</span>,<span class="st">'C'</span><span class="op">)</span>,</span>
+<span>                 radius <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">4.5</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">4.5</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: There were observations with all slices being <span style="color: #0000BB;">"0"</span>, they have been removed from</span></span>
+<span><span class="co">#&gt; the data before plotting.</span></span></code></pre></div>
+<p><img src="unusual-situations_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="negative-values-for-attributes">Negative values for attributes<a class="anchor" aria-label="anchor" href="#negative-values-for-attributes"></a>
 </h3>
 <p>
 Negative values don’t make sense in the context of pie-charts and are
-not supported by the PieGlyph package. If a user tries to use the
-package with data that includes negative values for attributes, they
-will get an error message.
+not supported by the <code>PieGlyph</code> package. If a user tries to
+use the package with data that includes negative values for attributes,
+they will get an error message.
 </p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, </span>
 <span>                        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">2</span><span class="op">)</span>,</span>
 <span>                        A <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="op">-</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>,</span>
@@ -207,16 +252,17 @@ will get an error message.
 <span><span class="co">#&gt; 2 2 1 -2 2  1</span></span>
 <span><span class="co">#&gt; 3 3 4  3 0  3</span></span>
 <span><span class="co">#&gt; 4 4 2  3 0 -3</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_pie_glyph.html">geom_pie_glyph</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
 <span>                 slices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'A'</span>,<span class="st">'B'</span>,<span class="st">'C'</span><span class="op">)</span>,</span>
 <span>                 data <span class="op">=</span> <span class="va">plot_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `geom_pie_glyph()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Problem while converting geom to grob.</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Problem while computing layer data.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Error occurred in the 1st layer.</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Caused by error in `draw_panel()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Data contains negative values. Remove them before plotting.</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Caused by error in `layer_data()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> The categories <span style="color: #0000BB;">C</span> and <span style="color: #0000BB;">A</span> in `data` contains negative values. Remove them</span></span>
+<span><span class="co">#&gt;   before plotting.</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="identical-x-and-y-values-for-different-pie-glyphs">Identical x and y values for different pie-glyphs<a class="anchor" aria-label="anchor" href="#identical-x-and-y-values-for-different-pie-glyphs"></a>
@@ -232,7 +278,7 @@ two pie-glyphs (one for each system) showing the proportions of the
 three attributes. Although the two pie-glyphs would be overlapped over
 one another and only one would be visible.
 </p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dummy_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>system <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'S'</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
 <span>                         x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span>,</span>
 <span>                         y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span><span class="op">)</span>,</span>
@@ -252,7 +298,7 @@ one another and only one would be visible.
 <p>
 The expected plot is as follows
 </p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dummy_data</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">9</span>,<span class="op">]</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_pie_glyph.html">geom_pie_glyph</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
 <span>                 slices <span class="op">=</span> <span class="st">'attribute'</span>, values <span class="op">=</span> <span class="st">'value'</span>,</span>
@@ -261,12 +307,12 @@ The expected plot is as follows
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">2.5</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">4.5</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'Expected Plot'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="unusual-situations_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="unusual-situations_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>
 However the plot produced is different and the attributes between the
 two system get combined into a single pie-glyph.
 </p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dummy_data</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_pie_glyph.html">geom_pie_glyph</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
 <span>                 slices <span class="op">=</span> <span class="st">'attribute'</span>, values <span class="op">=</span> <span class="st">'value'</span>,</span>
@@ -275,7 +321,7 @@ two system get combined into a single pie-glyph.
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">2.5</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">4.5</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'Generated Plot'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="unusual-situations_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="unusual-situations_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>
 As described before this is because the slices of the pie-glyph are
 grouped on the basis of the x and y coordinates of the pie-glyph and
@@ -287,7 +333,7 @@ This problem arises only in situations when the data is presented in the
 long-format (attributes stacked in one column). The package warns the
 user if this issue arises.
 </p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dummy_data</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_pie_glyph.html">geom_pie_glyph</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
 <span>                 slices <span class="op">=</span> <span class="st">'attribute'</span>, values <span class="op">=</span> <span class="st">'value'</span>,</span>
@@ -295,16 +341,17 @@ user if this issue arises.
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">2.5</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">4.5</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in setup_data(...): Some pie-glyphs have identical x and y</span></span>
-<span><span class="co">#&gt; coordinates. This can cause issues when creating the glyphs. Consider adding</span></span>
-<span><span class="co">#&gt; a pie_group variable to distinguish individual glyphs from one another. See</span></span>
-<span><span class="co">#&gt; vignette("unusual-situations") for more information.</span></span></code></pre></div>
-<p><img src="unusual-situations_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;"></p>
+<span><span class="co">#&gt; Warning: Some pie-glyphs have identical x and y coordinates. This can cause issues when</span></span>
+<span><span class="co">#&gt; creating the glyphs.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Consider adding a pie_group variable to distinguish individual glyphs from</span></span>
+<span><span class="co">#&gt;   one another.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> See `vignette(<span style="color: #0000BB;">"unusual-situations"</span>)` for more information.</span></span></code></pre></div>
+<p><img src="unusual-situations_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>
 The solution here is to manually specify the pie_group aesthetic which
 groups the attributes for one pie-glyph together
 </p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dummy_data</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_pie_glyph.html">geom_pie_glyph</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span>, pie_group <span class="op">=</span> <span class="va">system</span><span class="op">)</span>,</span>
 <span>                 slices <span class="op">=</span> <span class="st">'attribute'</span>, values <span class="op">=</span> <span class="st">'value'</span>,</span>
@@ -312,7 +359,7 @@ groups the attributes for one pie-glyph together
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">2.5</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">4.5</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="unusual-situations_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="unusual-situations_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>
 However a grouping variable might not always be present in the data nor
 would it be easy to manually create one. Hence the easiest fix would be
@@ -320,7 +367,7 @@ to simply convert the data into wide-format (unstack the attributes into
 separate columns) and let the package handle the grouping of the
 pie-glyphs.
 </p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dummy_data_wide</span> <span class="op">&lt;-</span> <span class="va">dummy_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="st">'attribute'</span>, values_from <span class="op">=</span> <span class="st">'value'</span><span class="op">)</span></span>
 <span></span>
@@ -339,11 +386,11 @@ pie-glyphs.
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">2.5</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">4.5</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="unusual-situations_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="unusual-situations_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>
 Finally, we could jitter the pie-glyphs to view all the glyphs
 </p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dummy_data_wide</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_pie_glyph.html">geom_pie_glyph</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
 <span>                 slices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'A'</span>,<span class="st">'B'</span>,<span class="st">'C'</span><span class="op">)</span>,</span>
@@ -352,7 +399,7 @@ Finally, we could jitter the pie-glyphs to view all the glyphs
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">1.4</span>, <span class="fl">5</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0.6</span>, <span class="fl">2.2</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="unusual-situations_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="unusual-situations_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

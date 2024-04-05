@@ -15,9 +15,12 @@ Suggests:
     maps,
     mapproj,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0),
+    vdiffr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 VignetteBuilder: knitr
 URL: https://rishvish.github.io/PieGlyph/, https://github.com/rishvish/PieGlyph
 BugReports: https://github.com/rishvish/PieGlyph/issues
+Config/testthat/edition: 3

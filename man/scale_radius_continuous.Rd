@@ -26,7 +26,9 @@ scale_radius(..., range = c(0.25, 0.6), unit = "cm")
 each major break)
 \item A numeric vector of positions
 \item A function that given the limits returns a vector of minor breaks. Also
-accepts rlang \link[rlang:as_function]{lambda} function notation.
+accepts rlang \link[rlang:as_function]{lambda} function notation. When
+the function has two arguments, it will be given the limits and major
+breaks.
 }}
     \item{\code{oob}}{One of:
 \itemize{
@@ -47,13 +49,15 @@ expand the scale by 5\% on each side for continuous variables, and by
 0.6 units on each side for discrete variables.}
     \item{\code{position}}{For position scales, The position of the axis.
 \code{left} or \code{right} for y axes, \code{top} or \code{bottom} for x axes.}
+    \item{\code{call}}{The \code{call} used to construct the scale for reporting messages.}
     \item{\code{super}}{The super class to use for the constructed scale}
   }}
 
 \item{range}{a numeric vector of length 2 that specifies the minimum and
 maximum size of the plotting symbol after transformation.}
 
-\item{unit}{Unit for the radius of the pie glyphs. Default is "cm", but other units like "in", "mm", etc. can be used.}
+\item{unit}{Unit for the radius of the pie glyphs. Default is "cm",
+but other units like "in", "mm", etc. can be used.}
 
 \item{values}{a set of aesthetic values to map data values to. The values
 will be matched in order (usually alphabetical) with the limits of the
@@ -65,7 +69,7 @@ match will be given \code{na.value}.}
 \itemize{
 \item \code{NULL} for no breaks
 \item \code{waiver()} for the default breaks computed by the
-\link[scales:trans_new]{transformation object}
+\link[scales:new_transform]{transformation object}
 \item A numeric vector of positions
 \item A function that takes the limits as input and returns breaks
 as output (e.g., a function returned by \code{\link[scales:breaks_extended]{scales::extended_breaks()}}).
@@ -85,7 +89,6 @@ A ggplot scale object adjusting the radii of the pie glyphs
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(PieGlyph)
 
 ## Simulate raw data
 set.seed(789)
@@ -100,7 +103,6 @@ plot_data <- data.frame(y = rnorm(10, 100, 30),
                         D = round(runif(10, 1, 9), 2))
 
 head(plot_data)
-
 
 ## Create plot
 p <- ggplot(data = plot_data)+

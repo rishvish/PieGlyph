@@ -29,7 +29,7 @@ p {
 }
 ```
 
-<p>This vignette shows examples of potential unusual situations that can be encountered when using the `PieGlyph` package and how they are handled within the package</p>
+<p>This vignette shows examples of potential unusual situations that can be encountered when using the `PieGlyph` package and how they are handled within the package.</p>
 
 ##### Load library
 ```{r setup, warning = F, message=F}
@@ -51,8 +51,8 @@ plot_data <- data.frame(x = 1:4,
 plot_data
 ```
 
-<p>The package handles this situation be replacing the any NA values with 0 in the data. The user is notified about this via a warning. This warning can be silenced by specifying na.rm as `TRUE`</p>
-```{r, warning = F, fig.align='center', fig.width=7}
+<p>The package handles this situation be replacing the any NA values with 0 in the data. The user is notified about this with a warning. This warning can be silenced by specifying `na.rm = TRUE` in `geom_pie_glyph`.</p>
+```{r, fig.align='center', fig.width=7}
 ggplot()+
   geom_pie_glyph(aes(x = x, y = y),
                  slices = c('A','B','C'),
@@ -75,8 +75,8 @@ plot_data <- data.frame(x = 1:4,
 head(plot_data)
 ```
 
-<p>The package handles this situation by dropping the observation that has all attributes as missing. The user is notified about this via a warning. This warning can be silenced by specifying na.rm as `TRUE`</p>
-```{r, warning = F, fig.align='center', fig.width=7}
+<p>The package handles this situation by dropping the observation that has all attributes as missing. The user is notified about this by a warning. This warning can be silenced by specifying `na.rm = TRUE` in `geom_pie_glyph`.</p>
+```{r, fig.align='center', fig.width=7}
 ggplot(data = plot_data)+
   geom_pie_glyph(aes(x = x, y = y),
                  slices = c('A','B','C'),
@@ -86,9 +86,30 @@ ggplot(data = plot_data)+
   ylim(0.5,4.5)
 ```
 
+### All attributes equal to zero
+<p>It is possible that for a particular observation all attributes will have a value of 0.</p>
+```{r}
+plot_data <- data.frame(x = 1:4, 
+                        y = c(3,1,4,2),
+                        A = c(5, 2, 0, 1),
+                        B = c(2, 2, 0, 5),
+                        C = c(7, 3, 0, 3))
+head(plot_data)
+```
+
+<p>The package handles this situation by dropping the observation that has all attributes equal to 0. The user is notified about this by a warning. This warning can be silenced by specifying `na.rm = TRUE` in `geom_pie_glyph`.</p>
+```{r, fig.align='center', fig.width=7}
+ggplot(data = plot_data)+
+  geom_pie_glyph(aes(x = x, y = y),
+                 slices = c('A','B','C'),
+                 radius = 1)+
+  theme_minimal()+
+  xlim(0.5,4.5)+
+  ylim(0.5,4.5)
+```
 
 ### Negative values for attributes
-<p>Negative values don’t make sense in the context of pie-charts and are not supported by the PieGlyph package. If a user tries to use the package with data that includes negative values for attributes, they will get an error message.</p>
+<p>Negative values don’t make sense in the context of pie-charts and are not supported by the `PieGlyph` package. If a user tries to use the package with data that includes negative values for attributes, they will get an error message.</p>
 ```{r}
 plot_data <- data.frame(x = 1:4, 
                         y = c(3,1,4,2),
@@ -104,7 +125,6 @@ ggplot()+
                  slices = c('A','B','C'),
                  data = plot_data)
 ```
-
 
 ### Identical x and y values for different pie-glyphs
 
