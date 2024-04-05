@@ -82,7 +82,9 @@
 each major break)</p></li>
 <li><p>A numeric vector of positions</p></li>
 <li><p>A function that given the limits returns a vector of minor breaks. Also
-accepts rlang <a href="https://rlang.r-lib.org/reference/as_function.html" class="external-link">lambda</a> function notation.</p></li>
+accepts rlang <a href="https://rlang.r-lib.org/reference/as_function.html" class="external-link">lambda</a> function notation. When
+the function has two arguments, it will be given the limits and major
+breaks.</p></li>
 </ul></dd>
 
     <dt><code>oob</code></dt>
@@ -110,6 +112,9 @@ expand the scale by 5% on each side for continuous variables, and by
 <dd><p>For position scales, The position of the axis.
 <code>left</code> or <code>right</code> for y axes, <code>top</code> or <code>bottom</code> for x axes.</p></dd>
 
+    <dt><code>call</code></dt>
+<dd><p>The <code>call</code> used to construct the scale for reporting messages.</p></dd>
+
     <dt><code>super</code></dt>
 <dd><p>The super class to use for the constructed scale</p></dd>
 
@@ -123,7 +128,8 @@ maximum size of the plotting symbol after transformation.</p></dd>
 
 
 <dt>unit</dt>
-<dd><p>Unit for the radius of the pie glyphs. Default is "cm", but other units like "in", "mm", etc. can be used.</p></dd>
+<dd><p>Unit for the radius of the pie glyphs. Default is "cm",
+but other units like "in", "mm", etc. can be used.</p></dd>
 
 
 <dt>values</dt>
@@ -162,7 +168,6 @@ Also accepts rlang <a href="https://rlang.r-lib.org/reference/as_function.html" 
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rishvish.github.io/PieGlyph/" class="external-link">PieGlyph</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Simulate raw data</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">789</span><span class="op">)</span></span></span>
@@ -184,7 +189,6 @@ Also accepts rlang <a href="https://rlang.r-lib.org/reference/as_function.html" 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 105.49420 4     1 4.63 1.78 4.68 6.83</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  89.15946 5     2 5.62 1.66 6.68 7.00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6  85.46548 6     2 6.50 3.57 6.22 6.71</span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Create plot</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">plot_data</span><span class="op">)</span><span class="op">+</span></span></span>

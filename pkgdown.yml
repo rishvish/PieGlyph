@@ -1,4 +1,4 @@
-pandoc: 2.19.2
+pandoc: 3.1.11
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
@@ -8,5 +8,5 @@ articles:
   spatial-example: spatial-example.html
   time-series-example: time-series-example.html
   unusual-situations: unusual-situations.html
-last_built: 2024-02-26T16:09Z
+last_built: 2024-04-05T19:48Z
 

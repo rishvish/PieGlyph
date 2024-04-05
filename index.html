@@ -90,10 +90,10 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the released version of <code>PieGlyph</code> from <a href="https://cran.r-project.org/" class="external-link">CRAN</a> by running:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"PieGlyph"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"PieGlyph"</span>)</span></code></pre></div>
 <p>Alternatively, you can install the development version of <code>PieGlyph</code> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("devtools")</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"rishvish/PieGlyph"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># install.packages("devtools")</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"rishvish/PieGlyph"</span>)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
@@ -101,27 +101,27 @@
 <div class="section level4">
 <h4 id="load-libraries">Load libraries<a class="anchor" aria-label="anchor" href="#load-libraries"></a>
 </h4>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PieGlyph)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">library</span>(PieGlyph)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="simulate-raw-data">Simulate raw data<a class="anchor" aria-label="anchor" href="#simulate-raw-data"></a>
 </h4>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">777</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">response =</span> <span class="fu">rnorm</span>(<span class="dv">15</span>, <span class="dv">100</span>, <span class="dv">30</span>),</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">system =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">group =</span> <span class="fu">sample</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">x =</span> <span class="fu">c</span>(<span class="st">'G1'</span>, <span class="st">'G2'</span>, <span class="st">'G3'</span>), <span class="at">replace =</span> T),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">A =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="dv">3</span>, <span class="dv">9</span>), <span class="dv">2</span>),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">B =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="dv">1</span>, <span class="dv">5</span>), <span class="dv">2</span>),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">C =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="dv">3</span>, <span class="dv">7</span>), <span class="dv">2</span>),</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">D =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="dv">1</span>, <span class="dv">9</span>), <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">777</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">response =</span> <span class="fu">rnorm</span>(<span class="dv">15</span>, <span class="dv">100</span>, <span class="dv">30</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>                        <span class="at">system =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>                        <span class="at">group =</span> <span class="fu">sample</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">x =</span> <span class="fu">c</span>(<span class="st">'G1'</span>, <span class="st">'G2'</span>, <span class="st">'G3'</span>), <span class="at">replace =</span> T),</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>                        <span class="at">A =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="dv">3</span>, <span class="dv">9</span>), <span class="dv">2</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>                        <span class="at">B =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="dv">1</span>, <span class="dv">5</span>), <span class="dv">2</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>                        <span class="at">C =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="dv">3</span>, <span class="dv">7</span>), <span class="dv">2</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>                        <span class="at">D =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="dv">1</span>, <span class="dv">9</span>), <span class="dv">2</span>))</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="create-plot">Create plot<a class="anchor" aria-label="anchor" href="#create-plot"></a>
 </h4>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">x =</span> system, <span class="at">y =</span> response))<span class="sc">+</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pie_glyph</span>(<span class="at">slices =</span> <span class="fu">c</span>(<span class="st">'A'</span>, <span class="st">'B'</span>, <span class="st">'C'</span>, <span class="st">'D'</span>))<span class="sc">+</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">x =</span> system, <span class="at">y =</span> response))<span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">geom_pie_glyph</span>(<span class="at">slices =</span> <span class="fu">c</span>(<span class="st">'A'</span>, <span class="st">'B'</span>, <span class="st">'C'</span>, <span class="st">'D'</span>))<span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="reference/figures/README-basic-1.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -133,30 +133,30 @@ The attributes can also be stacked into one column to generate the plot. This va
 <div class="section level4">
 <h4 id="stack-the-attributes-in-one-column">Stack the attributes in one column<a class="anchor" aria-label="anchor" href="#stack-the-attributes-in-one-column"></a>
 </h4>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plot_data_stacked <span class="ot">&lt;-</span> plot_data <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">'A'</span>,<span class="st">'B'</span>,<span class="st">'C'</span>,<span class="st">'D'</span>), </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">'Attributes'</span>, </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">'values'</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(plot_data_stacked, <span class="dv">8</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 8 × 5</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   response system group Attributes values</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      &lt;dbl&gt;  &lt;int&gt; &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    115.       1 G2    A            3.24</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    115.       1 G2    B            2.03</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    115.       1 G2    C            4.35</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    115.       1 G2    D            2.78</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     88.0      2 G2    A            3.96</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     88.0      2 G2    B            4.74</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7     88.0      2 G2    C            4.66</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8     88.0      2 G2    D            8.45</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>plot_data_stacked <span class="ot">&lt;-</span> plot_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">'A'</span>,<span class="st">'B'</span>,<span class="st">'C'</span>,<span class="st">'D'</span>), </span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">'Attributes'</span>, </span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">'values'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">head</span>(plot_data_stacked, <span class="dv">8</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; # A tibble: 8 × 5</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt;   response system group Attributes values</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt;      &lt;dbl&gt;  &lt;int&gt; &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; 1    115.       1 G2    A            3.24</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt; 2    115.       1 G2    B            2.03</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt; 3    115.       1 G2    C            4.35</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; 4    115.       1 G2    D            2.78</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; 5     88.0      2 G2    A            3.96</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; 6     88.0      2 G2    B            4.74</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; 7     88.0      2 G2    C            4.66</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; 8     88.0      2 G2    D            8.45</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="create-plot-1">Create plot<a class="anchor" aria-label="anchor" href="#create-plot-1"></a>
 </h4>
-<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data_stacked, <span class="fu">aes</span>(<span class="at">x =</span> system, <span class="at">y =</span> response))<span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Along with slices column, values column is also needed now</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pie_glyph</span>(<span class="at">slices =</span> <span class="st">'Attributes'</span>, <span class="at">values =</span> <span class="st">'values'</span>)<span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data_stacked, <span class="fu">aes</span>(<span class="at">x =</span> system, <span class="at">y =</span> response))<span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="co"># Along with slices column, values column is also needed now</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">geom_pie_glyph</span>(<span class="at">slices =</span> <span class="st">'Attributes'</span>, <span class="at">values =</span> <span class="st">'values'</span>)<span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="reference/figures/README-stacked-1.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
 </div>
