@@ -3,7 +3,7 @@ template:
   bootstrap: 5
   bootswatch: zephyr
 navbar:
-  bg: dark
+  bg: light
   structure:
     left:  [intro, reference, articles, tutorials, news]
     right: [search, github]

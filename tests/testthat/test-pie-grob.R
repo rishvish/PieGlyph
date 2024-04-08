@@ -77,8 +77,9 @@ test_that("Proper pie is created", {
 # Snapshot testing for plots
 test_that("pie_grob generates proper plot", {
   print_grob <- function(x){
-    grid.newpage()
-    grid.draw(x)
+    #grid.newpage()
+    #grid.draw(x)
+    x
   }
 
   p1 <- pieGrob(x = 0.75, y = 0.9, edges = 360, radius = 1,

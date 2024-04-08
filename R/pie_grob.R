@@ -98,7 +98,6 @@ pieGrob <- function(x = .5, y = .5, values,
   if(all(values == 0)){
     cli::cli_abort("Cannot create pie-chart if all values in {.var values} are 0.")
   }
-
   # Check if only one value is non-zero
   only_one <- ifelse(length(values[values != 0]) == 1, TRUE, FALSE)
 
@@ -116,7 +115,7 @@ pieGrob <- function(x = .5, y = .5, values,
                                                      radius_unit))
     slice_y <- grid::unit.c(unit(y, "native") + unit(radius * cos(angles),
                                                      radius_unit))
-    slice_id <- rep(1, each = edges)
+    slice_id <- rep(which(values != 0), each = edges)
     # Create glyph
     pieChart <- grid::polygonGrob(x = slice_x,
                                   y = slice_y,

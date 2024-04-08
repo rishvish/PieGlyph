@@ -57,7 +57,7 @@ draw_key_pie <- function (data, params, size) {
 #' @importFrom rlang sym syms !! !!! caller_env
 #' @importFrom ggforce geom_arc_bar
 #' @importFrom forcats fct_inorder
-#' @importFrom ggplot2 ggproto Geom draw_key_polygon aes_ aes ggplotGrob ggplot theme_void waiver as_label labs
+#' @importFrom ggplot2 ggproto Geom draw_key_polygon aes ggplotGrob ggplot theme_void waiver as_label labs
 #' @export
 NULL
 GeomPieGlyph <- ggproto("GeomPieGlyph", Geom,
@@ -321,7 +321,7 @@ geom_pie_glyph <- function(mapping = NULL, data = NULL, slices, values = NA,
 
   # If global mapping was specified without any local layer mapping
   if (is.null(mapping))
-    mapping <- ggplot2::aes_()
+    mapping <- ggplot2::aes()
 
   # For situations when the data is wide format instead of long
   if (length(slices) > 1){
@@ -347,11 +347,10 @@ geom_pie_glyph <- function(mapping = NULL, data = NULL, slices, values = NA,
 
   # Modify mapping to add the slice, values, fill and pie_group variables
   mapping <- utils::modifyList(mapping,
-                               ggplot2::aes_(fill = as.formula(paste0("~", mapping_slices)),
-                                             values = as.formula(paste0("~", mapping_values)),
-                                             slices = as.formula(paste0("~", mapping_slices)),
-                                             pie_group = as.formula(paste0("~", mapping_pie_group)))
-  )
+                               list(fill = ifelse(is.logical(mapping_slices), mapping_slices, sym(mapping_slices)),
+                                    values = ifelse(is.logical(mapping_values), mapping_values, sym(mapping_values)),
+                                    slices = ifelse(is.logical(mapping_slices), mapping_slices, sym(mapping_slices)),
+                                    pie_group = ifelse(is.logical(mapping_pie_group), mapping_pie_group, sym(mapping_pie_group))))
 
   # Create custom layer
   ll <- ggplot2::layer(
@@ -400,7 +399,7 @@ setup_layer_data <- function(self, plot_data) {
     # For situations when the data is wide format instead of long
     if (length(slices) > 1){
       # If indices are specified in slices
-      slices <- colnames(select(data, slices))
+      slices <- colnames(select(data, all_of(slices)))
 
       if(!all(sapply(data[, slices], is.numeric))){
         cli::cli_abort(c("All columns specified in {.var slices} should be numeric.",
