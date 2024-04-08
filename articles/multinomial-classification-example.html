@@ -29,7 +29,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-dark"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">PieGlyph</a>
 
@@ -166,33 +166,33 @@ particular species.
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">preds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rf</span>, <span class="va">iris</span><span class="op">)</span><span class="op">$</span><span class="va">predictions</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">preds</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   setosa versicolor virginica</span></span>
-<span><span class="co">#&gt; 1      1          0         0</span></span>
-<span><span class="co">#&gt; 2      1          0         0</span></span>
-<span><span class="co">#&gt; 3      1          0         0</span></span>
-<span><span class="co">#&gt; 4      1          0         0</span></span>
-<span><span class="co">#&gt; 5      1          0         0</span></span>
-<span><span class="co">#&gt; 6      1          0         0</span></span></code></pre></div>
+<span><span class="co">#&gt;      setosa   versicolor virginica</span></span>
+<span><span class="co">#&gt; 1 1.0000000 0.0000000000         0</span></span>
+<span><span class="co">#&gt; 2 0.9971111 0.0028888889         0</span></span>
+<span><span class="co">#&gt; 3 1.0000000 0.0000000000         0</span></span>
+<span><span class="co">#&gt; 4 1.0000000 0.0000000000         0</span></span>
+<span><span class="co">#&gt; 5 1.0000000 0.0000000000         0</span></span>
+<span><span class="co">#&gt; 6 0.9997143 0.0002857143         0</span></span></code></pre></div>
 <p>
 Combine the predicted probabilities with the original data for plotting
 </p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">iris</span>, <span class="va">preds</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">plot_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width Species setosa versicolor</span></span>
-<span><span class="co">#&gt; 1          5.1         3.5          1.4         0.2  setosa      1          0</span></span>
-<span><span class="co">#&gt; 2          4.9         3.0          1.4         0.2  setosa      1          0</span></span>
-<span><span class="co">#&gt; 3          4.7         3.2          1.3         0.2  setosa      1          0</span></span>
-<span><span class="co">#&gt; 4          4.6         3.1          1.5         0.2  setosa      1          0</span></span>
-<span><span class="co">#&gt; 5          5.0         3.6          1.4         0.2  setosa      1          0</span></span>
-<span><span class="co">#&gt; 6          5.4         3.9          1.7         0.4  setosa      1          0</span></span>
-<span><span class="co">#&gt;   virginica</span></span>
-<span><span class="co">#&gt; 1         0</span></span>
-<span><span class="co">#&gt; 2         0</span></span>
-<span><span class="co">#&gt; 3         0</span></span>
-<span><span class="co">#&gt; 4         0</span></span>
-<span><span class="co">#&gt; 5         0</span></span>
-<span><span class="co">#&gt; 6         0</span></span></code></pre></div>
+<span><span class="co">#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width Species    setosa</span></span>
+<span><span class="co">#&gt; 1          5.1         3.5          1.4         0.2  setosa 1.0000000</span></span>
+<span><span class="co">#&gt; 2          4.9         3.0          1.4         0.2  setosa 0.9971111</span></span>
+<span><span class="co">#&gt; 3          4.7         3.2          1.3         0.2  setosa 1.0000000</span></span>
+<span><span class="co">#&gt; 4          4.6         3.1          1.5         0.2  setosa 1.0000000</span></span>
+<span><span class="co">#&gt; 5          5.0         3.6          1.4         0.2  setosa 1.0000000</span></span>
+<span><span class="co">#&gt; 6          5.4         3.9          1.7         0.4  setosa 0.9997143</span></span>
+<span><span class="co">#&gt;     versicolor virginica</span></span>
+<span><span class="co">#&gt; 1 0.0000000000         0</span></span>
+<span><span class="co">#&gt; 2 0.0028888889         0</span></span>
+<span><span class="co">#&gt; 3 0.0000000000         0</span></span>
+<span><span class="co">#&gt; 4 0.0000000000         0</span></span>
+<span><span class="co">#&gt; 5 0.0000000000         0</span></span>
+<span><span class="co">#&gt; 6 0.0002857143         0</span></span></code></pre></div>
 <p>
 Add a column indicating whether the sample was classified correctly or
 not
