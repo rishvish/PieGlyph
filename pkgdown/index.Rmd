@@ -53,26 +53,26 @@ library(PieGlyph)
 #### Simulate raw data
 
 ```{r data}
-set.seed(777)
-plot_data <- data.frame(response = rnorm(15, 100, 30),
-                        system = 1:15,
-                        group = sample(size = 15, x = c('G1', 'G2', 'G3'), replace = T),
-                        A = round(runif(15, 3, 9), 2),
-                        B = round(runif(15, 1, 5), 2),
-                        C = round(runif(15, 3, 7), 2),
-                        D = round(runif(15, 1, 9), 2))
+set.seed(123)
+plot_data <- data.frame(response = rnorm(30, 100, 30),
+                        system = 1:30,
+                        group = sample(size = 30, x = c("G1", "G2", "G3"), replace = T),
+                        A = round(runif(30, 3, 9), 2),
+                        B = round(runif(30, 1, 5), 2),
+                        C = round(runif(30, 3, 7), 2),
+                        D = round(runif(30, 1, 9), 2))
 ```
 
 #### Create plot
 
 ```{r basic, fig.align='center', fig.width=8, eval = FALSE}
 ggplot(data = plot_data, aes(x = system, y = response))+
-  geom_pie_glyph(slices = c('A', 'B', 'C', 'D'))+
+  geom_pie_glyph(slices = c("A", "B", "C", "D"))+
   theme_minimal()
 ```
 
 ```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
-knitr::include_graphics('man/figures/README-basic-1.png')
+knitr::include_graphics("man/figures/README-basic-1.png")
 ```
 
 ### Alternative specification
@@ -84,9 +84,9 @@ knitr::include_graphics('man/figures/README-basic-1.png')
 
 ```{r data_stacking}
 plot_data_stacked <- plot_data %>%
-  pivot_longer(cols = c('A','B','C','D'), 
-               names_to = 'Attributes', 
-               values_to = 'values')
+  pivot_longer(cols = c("A", "B", "C", "D"), 
+               names_to = "Attributes", 
+               values_to = "values")
 head(plot_data_stacked, 8)
 ```
 
@@ -102,3 +102,24 @@ ggplot(data = plot_data_stacked, aes(x = system, y = response))+
 ```{r echo=FALSE, fig.align='center', fig.cap='', out.width='100%'}
 knitr::include_graphics('man/figures/README-stacked-1.png')
 ```
+
+### Interactive pie-chart glyphs
+
+It is also possible to create interactive pie-chart scatterplots using the `geom_pie_interactive` function via the [ggiraph](https://davidgohel.github.io/ggiraph/) framework.
+
+Hovering over a pie-chart glyph will show a tooltip containing information about the raw counts and percentages of the categories (system attributes in this example) shown in the pie-charts. All additional features by ggiraph are also supported. See the [ggiraph book](https://www.ardata.fr/ggiraph-book/) and `vignette("interactive-pie-glyphs")` for more information.
+
+```{r interactive, fig.align='center', fig.width=8, fig.height = 6, eval=FALSE}
+plot_obj <- ggplot(data = plot_data)+
+              geom_pie_interactive(aes(x = system, y = response,
+                                       data_id = system),
+                                   slices = c("A", "B", "C", "D"), 
+                                   colour = "black")+
+              theme_classic()
+
+girafe(ggobj = plot_obj, height_svg = 6, width_svg = 8)
+```
+
+<img src = "man/figures/interactive-pie-glyphs.png" width="100%" style="display: block; margin: auto;" > </img>
+
+

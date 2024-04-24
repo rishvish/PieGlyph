@@ -16,20 +16,26 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{css, echo = FALSE}
+body{
+  text-align: justify;
+  text-justify: inter-word;
+}
+```
+
 `PieGlyph` is an R package aimed at replacing points in a plot with pie-chart glyphs, showing the relative proportions of different categories. The pie-chart glyphs are invariant to the axes and plot dimensions to prevent distortions when the plot dimensions are changed.
 
-## Examples
-
-#### Load libraries
+##### Load libraries
 
 ```{r libs, warning=F, message=F}
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(PieGlyph)
+library(ggiraph)
 ```
 
-#### Simulate raw data
+##### Simulate raw data
 
 ```{r data}
 set.seed(123)
@@ -42,11 +48,13 @@ plot_data <- data.frame(response = rnorm(30, 100, 30),
                         D = round(runif(30, 1, 9), 2))
 ```
 
-<p> The data has 30 observations and seven columns. `response` is a continuous variable measuring system output while `system` describes the 30 individual systems of interest. Each system is placed in one of three groups shown in `group`. Columns `A`, `B`, `C`, and `D` measure system attributes. </p>
+The data has 30 observations and seven columns. `response` is a continuous variable measuring system output while `system` describes the 30 individual systems of interest. Each system is placed in one of three groups shown in `group`. Columns `A`, `B`, `C`, and `D` measure system attributes. 
 
 ```{r data_subset}
 head(plot_data)
 ```
+
+### Standard specification (wide-data)
 
 #### Create scatter plot with pie-charts
 
@@ -54,7 +62,7 @@ head(plot_data)
 
 #### Basic plot
 
-```{r basic, fig.align='center', fig.width=8}
+```{r basic, fig.align='center', fig.width=6, fig.height = 5}
 ggplot(data = plot_data, aes(x = system, y = response))+
   geom_pie_glyph(slices = c('A', 'B', 'C', 'D'))+
   theme_classic()
@@ -62,7 +70,7 @@ ggplot(data = plot_data, aes(x = system, y = response))+
 
 #### Change pie radius and border colour
 
-```{r border, fig.align='center', fig.width=8}
+```{r border, fig.align='center', fig.width=6, fig.height = 5}
 ggplot(data = plot_data, aes(x = system, y = response))+
   # Can also specify slices as column indices
   geom_pie_glyph(slices = 4:7, colour = 'black', radius = 0.5)+ 
@@ -71,7 +79,7 @@ ggplot(data = plot_data, aes(x = system, y = response))+
 
 #### Map radius to a variable
 
-```{r map, fig.align='center', fig.width=8}
+```{r map, fig.align='center', fig.width=6, fig.height = 5}
 p <- ggplot(data = plot_data, aes(x = system, y = response))+
         geom_pie_glyph(aes(radius = group), 
                        slices = c('A', 'B', 'C', 'D'), 
@@ -82,30 +90,30 @@ p
 
 #### Adjust radius for groups
 
-```{r radius, fig.align='center', fig.width=8}
+```{r radius, fig.align='center', fig.width=6, fig.height = 5}
 p <- p + scale_radius_manual(values = c(0.25, 0.5, 0.75), unit = 'cm')
 p
 ```
 
 #### Add custom labels
 
-```{r labels, fig.align='center', fig.width=8}
+```{r labels, fig.align='center', fig.width=6, fig.height = 5}
 p <- p + labs(x = 'System', y = 'Response', fill = 'Attributes', radius = 'Group')
 p
 ```
 
 #### Change category colours
 
-```{r colours, fig.align='center', fig.width=8}
+```{r colours, fig.align='center', fig.width=6, fig.height = 5}
 p + scale_fill_manual(values = c('#56B4E9', '#CC79A7', '#F0E442', '#D55E00'))
 ```
 
-### Alternative specification
+### Alternative specification (long-data)
 
 <p> The attributes can also be stacked into one column to generate the plot. This variant of the function is useful for situations  when the data is in tidy format. See `vignette('tidy-data')` and `vignette('pivot')` for more information. </p>
 
 
-#### Stack the attributes in one column
+##### Stack the attributes in one column
 
 ```{r data_stacking}
 plot_data_stacked <- plot_data %>%
@@ -117,9 +125,27 @@ head(plot_data_stacked, 8)
 
 #### Create plot
 
-```{r stacked, fig.align='center', fig.width=8}
+```{r stacked, fig.align='center', fig.width=6, fig.height = 5}
 ggplot(data = plot_data_stacked, aes(x = system, y = response))+
   # Along with slices column, values column is also needed now
   geom_pie_glyph(slices = 'Attributes', values = 'values')+
   theme_classic()
 ```
+
+### Interactive pie-chart glyphs
+
+It is also possible to create interactive pie-chart scatterplots using the `geom_pie_interactive` function via the [ggiraph](https://davidgohel.github.io/ggiraph/) framework.
+
+Hovering over a pie-chart glyph will show a tooltip containing information about the raw counts and percentages of the categories (system attributes in this example) shown in the pie-charts. All additional features by ggiraph are also supported. See the [ggiraph book](https://www.ardata.fr/ggiraph-book/) and `vignette("interactive-pie-glyphs")` for more information.
+
+```{r interactive, fig.align='center', fig.width=6, fig.height = 5}
+plot_obj <- ggplot(data = plot_data)+
+              geom_pie_interactive(aes(x = system, y = response,
+                                       data_id = system),
+                                   slices = c("A", "B", "C", "D"), 
+                                   colour = "black")+
+              theme_classic()
+
+girafe(ggobj = plot_obj, height_svg = 5, width_svg = 6)
+```
+

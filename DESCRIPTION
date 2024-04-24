@@ -1,6 +1,6 @@
 Package: PieGlyph
 Title: Axis Invariant Scatter Pie Plots
-Version: 0.1.1
+Version: 1.0.0
 Authors@R: 
     c(person("Rishabh", "Vishwakarma", email = "vishwakr@tcd.ie", role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-4847-3494")),
@@ -9,10 +9,11 @@ Authors@R:
 Description: Extends 'ggplot2' to help replace points in a scatter plot with pie-chart glyphs showing the relative proportions of different categories. The pie glyphs are independent of the axes and plot dimensions, to prevent distortions when the plot dimensions are changed.
 License: GPL (>= 3)
 Encoding: UTF-8
-Imports: ggplot2, dplyr, tidyr, rlang, ggforce, forcats, plyr, grid, scales, cli, utils
+Imports: ggplot2, dplyr, tidyr, rlang, ggiraph, ggforce, purrr, forcats, plyr, grid, scales, cli, utils
 Suggests: 
     ranger,
     maps,
+    cowplot,
     mapproj,
     knitr,
     rmarkdown,

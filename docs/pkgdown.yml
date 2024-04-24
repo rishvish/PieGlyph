@@ -2,11 +2,12 @@ pandoc: 3.1.1
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
+  interactive-pie-glyphs: interactive-pie-glyphs.html
   multinomial-classification-example: multinomial-classification-example.html
   pie-lollipop-example: pie-lollipop-example.html
   PieGlyph: PieGlyph.html
   spatial-example: spatial-example.html
   time-series-example: time-series-example.html
   unusual-situations: unusual-situations.html
-last_built: 2024-04-05T18:12Z
+last_built: 2024-04-24T00:13Z
 

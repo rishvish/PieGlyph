@@ -48,7 +48,7 @@ draw_key_pie <- function (data, params, size) {
 
 
 #' @usage NULL
-#' @importFrom grid gpar viewport grobTree unit rectGrob pointsGrob grid.draw grid.newpage
+#' @importFrom grid gpar viewport grobTree unit rectGrob pointsGrob grid.draw grid.newpage gTree
 #' @importFrom tidyr pivot_longer pivot_wider %>%
 #' @importFrom dplyr mutate near distinct select is.grouped_df ungroup all_of group_by filter .data rename_with
 #' @importFrom plyr unrowname
@@ -133,11 +133,9 @@ GeomPieGlyph <- ggproto("GeomPieGlyph", Geom,
 
 # Additional helper functions taken from ggplot2 and grid packages because they
 # weren't exported in the namescape by the respective packages
-manual_scale <- utils::getFromNamespace("manual_scale",
-                                        "ggplot2")
-
-is.waive <- utils::getFromNamespace("is.waive",
-                                    "ggplot2")
+manual_scale <- getFromNamespace("manual_scale", "ggplot2")
+is.waive <- getFromNamespace("is.waive", "ggplot2")
+defaults <- getFromNamespace("defaults", "ggplot2")
 
 #' @title Scatter plot with points replaced by axis-invariant pie-chart glyphs
 #' @description

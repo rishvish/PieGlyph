@@ -1,3 +1,15 @@
+<style type="text/css">
+body {
+  text-align: justify;
+}
+
+p {
+  font-weight: 'normal';
+  font-size: '12px;
+  text-align: justify;
+}
+</style>
+
 # PieGlyph <img src="man/figures/logo.png" align="right" height="139" />
 
 `PieGlyph` is an R package aimed at replacing points in a plot with
@@ -27,19 +39,19 @@ from [GitHub](https://github.com/) with:
 
 #### Simulate raw data
 
-    set.seed(777)
-    plot_data <- data.frame(response = rnorm(15, 100, 30),
-                            system = 1:15,
-                            group = sample(size = 15, x = c('G1', 'G2', 'G3'), replace = T),
-                            A = round(runif(15, 3, 9), 2),
-                            B = round(runif(15, 1, 5), 2),
-                            C = round(runif(15, 3, 7), 2),
-                            D = round(runif(15, 1, 9), 2))
+    set.seed(123)
+    plot_data <- data.frame(response = rnorm(30, 100, 30),
+                            system = 1:30,
+                            group = sample(size = 30, x = c("G1", "G2", "G3"), replace = T),
+                            A = round(runif(30, 3, 9), 2),
+                            B = round(runif(30, 1, 5), 2),
+                            C = round(runif(30, 3, 7), 2),
+                            D = round(runif(30, 1, 9), 2))
 
 #### Create plot
 
     ggplot(data = plot_data, aes(x = system, y = response))+
-      geom_pie_glyph(slices = c('A', 'B', 'C', 'D'))+
+      geom_pie_glyph(slices = c("A", "B", "C", "D"))+
       theme_minimal()
 
 <img src="man/figures/README-basic-1.png" width="100%" style="display: block; margin: auto;" />
@@ -56,21 +68,21 @@ more information.
 #### Stack the attributes in one column
 
     plot_data_stacked <- plot_data %>%
-      pivot_longer(cols = c('A','B','C','D'), 
-                   names_to = 'Attributes', 
-                   values_to = 'values')
+      pivot_longer(cols = c("A", "B", "C", "D"), 
+                   names_to = "Attributes", 
+                   values_to = "values")
     head(plot_data_stacked, 8)
     #> # A tibble: 8 × 5
     #>   response system group Attributes values
     #>      <dbl>  <int> <chr> <chr>       <dbl>
-    #> 1    115.       1 G2    A            3.24
-    #> 2    115.       1 G2    B            2.03
-    #> 3    115.       1 G2    C            4.35
-    #> 4    115.       1 G2    D            2.78
-    #> 5     88.0      2 G2    A            3.96
-    #> 6     88.0      2 G2    B            4.74
-    #> 7     88.0      2 G2    C            4.66
-    #> 8     88.0      2 G2    D            8.45
+    #> 1     83.2      1 G1    A            5.8 
+    #> 2     83.2      1 G1    B            1.57
+    #> 3     83.2      1 G1    C            4.78
+    #> 4     83.2      1 G1    D            8.31
+    #> 5     93.1      2 G3    A            6.07
+    #> 6     93.1      2 G3    B            3.76
+    #> 7     93.1      2 G3    C            3.87
+    #> 8     93.1      2 G3    D            8.21
 
 #### Create plot
 
@@ -80,3 +92,28 @@ more information.
       theme_minimal()
 
 <img src="man/figures/README-stacked-1.png" width="100%" style="display: block; margin: auto;" />
+
+### Interactive pie-chart glyphs
+
+It is also possible to create interactive pie-chart scatterplots using
+the `geom_pie_interactive` function via the
+[ggiraph](https://davidgohel.github.io/ggiraph/) framework.
+
+Hovering over a pie-chart glyph will show a tooltip containing
+information about the raw counts and percentages of the categories
+(system attributes in this example) shown in the pie-charts. All
+additional features by ggiraph are also supported. See the [ggiraph
+book](https://www.ardata.fr/ggiraph-book/) and
+`vignette("interactive-pie-glyphs")` for more information.
+
+    plot_obj <- ggplot(data = plot_data)+
+                  geom_pie_interactive(aes(x = system, y = response,
+                                           data_id = system),
+                                       slices = c("A", "B", "C", "D"), 
+                                       colour = "black")+
+                  theme_classic()
+
+    girafe(ggobj = plot_obj, height_svg = 6, width_svg = 8)
+
+<img src = "man/figures/interactive-pie-glyphs.png" width="100%" style="display: block; margin: auto;" >
+</img>

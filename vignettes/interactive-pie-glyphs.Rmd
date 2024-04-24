@@ -1,0 +1,304 @@
+---
+title: "Interactive pie-chart glyphs"
+output: 
+  rmarkdown::html_vignette:
+    check_title: FALSE
+vignette: >
+  %\VignetteIndexEntry{Interactive pie-chart glyphs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{css, echo = FALSE}
+body{
+  text-align: justify;
+  text-justify: inter-word;
+}
+```
+
+Static pie-chart glyphs can only show information about the relative proportions of the different categories. Sometimes, information about the raw counts of categories could also be important. The [`geom_pie_interactive`](../reference/geom_pie_interactive.html) function can be used in conjunction with the [`ggiraph`](https://davidgohel.github.io/ggiraph/) framework to create interactive visualisations where hovering over a pie-glyph shows additional information about the categories shown. 
+
+All the interactive parameters from [`ggiraph`](https://davidgohel.github.io/ggiraph/) are supported and the plots can be fully customised. A few useful examples are shown here. See [ggiraph book](https://www.ardata.fr/ggiraph-book/) for all available options.
+
+
+##### Load libraries
+```{r setup, warning = FALSE, message = FALSE}
+library(PieGlyph)
+library(ggplot2)
+library(ggiraph)
+library(dplyr)
+library(cowplot)
+```
+
+##### Simulate raw data
+```{r}
+set.seed(737)
+plot_data <- data.frame(response = rnorm(15, 100, 30),
+                        system = 1:15,
+                        group = sample(size = 15, x = c('G1', 'G2', 'G3'), replace = T),
+                        A = round(runif(15, 3, 9), 2),
+                        B = round(runif(15, 1, 5), 2),
+                        C = round(runif(15, 3, 7), 2),
+                        D = round(runif(15, 1, 9), 2))
+```
+
+The data has 15 observations and seven columns. `response` is a continuous variable measuring system output while `system` describes the 15 individual systems of interest. Each system is placed in one of three groups shown in `group`. Columns `A`, `B`, `C`, and `D` measure system attributes. 
+
+```{r data_subset}
+head(plot_data)
+```
+
+### Create basic interactive visualisation
+
+Creating interactive pie-chart glyphs is similar to creating their static counterparts, we just use [`geom_pie_interactive`](../reference/geom_pie_interactive.html) instead of [`geom_pie_glyph`](../reference/geom_pie_glyph.html) and wrap the ggplot object in the [`girafe()`](https://davidgohel.github.io/ggiraph/reference/girafe.html) function.
+
+```{r basic_plot, fig.align='center', fig.width=6, fig.height=5}
+# Same ggplot call as the static version
+gg_obj <- ggplot(data = plot_data, aes(x = system, y = response)) + 
+  # geom_pie_interactive instead of geom_pie_glyph
+  geom_pie_interactive(slices = c("A", "B", "C", "D"),
+                       colour = "black") +
+  scale_fill_brewer(palette = "Dark2") + 
+  theme_classic(base_size = 16)
+  
+# Pass the ggplot object to the girafe function to create the interactive plot
+girafe(ggobj = gg_obj)
+```
+
+*By default, hovering over a specific pie-glyph would present a tooltip containing information about the raw values and percentages of the different categories shown in that pie-glyph.*
+
+### Custom tooltip
+
+The [`tooltip`](https://davidgohel.github.io/ggiraph/reference/interactive_parameters.html) aesthetic can be modified to show a custom tooltip when hovering over a pie-glyph. This could either be set to a column in the data, a particular character string or a combination of two. 
+
+We create a plot with the tooltip showing the `group` variable in the data. 
+```{r custom_tooltip, fig.align='center', fig.width=6, fig.height=5}
+gg_obj <- ggplot(data = plot_data, aes(x = system, y = response)) + 
+  # specify tooltip aesthetic
+  # wrapped in paste0 to add more descriptive text to the tooltip
+  geom_pie_interactive(aes(tooltip = paste0("Group: ", group)),
+                       slices = c("A", "B", "C", "D"),
+                       colour = "black") +
+  scale_fill_brewer(palette = "Dark2") + 
+  theme_classic(base_size = 16)
+  
+# Pass the ggplot object to the girafe function to create the interactive plot
+girafe(ggobj = gg_obj)
+```
+
+*Hovering over a pie-glyph will now show the `group` that observation belongs to.*
+
+### Showing information on clicking pie-glyphs
+
+The [`onclick`](https://davidgohel.github.io/ggiraph/reference/interactive_parameters.html) aesthetic can be configured to execute javascript code when a pie-glyph is clicked. This could be useful in a shiny application for populating a container with information or for running javascript code like opening a webpage or making an API call based on the observations selected by the user in a plot. We show a basic example that opens up an alert box showing the group variable of the observation clicked by the user.
+
+```{r onclick, fig.align='center', fig.width=6, fig.height=5}
+gg_obj <- ggplot(data = plot_data, aes(x = system, y = response)) + 
+  # specify onclick aesthetic
+  geom_pie_interactive(aes(
+                       onclick = "alert(\"This observation belongs to group \" + 
+                                  this.getAttribute(\"data-id\"))"),
+                       slices = c("A", "B", "C", "D"),
+                       colour = "black") +
+  scale_fill_brewer(palette = "Dark2") + 
+  theme_classic(base_size = 16)
+
+# Pass the ggplot object to the girafe function to create the interactive plot
+girafe(ggobj = gg_obj)
+```
+
+*Click on any pie-glyph to show a dialog box containing information about the `group` of the observation.*
+
+### Group pie-glyphs using data_id
+
+If the data has a grouping variable, the visualisation can be configured to highlight all the pie-glyphs for observations belonging to the same group as that of the hovered pie-glyph. This is accomplished using the [`data_id`](https://davidgohel.github.io/ggiraph/reference/interactive_parameters.html) aesthetic.
+
+```{r data_id, fig.align='center', fig.width=6, fig.height=5}
+gg_obj <- ggplot(data = plot_data, aes(x = system, y = response)) + 
+  # specify data_id aesthetic
+  geom_pie_interactive(aes(data_id = group),
+                       slices = c("A", "B", "C", "D"),
+                       colour = "black") +
+  scale_fill_brewer(palette = "Dark2") + 
+  theme_classic(base_size = 16)
+  
+# Pass the ggplot object to the girafe function to create the interactive plot
+girafe(ggobj = gg_obj)
+```
+
+*Hovering over a pie-glyph would now highlight it in addition to showing the tooltip.*
+
+
+### Customising the aesthetics of interactivity
+
+The `options` argument in the [`girafe()`](https://davidgohel.github.io/ggiraph/reference/girafe.html) function can be used to customise the aesthetic properties of the tooltip (using [`opts_tooltip()`](https://davidgohel.github.io/ggiraph/reference/opts_tooltip.html)), hover animation(using [`opts_hover()`](https://davidgohel.github.io/ggiraph/reference/opts_hover.html) and [`opts_hover_inv()`](https://davidgohel.github.io/ggiraph/reference/opts_hover.html)) and general visual aesthetics (using [`opts_sizing()`](https://davidgohel.github.io/ggiraph/reference/opts_sizing.html), [`opts_toolbar()`](https://davidgohel.github.io/ggiraph/reference/opts_toolbar.html), [`opts_zoom()`](https://davidgohel.github.io/ggiraph/reference/opts_zoom.html), etc.) of the plot using CSS. We show an example modifying a few of these properties, refer to [Customising girafe animations](https://www.ardata.fr/ggiraph-book/customize.html) in the ggiraph book for more information.
+
+```{r customisation, fig.align='center', fig.width=6, fig.height=5}
+# Reuse the previous gg_obj
+girafe(ggobj = gg_obj,
+       options = list(
+         # Options for formatting the appearance of the tooltip
+         # The tooltip will have a blue background with white text
+         opts_tooltip = opts_tooltip(css = "background-color:blue;color:white;padding:5px"),
+         # Options for changing animation of observations which are hovered
+         # Hovered pie-glyph will be highlighted yellow with dark grey border
+         opts_hover(css = "fill:yellow;stroke:darkgrey;"),
+         # Options for changing properties of the pie-glyphs not selected
+         # Make non-selected pie-glyphs fade into background
+         opts_hover_inv(css = "opacity:0.25;"),
+         # Options for panning and zooming
+         # Set max to a number greater than 1 and tooltip will appear on 
+         # top right giving options for panning and zooming across the plot
+         opts_zoom(max = 3)
+       ))
+```
+
+*Hover over a pie-glyph to show the customised tooltip. The highlighted pie-glyph would have a different appearance while those not selected would fade into the background. The menu on the top right can also be used to pan and zoom across the plot.*
+
+### Selection of observations in a plot
+
+The [`opts_selection()`](https://davidgohel.github.io/ggiraph/reference/opts_selection.html) function can be used to configure properties for selecting observations by dragging the mouse across the plot. The `type = "single"` allows for selecting a single value while `type="multiple"` enables lasso selection for selecting multiple values. A toolbar appear on top-right with options for selecting and deselecting observations.
+
+*Note: It is important to specify the `data_id` aesthetic (ideally a unique identifier for each observation) for performing selection.*
+
+```{r single-selection, fig.align='center', fig.width=6, fig.height=5}
+# Add a unique identifier for each observertion
+plot_data$id <- 1:nrow(plot_data)
+
+gg_obj <- ggplot(data = plot_data, aes(x = system, y = response)) + 
+  # specify data_id as a unique identifier for each observation
+  geom_pie_interactive(aes(data_id = id),
+                       slices = c("A", "B", "C", "D"),
+                       colour = "black") +
+  scale_fill_brewer(palette = "Dark2") + 
+  theme_classic(base_size = 16)
+
+girafe(ggobj = gg_obj,
+       options = list(
+         # Options for selecting observations
+         # only_shiny = FALSE is needed to see selections in page
+         opts_selection(type = "multiple", 
+                        only_shiny = FALSE),
+         # Panning and zooming
+         opts_zoom(max = 3)
+       ))
+```
+
+*Use the menu from the top right menu to perform lasso selection/deslection to select/deselect observations in the plot and zoom and pan across the plot.*
+
+
+### Selection across multiple plots
+It is also possible to arrange multiple plots beside each other and perform selection between plots. The two plots can be arranged using [cowplot](https://wilkelab.org/cowplot/index.html) or [patchwork](https://patchwork.data-imaginist.com/) and if they share the same `data_id` attribute, hovering over an observation in one plot would highlight that observation in the other plot.
+
+```{r multi-selection, fig.align='center', fig.width=9, fig.height=5}
+# Lets first add two more variables to our data
+set.seed(373)
+plot_data <- plot_data %>% 
+  mutate(response2 = round(rnorm(15, 100, 30), 2),
+         system2 = round(runif(15, 5, 20), 2))
+
+gg_obj1 <- ggplot(data = plot_data, aes(x = system, y = response)) + 
+  # specify data_id as a unique identifier for each observation
+  geom_pie_interactive(aes(data_id = id),
+                       slices = c("A", "B", "C", "D"),
+                       colour = "black") +
+  scale_fill_brewer(palette = "Dark2") + 
+  theme_classic(base_size = 16) +
+  theme(legend.position = "top")
+
+
+gg_obj2 <- ggplot(data = plot_data, aes(x = system2, y = response2)) + 
+  # specify data_id as a unique identifier for each observation
+  geom_pie_interactive(aes(data_id = id),
+                       slices = c("A", "B", "C", "D"),
+                       colour = "black") +
+  scale_fill_brewer(palette = "Dark2") + 
+  labs(x = "Another system", y = "Another response") +
+  theme_classic(base_size = 16) +
+  theme(legend.position = "top")
+
+girafe(ggobj = cowplot::plot_grid(gg_obj1, gg_obj2, 
+                                  nrow = 1),
+       options = list(
+         # Options for selecting observations
+         # only_shiny = FALSE is needed to see selections in page
+         opts_selection(type = "multiple", 
+                        only_shiny = FALSE)
+       ))
+```
+
+*Hover over a pie-glyph in any plot to see the corresponding pie-glyph in the other plot. Use the lasso selection option from the top-right menu to select multiple observations between the plots.*
+
+### Combining with other interactive geoms/elements from `ggiraph`
+
+`geom_pie_interactive` can be combined with other elements of `ggiraph` like geoms, scales, facets, etc. to convert every component of a plot interactive. In this example, every element of the plot including the pie-glyphs, facet labels, plot title, axis title and text, legend title and keys are interactive and they can be hovered over or clicked on to present additional information or execute javascript code in the background. 
+
+```{r interactive-geoms, fig.align='center', fig.width=8, fig.height=5}
+gg_obj <- ggplot(data = plot_data, aes(x = system, y = response)) + 
+  # Simple theme for plot
+  theme_classic(base_size = 16) +
+  # Title for plot
+  labs(title = "This is a plot with each component being interactive") +
+  # Interactive pie-glyphs
+  geom_pie_interactive(aes(data_id = id),
+                       slices = c("A", "B", "C", "D"),
+                       colour = "black") +
+  # Interactive version of facet_wrap.
+  # Use labeller_interactive for the interactive strips
+  facet_wrap_interactive(vars(group), nrow = 1,
+                         labeller = labeller_interactive(
+                           aes(tooltip = paste0("Group: ", group), 
+                               data_id = group)
+                           )
+                         ) + 
+  # Interactive version of scale_fill_manual
+  # Specify he tooltip and data_id attributes for the legend keys
+  # Use labeller_interactive for making legend title interactive
+  scale_fill_manual_interactive(values = c("#1B9E77", "#D95F02",
+                                           "#7570B3", "#E7298A"),
+                                name = label_interactive(
+                                  "Attributes", 
+                                  tooltip = "Interactive legend title", 
+                                  data_id =   "legend.title",
+                                  onclick = "alert(\"You clicked the legend title.\")"
+                                  ),
+                                tooltip = function(x) paste0("Attribute: ", x),
+                                data_id = function(x) x) + 
+  # Interactive elements in the theme
+  # Use element_text_interactive for the axis title, axis text and plot title
+  theme(legend.position = "top",
+        axis.title = element_text_interactive(
+          data_id = "axis.title",
+          tooltip = "Axis title",
+          onclick = "alert(\"You clicked the axis title.\")",
+          hover_css = "fill:red;stroke:none;"
+        ),
+        axis.text = element_text_interactive(
+          data_id = "axis.text",
+          tooltip = "Axis text",
+          onclick = "alert(\"You clicked the axis text\")",
+          hover_css = "fill:red;stroke:none;"
+        ),
+        plot.title = element_text_interactive(
+          data_id = "plot.title",
+          tooltip = "Plot title",
+          onclick = "alert(\"You clicked the plot title\")",
+          hover_css = "fill:blue;stroke:black;"
+        )) 
+
+girafe(ggobj = gg_obj)
+```
+
+*Hover and click over any element in the plot to highlight it and open a dialog box showing additional information.*
+
+`ggiraph` is a very powerful package and the examples presented here in this vignette cover a small subset of features offered by `ggiraph`. Please see the [ggiraph book](https://www.ardata.fr/ggiraph-book/) to learn more about the wonderful plots that can be created using `ggiraph`.
+
+
+

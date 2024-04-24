@@ -29,10 +29,10 @@ test_that("geom_pie_glyph throws appropriate errors", {
 
   # 0 in all slices
   plot_data3 <- data.frame(x = 1:4,
-                           y = c(3,  1, 4,  2),
-                           A = c(5,  2, 0, 3),
-                           B = c(0,  2, 0, 3),
-                           C = c(7,  5, 0, 3))
+                           y = c(3, 1, 4, 2),
+                           A = c(5, 2, 0, 3),
+                           B = c(0, 2, 0, 3),
+                           C = c(7, 5, 0, 3))
   p3 <- ggplot()+
     geom_pie_glyph(aes(x = x, y = y),
                    slices = c('A','B','C'),
