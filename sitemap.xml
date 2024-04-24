@@ -13,6 +13,9 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
+    <loc>/articles/interactive-pie-glyphs.html</loc>
+  </url>
+  <url>
     <loc>/articles/multinomial-classification-example.html</loc>
   </url>
   <url>
@@ -44,6 +47,9 @@
   </url>
   <url>
     <loc>/reference/geom_pie_glyph.html</loc>
+  </url>
+  <url>
+    <loc>/reference/geom_pie_interactive.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
