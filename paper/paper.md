@@ -13,6 +13,7 @@ authors:
     affiliation: 1 
   - name: Caroline Brophy
     affiliation: 1
+    orcid: 0000-0003-2888-4082
   - name: Catherine Hurley
     affiliation: 2
 affiliations:
@@ -45,7 +46,7 @@ Other packages in `R` including `scatterpie` [@Yu:2024] and `ggforce` [@Pedersen
 
 A limitation of static pie-chart glyphs is that only the relative proportion of different attributes can be visualised and not their raw counts (where there are associated raw counts). `PieGlyph` accounts for this by providing the option to create interactive pie-glyphs which, when hovered over, show a tooltip highlighting the raw count and percentage of each attribute shown in the pie-glyph. \autoref{fig:fig2} shows an example of such a plot where interactive pie-glyphs are superimposed on the map of Europe to illustrate the breakdown of the ages of mothers at the time of their first birth across different countries in 1999 and 2017. It indicates that, women in Western Europe tend to have a higher age at the time of first birth, compared to women in Eastern Europe. Furthermore, \autoref{fig:fig2} also highlights the trend of an increased age at the time of first birth in 2017 as compared to 1999 across all countries. Hovering over a pie-glyph would show the raw counts and percentages of mothers in each age group in the respective country (illustrated for Iceland in 1999 here). This interactivity is incorporated in `PieGlyph` using the `ggiraph` [@Gohel:2024] package. 
 
-![ A map of Europe overlayed with pie-glyphs showing the proportion of mothers belonging to particular age group during their first birth in the year 1999 (a) and 2017 (b) in the respective countries. A tooltip is shown highlighting the raw counts in each age group in Iceland. The data for this plot is from @birthsdata. \label{fig:fig2}](Figure%202.png){width="97.5%" height="7in"}
+![ A map of Europe overlayed with pie-glyphs showing the proportion of mothers belonging to particular age group during their first birth in the year 1999 (a) and 2017 (b) in the respective countries. A tooltip is shown highlighting the raw counts in each age group in Iceland. The data for this plot is from @birthsdata. \label{fig:fig2}](Figure%202.png){width="97.5%" height="8in"}
 
 
 `PieGlyph` is designed to be flexible with all features and extensions offered by `ggplot2` and `ggiraph`, thereby allowing users to customise every component of the visualisation. It can also be used to effectively present spatial and temporal data, or interpret the results of regression and classification models (see [vignettes](https://rishvish.github.io/PieGlyph/articles/) for additional examples). `PieGlyph` is particularly useful when visualising and interpreting statistical models fit to compositional data as there is a natural sum to one constraint on the data variables. Traditional visualisations like scatterplots, bar-charts, and ternary diagrams can be superimposed with pie-glyphs to convey additional information about the relative proportions of the compositional variables (see examples in, [@Moral:2023; @Finn:2024; @Grange:2024]). 
