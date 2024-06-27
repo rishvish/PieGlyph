@@ -10,7 +10,8 @@ Description: Extends 'ggplot2' to help replace points in a scatter plot with pie
 License: GPL (>= 3)
 Encoding: UTF-8
 Imports: ggplot2, dplyr, tidyr, rlang, ggiraph, ggforce, purrr, forcats, plyr, grid, scales, cli, utils
-Suggests: 
+Suggests:
+    spelling, 
     ranger,
     maps,
     cowplot,
@@ -25,3 +26,4 @@ VignetteBuilder: knitr
 URL: https://rishvish.github.io/PieGlyph/, https://github.com/rishvish/PieGlyph
 BugReports: https://github.com/rishvish/PieGlyph/issues
 Config/testthat/edition: 3
+Language: en-US
