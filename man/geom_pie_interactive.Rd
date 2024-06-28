@@ -81,5 +81,5 @@ if(interactive()) print(x3)
 # All other aesthetics and attributes of geom_pie_glyph can be used as well
 }
 \seealso{
-\code{\link[=girafe]{girafe()}}, \code{\link[=geom_pie_glyph]{geom_pie_glyph()}}
+\code{\link[ggiraph:girafe]{girafe()}}, \code{\link[=geom_pie_glyph]{geom_pie_glyph()}}
 }

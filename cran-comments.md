@@ -1,6 +1,12 @@
 # Version 1.0.0
 
-* This is an update (v1.0.0) to the PieGlyph package
+## This is an update (v1.0.0) to the PieGlyph package
+
+### Submission 2
+
+* Fixed the note about revdep directory being present in root
+* Fixed note about missing anchor for external links in .rd files
+
 
 ## R CMD check results
 
@@ -20,3 +26,5 @@ I checked that the package builds successfully on the following systems without 
 - local Windows install, R 4.3.2
 - win-builder (devel and release)
 - macOS builder
+- linux (r-devel)
+- ubuntu 

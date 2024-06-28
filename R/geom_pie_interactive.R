@@ -18,7 +18,7 @@
 #'
 #' @export
 #'
-#' @seealso [girafe()], [geom_pie_glyph()]
+#' @seealso \code{\link[ggiraph:girafe]{girafe()}}, [geom_pie_glyph()]
 #'
 #' @examples
 #' #' ## Load libraries
