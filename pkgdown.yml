@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   interactive-pie-glyphs: interactive-pie-glyphs.html
@@ -9,5 +9,7 @@ articles:
   spatial-example: spatial-example.html
   time-series-example: time-series-example.html
   unusual-situations: unusual-situations.html
-last_built: 2024-07-01T11:37Z
-
+last_built: 2025-08-22T18:00Z
+urls:
+  reference: https://rishvish.github.io/PieGlyph/reference
+  article: https://rishvish.github.io/PieGlyph/articles
