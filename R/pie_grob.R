@@ -62,7 +62,7 @@
 #'               fill = c("purple4"), alpha = 0.5)
 #' grid.draw(p4)
 #'
-#' ## Use `edges` to increase resolutino of pie-charts
+#' ## Use `edges` to increase resolution of pie-charts
 #' grid.newpage()
 #' p5 <- pieGrob(x = 0.8, y = 0.2,
 #'               values = c(.7, .1, .1, .1), radius = 1,
@@ -197,7 +197,3 @@ pieTree <- function(data) {
   return(pies)
 }
 
-# Additional helper functions taken from ggplot2 and grid packages because they
-# weren't exported in the namescape by the respective packages
-upgradeUnit.unit.list <- utils::getFromNamespace("upgradeUnit.unit.list",
-                                                 "grid")

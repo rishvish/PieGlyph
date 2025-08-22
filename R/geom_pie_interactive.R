@@ -151,29 +151,6 @@ setup_layer_function <- function (self, data, plot) {
   return(data)
 }
 
-# Additional helper functions taken from ggiraph which weren't exported
-layer_interactive <- getFromNamespace("layer_interactive",
-                                      "ggiraph")
-add_default_interactive_aes <- getFromNamespace("add_default_interactive_aes",
-                                                "ggiraph")
-interactive_geom_parameters <- getFromNamespace("interactive_geom_parameters",
-                                                "ggiraph")
-interactive_geom_draw_key <- getFromNamespace("interactive_geom_draw_key",
-                                              "ggiraph")
-get_interactive_attr_names <- getFromNamespace("get_interactive_attr_names",
-                                               "ggiraph")
-do_add_interactive_attrs <- getFromNamespace("do_add_interactive_attrs",
-                                             "ggiraph")
-dsvg_tracer_on <- getFromNamespace("dsvg_tracer_on",
-                                   "ggiraph")
-dsvg_tracer_off <- getFromNamespace("dsvg_tracer_off",
-                                    "ggiraph")
-interactive_attr_toxml <- getFromNamespace("interactive_attr_toxml",
-                                           "ggiraph")
-
-IPAR_NAMES <- getFromNamespace("IPAR_NAMES", "ggiraph")
-
-
 #' @importFrom utils modifyList
 #' @importFrom purrr detect_index
 #' @importFrom ggiraph GeomInteractivePolygon girafe

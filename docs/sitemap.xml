@@ -1,63 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/interactive-pie-glyphs.html</loc>
-  </url>
-  <url>
-    <loc>/articles/multinomial-classification-example.html</loc>
-  </url>
-  <url>
-    <loc>/articles/pie-lollipop-example.html</loc>
-  </url>
-  <url>
-    <loc>/articles/PieGlyph.html</loc>
-  </url>
-  <url>
-    <loc>/articles/spatial-example.html</loc>
-  </url>
-  <url>
-    <loc>/articles/time-series-example.html</loc>
-  </url>
-  <url>
-    <loc>/articles/unusual-situations.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/draw_key_pie.html</loc>
-  </url>
-  <url>
-    <loc>/reference/geom_pie_glyph.html</loc>
-  </url>
-  <url>
-    <loc>/reference/geom_pie_interactive.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/PieGlyph-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pieGrob.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scale_radius_continuous.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://rishvish.github.io/PieGlyph/404.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/articles/index.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/articles/interactive-pie-glyphs.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/articles/multinomial-classification-example.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/articles/pie-lollipop-example.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/articles/PieGlyph.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/articles/spatial-example.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/articles/time-series-example.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/articles/unusual-situations.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/authors.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/index.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/LICENSE.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/news/index.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/reference/draw_key_pie.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/reference/geom_pie_glyph.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/reference/geom_pie_interactive.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/reference/index.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/reference/PieGlyph-package.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/reference/pieGrob.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/reference/scale_radius_continuous.html</loc></url>
+<url><loc>https://rishvish.github.io/PieGlyph/reference/upgradeUnit.unit.list.html</loc></url>
 </urlset>
+

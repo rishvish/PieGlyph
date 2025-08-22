@@ -108,5 +108,15 @@ test_that("pie_grob generates proper plot", {
 })
 
 
+test_that("Unit conversion works", {
+  expect_true(is.newUnit(unit(0.1, "cm")))
+
+  expect_equal(upgradeUnit(unit(0.1, "cm")) %>% as.character(),
+               "0.1cm")
+
+  expect_error(upgradeUnit(list(unit(0.1, "cm"))),
+               "no applicable")
+})
+
 
 

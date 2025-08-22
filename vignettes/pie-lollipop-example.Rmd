@@ -105,7 +105,7 @@ head(plot_data, 8)
 
 ### Bar plot
 <p>The probability of each patient in our sample having the disease can be visualised with a bar chart as follows.</p>
-```{r barplot, warn = F, fig.align='center', fig.width=7}
+```{r barplot, warn = F, fig.align='center', fig.width=7, fig.alt="Standard bar chart"}
 # Filtering the data as each prediction is replicated 4 times, once for each marker 
 ggplot(data = filter(plot_data, Marker == 'A'))+
   geom_col(aes(x = ID, y = prediction))+
@@ -119,7 +119,7 @@ ggplot(data = filter(plot_data, Marker == 'A'))+
 <p>The bar plot is not that useful in this example as it gives only the probability of having the disease and gives no information about the model predictors (scores for protein markers in this case).</p>
 
 <p>We can improve this plot by converting it into a lollipop plot where the centre of the lollipop shows the proportions of the four protein markers. This enables us to view both, the response as well as the predictors for model simultaneously.</p>
-```{r lollipop, warn = F, fig.align='center', fig.width=7}
+```{r lollipop, warn = F, fig.align='center', fig.width=7, fig.alt="Lollipop plot showing proportions of each marker"}
 ggplot(data = plot_data, aes(x = ID, y = prediction, fill = Marker))+
   # Vertical line of lollipop
   geom_segment(aes(yend = 0, xend = ID))+

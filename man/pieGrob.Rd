@@ -91,7 +91,7 @@ p4 <- pieGrob(x = 0.25, y = 0.75,
               fill = c("purple4"), alpha = 0.5)
 grid.draw(p4)
 
-## Use `edges` to increase resolutino of pie-charts
+## Use `edges` to increase resolution of pie-charts
 grid.newpage()
 p5 <- pieGrob(x = 0.8, y = 0.2,
               values = c(.7, .1, .1, .1), radius = 1,

@@ -54,7 +54,7 @@ from [GitHub](https://github.com/) with:
       geom_pie_glyph(slices = c("A", "B", "C", "D"))+
       theme_minimal()
 
-<img src="man/figures/README-basic-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="man/figures/README-basic-1.png" alt = "basic pie-glyph plot", width="100%" style="display: block; margin: auto;" />
 
 ### Alternative specification
 
@@ -91,7 +91,7 @@ more information.
       geom_pie_glyph(slices = 'Attributes', values = 'values')+
       theme_minimal()
 
-<img src="man/figures/README-stacked-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="man/figures/README-stacked-1.png" alt = "pie-glyph with stacked data", width="100%" style="display: block; margin: auto;" />
 
 ### Interactive pie-chart glyphs
 
@@ -115,5 +115,5 @@ book](https://www.ardata.fr/ggiraph-book/) and
 
     girafe(ggobj = plot_obj, height_svg = 6, width_svg = 8)
 
-<img src = "man/figures/interactive-pie-glyphs.png" width="100%" style="display: block; margin: auto;" >
+<img src = "man/figures/interactive-pie-glyphs.png" alt = "Interactive pie-glyphs", width="100%" style="display: block; margin: auto;" >
 </img>

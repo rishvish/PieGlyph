@@ -48,16 +48,16 @@ draw_key_pie <- function (data, params, size) {
 
 
 #' @usage NULL
-#' @importFrom grid gpar viewport grobTree unit rectGrob pointsGrob grid.draw grid.newpage gTree
+#' @importFrom grid gpar viewport grobTree unit rectGrob pointsGrob grid.draw grid.newpage gTree is.grob
 #' @importFrom tidyr pivot_longer pivot_wider %>%
 #' @importFrom dplyr mutate near distinct select is.grouped_df ungroup all_of group_by filter .data rename_with
 #' @importFrom plyr unrowname
 #' @importFrom cli cli_abort cli_warn col_green
 #' @importFrom stats as.formula
-#' @importFrom rlang sym syms !! !!! caller_env
+#' @importFrom rlang sym syms !! !!! caller_env current_call caller_call is_missing list2
 #' @importFrom ggforce geom_arc_bar
 #' @importFrom forcats fct_inorder
-#' @importFrom ggplot2 ggproto Geom draw_key_polygon aes ggplotGrob ggplot theme_void waiver as_label labs
+#' @importFrom ggplot2 ggproto Geom draw_key_polygon aes ggplotGrob ggplot theme_void waiver as_label labs discrete_scale
 #' @export
 NULL
 GeomPieGlyph <- ggproto("GeomPieGlyph", Geom,
@@ -130,12 +130,6 @@ GeomPieGlyph <- ggproto("GeomPieGlyph", Geom,
 
                           pies
                         })
-
-# Additional helper functions taken from ggplot2 and grid packages because they
-# weren't exported in the namescape by the respective packages
-manual_scale <- getFromNamespace("manual_scale", "ggplot2")
-is.waive <- getFromNamespace("is.waive", "ggplot2")
-defaults <- getFromNamespace("defaults", "ggplot2")
 
 #' @title Scatter plot with points replaced by axis-invariant pie-chart glyphs
 #' @description
@@ -496,9 +490,9 @@ scale_radius_manual <- function (..., values, unit = "cm",
     cli::cli_abort("Specify the values of the radii for each group as a numeric
                    vector in {.var values}.")
   }
-  values <- grid::convertWidth(unit(values, unit), "cm", valueOnly = TRUE)
-
-  manual_scale("radius", values, breaks, ..., na.value = na.value)
+  values_conv <- grid::convertWidth(unit(values, unit), "cm", valueOnly = TRUE)
+  names(values_conv) <- names(values)
+  manual_scale("radius", values_conv, breaks, ..., na.value = na.value)
 }
 
 

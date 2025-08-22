@@ -52,7 +52,7 @@ plot_data
 ```
 
 <p>The package handles this situation be replacing the any NA values with 0 in the data. The user is notified about this with a warning. This warning can be silenced by specifying `na.rm = TRUE` in `geom_pie_glyph`.</p>
-```{r, fig.align='center', fig.width=7}
+```{r, fig.align='center', fig.width=7, fig.alt = "Pie-glyphs with zeros"}
 ggplot()+
   geom_pie_glyph(aes(x = x, y = y),
                  slices = c('A','B','C'),
@@ -76,7 +76,7 @@ head(plot_data)
 ```
 
 <p>The package handles this situation by dropping the observation that has all attributes as missing. The user is notified about this by a warning. This warning can be silenced by specifying `na.rm = TRUE` in `geom_pie_glyph`.</p>
-```{r, fig.align='center', fig.width=7}
+```{r, fig.align='center', fig.width=7, fig.alt = "Pie-glyphs with all missing"}
 ggplot(data = plot_data)+
   geom_pie_glyph(aes(x = x, y = y),
                  slices = c('A','B','C'),
@@ -98,7 +98,7 @@ head(plot_data)
 ```
 
 <p>The package handles this situation by dropping the observation that has all attributes equal to 0. The user is notified about this by a warning. This warning can be silenced by specifying `na.rm = TRUE` in `geom_pie_glyph`.</p>
-```{r, fig.align='center', fig.width=7}
+```{r, fig.align='center', fig.width=7, fig.alt = "Pie-glyphs with all zeros"}
 ggplot(data = plot_data)+
   geom_pie_glyph(aes(x = x, y = y),
                  slices = c('A','B','C'),
@@ -119,7 +119,7 @@ plot_data <- data.frame(x = 1:4,
 plot_data
 ```
 
-```{r, warning = F, error = T, fig.align='center', fig.width=7}
+```{r, warning = F, error = T, fig.align='center', fig.width=7, fig.alt = "Pie-glyphs with negative values"}
 ggplot()+
   geom_pie_glyph(aes(x = x, y = y),
                  slices = c('A','B','C'),
@@ -141,7 +141,7 @@ dummy_data
 ```
 
 <p>The expected plot is as follows</p>
-```{r, fig.align='center', fig.width=7}
+```{r, fig.align='center', fig.width=7, fig.alt = "Pie-glyphs with identical x-y coordinates expected output"}
 ggplot(data = dummy_data[4:9,])+
   geom_pie_glyph(aes(x = x, y = y),
                  slices = 'attribute', values = 'value',
@@ -154,7 +154,7 @@ ggplot(data = dummy_data[4:9,])+
 ```
 
 <p>However the plot produced is different and the attributes between the two system get combined into a single pie-glyph.</p>
-```{r, warning = F, fig.align='center', fig.width=7 }
+```{r, warning = F, fig.align='center', fig.width=7, fig.alt = "Pie-glyphs with identical x-y coordinates actual output"}
 ggplot(data = dummy_data)+
   geom_pie_glyph(aes(x = x, y = y),
                  slices = 'attribute', values = 'value',
@@ -168,7 +168,7 @@ ggplot(data = dummy_data)+
 <p>As described before this is because the slices of the pie-glyph are grouped on the basis of the x and y coordinates of the pie-glyph and hence if two glyphs have the same x and y coordinates, their glyphs get combined together.</p>
 
 <p>This problem arises only in situations when the data is presented in the long-format (attributes stacked in one column). The package warns the user if this issue arises.</p>
-```{r, fig.align='center', fig.width=7 }
+```{r, fig.align='center', fig.width=7, fig.alt = "Pie-glyphs with identical coordinates fix"}
 ggplot(data = dummy_data)+
   geom_pie_glyph(aes(x = x, y = y),
                  slices = 'attribute', values = 'value',
@@ -179,7 +179,7 @@ ggplot(data = dummy_data)+
 ```
 
 <p>The solution here is to manually specify the pie_group aesthetic which groups the attributes for one pie-glyph together</p>
-```{r, fig.align='center', fig.width=7 }
+```{r, fig.align='center', fig.width=7, fig.alt = "Pie-glyphs with identical coordinates solution" }
 ggplot(data = dummy_data)+
   geom_pie_glyph(aes(x = x, y = y, pie_group = system),
                  slices = 'attribute', values = 'value',
@@ -191,7 +191,7 @@ ggplot(data = dummy_data)+
 
 <p>However a grouping variable might not always be present in the data nor would it be easy to manually create one. Hence the easiest fix would be to simply convert the data into wide-format (unstack the attributes into separate columns) and let the package handle the grouping of the pie-glyphs.</p>
 
-```{r, fig.align='center', fig.width=7 }
+```{r, fig.align='center', fig.width=7, fig.alt = "Pie-glyphs with identical coordinates wide format fix"}
 dummy_data_wide <- dummy_data %>% 
   pivot_wider(names_from = 'attribute', values_from = 'value')
 
@@ -208,7 +208,7 @@ ggplot(data = dummy_data_wide)+
 
 <p>Finally, we could jitter the pie-glyphs to view all the glyphs</p>
 
-```{r, fig.align='center', fig.width=7}
+```{r, fig.align='center', fig.width=7, , fig.alt = "Pie-glyphs with jitter"}
 ggplot(data = dummy_data_wide)+
   geom_pie_glyph(aes(x = x, y = y),
                  slices = c('A','B','C'),

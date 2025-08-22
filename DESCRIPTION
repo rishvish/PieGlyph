@@ -1,6 +1,6 @@
 Package: PieGlyph
 Title: Axis Invariant Scatter Pie Plots
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: 
     c(person("Rishabh", "Vishwakarma", email = "vishwakr@tcd.ie", role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-4847-3494")),
@@ -21,7 +21,7 @@ Suggests:
     testthat (>= 3.0.0),
     vdiffr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 URL: https://rishvish.github.io/PieGlyph/, https://github.com/rishvish/PieGlyph
 BugReports: https://github.com/rishvish/PieGlyph/issues

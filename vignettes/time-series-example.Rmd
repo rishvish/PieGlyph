@@ -69,7 +69,7 @@ p <- ggplot(plot_data, aes(x = time, y = kms))+
         theme_minimal()
 ```
 
-```{r scatterpie-figure, fig.align='center', out.width = '95%', eval = T, echo = F}
+```{r scatterpie-figure, fig.align='center', out.width = '95%', eval = T, echo = F, fig.alt="pie-chart glyphs with scatterpie"}
 knitr::include_graphics("../man/figures/scatterpie-1.png")
 ```
 
@@ -80,13 +80,13 @@ knitr::include_graphics("../man/figures/scatterpie-1.png")
 p + coord_fixed()
 ```
 
-```{r scatterpie-fixed-figure, fig.align='center', out.width = '95%', eval = T, echo = F}
+```{r scatterpie-fixed-figure, fig.align='center', out.width = '95%', eval = T, echo = F, fig.alt = "pie-chart glyphs with fixed coordinates"}
 knitr::include_graphics("../man/figures/scatterpie-fixed-1.png")
 ```
 
 #### Fixing the problems using PieGlyph
 <p>PieGlyph fixes this problem by creating the pie charts independently of the plot axes and thus the plot dimensions have no effects on the pie charts </p>
-```{r Pie-glyph-plot, fig.align='center', fig.width = 7, fig.height=5, warning = F}
+```{r Pie-glyph-plot, fig.align='center', fig.width = 7, fig.height=5, warning = F, fig.alt = "pie-chart glyphs"}
 pl <- ggplot(plot_data, aes(x = time, y = kms))+
         # Add the lines joining the pie-charts
         geom_line(linewidth = 1)+
@@ -99,7 +99,7 @@ pl
 ```
 
 <p>We can also highlight the months where the seatbelt law was in effect, by mapping them to the pie-borders.</p>
-```{r pie-borders, fig.align='center', fig.width=7, fig.height=5, warning = F}
+```{r pie-borders, fig.align='center', fig.width=7, fig.height=5, warning = F, fig.alt = "pie-chart glyphs with borders"}
 pl <- ggplot(plot_data, aes(x = time, y = kms))+
         # Add the lines joining the pie-charts
         geom_line(linewidth = 1)+
@@ -119,7 +119,7 @@ pl
 
 
 <p> We can then adjust any aesthetics of our choice in the plot using the usual ggplot functions. </p> 
-```{r aesthetics, fig.align='center', fig.width=7, fig.height=5, warning = F}
+```{r aesthetics, fig.align='center', fig.width=7, fig.height=5, warning = F, fig.alt="pie-glyphs with custom colours"}
 pl + 
   # Colours of the pie-sectors
   scale_fill_manual(values = c('#56B4E9','#F0E442','#CC79A7'))+

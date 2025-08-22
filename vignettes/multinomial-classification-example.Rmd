@@ -99,7 +99,7 @@ plot_data <- plot_data %>%
 
 <p>The plot shows a scatterplot of the sepal width and sepal length for the samples in the `iris` dataset. The predicted probabilities of belonging to a particular species for each sample are shown by the pie-chart glyphs. The borders of the pie charts show whether or not the sample was classified correctly.</p>
 
-```{r prob-plot, warning = F, fig.align='center', fig.height = 5, fig.width=7, eval = execute}
+```{r prob-plot, warning = F, fig.align='center', fig.height = 5, fig.width=7, eval = execute, fig.alt="Pie-charts showing predicted probabilities of each species."}
 ggplot(data=plot_data,
    aes(x=Sepal.Length, y=Sepal.Width))+
    # Pies-charts showing predicted probabilities of the different species

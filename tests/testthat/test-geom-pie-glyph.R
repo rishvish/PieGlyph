@@ -247,6 +247,7 @@ test_that("scale_radius works", {
   vdiffr::expect_doppelganger(title = "scale_radius_manual",
                             fig = q + scale_radius_manual(values = c(2, 6, 4),
                                                           unit = 'mm',
+                                                          breaks = 1:3,
                                                           labels = paste0('G', 1:3),
                                                           name = 'G'))
 })
@@ -292,7 +293,45 @@ test_that("test that scale_radius_* works as expected", {
                c(0.25, 0.6))
 })
 
+test_that("ggplot imports work", {
 
+  set.seed(737)
+  plot_data <- data.frame(response = rnorm(10, 100, 30),
+                          system = as.factor(1:10),
+                          group = sample(size = 10,
+                                         x = c(1:3),
+                                         replace = TRUE),
+                          A = round(runif(10, 3, 9), 2),
+                          B = round(runif(10, 1, 5), 2),
+                          C = round(runif(10, 3, 7), 2),
+                          D = round(runif(10, 1, 9), 2))
+
+  q <- ggplot(data = plot_data)+
+    geom_pie_glyph(aes(x = system, y = response,
+                       radius = as.factor(group)),
+                   colour = "black",
+                   slices = c('A', 'B', 'C', 'D'))
+
+  expect_warning(print(q + scale_radius_manual(values = c("G1" = 2, "G3" = 6, "G2" = 4),
+                                         unit = 'cm',
+                                         labels = paste0('G', 1:3),
+                                         name = 'G')),
+  "No shared levels") %>% suppressWarnings()
+
+  expect_error(print(q + scale_radius_manual(values = c(2, 4),
+                                         unit = 'cm',
+                                         labels = paste0('G', 1:3),
+                                         name = 'G')),
+               "Insufficient values")
+
+  expect_error(print(q + scale_radius_manual(values = c(2, 4),
+                                       unit = 'cm',
+                                       breaks = 1:4,
+                                       labels = paste0('G', 1:3),
+                                       name = 'G')),
+               "`breaks` and `labels` must have the same")
+
+})
 
 
 

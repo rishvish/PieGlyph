@@ -62,7 +62,7 @@ head(plot_data)
 
 #### Basic plot
 
-```{r basic, fig.align='center', fig.width=6, fig.height = 5}
+```{r basic, fig.align='center', fig.width=6, fig.height = 5, fig.alt="Basic pie-scatterplot"}
 ggplot(data = plot_data, aes(x = system, y = response))+
   geom_pie_glyph(slices = c('A', 'B', 'C', 'D'))+
   theme_classic()
@@ -70,7 +70,7 @@ ggplot(data = plot_data, aes(x = system, y = response))+
 
 #### Change pie radius and border colour
 
-```{r border, fig.align='center', fig.width=6, fig.height = 5}
+```{r border, fig.align='center', fig.width=6, fig.height = 5, fig.alt="Pie-scatterplot with different radius and border colour"}
 ggplot(data = plot_data, aes(x = system, y = response))+
   # Can also specify slices as column indices
   geom_pie_glyph(slices = 4:7, colour = 'black', radius = 0.5)+ 
@@ -79,7 +79,7 @@ ggplot(data = plot_data, aes(x = system, y = response))+
 
 #### Map radius to a variable
 
-```{r map, fig.align='center', fig.width=6, fig.height = 5}
+```{r map, fig.align='center', fig.width=6, fig.height = 5, fig.alt="Pie-scatterplot with radius mapped to variable"}
 p <- ggplot(data = plot_data, aes(x = system, y = response))+
         geom_pie_glyph(aes(radius = group), 
                        slices = c('A', 'B', 'C', 'D'), 
@@ -90,21 +90,21 @@ p
 
 #### Adjust radius for groups
 
-```{r radius, fig.align='center', fig.width=6, fig.height = 5}
+```{r radius, fig.align='center', fig.width=6, fig.height = 5, fig.alt="Pie-scatterplot with different custom radius"}
 p <- p + scale_radius_manual(values = c(0.25, 0.5, 0.75), unit = 'cm')
 p
 ```
 
 #### Add custom labels
 
-```{r labels, fig.align='center', fig.width=6, fig.height = 5}
+```{r labels, fig.align='center', fig.width=6, fig.height = 5, fig.alt="Pie-scatterplot with custom labels"}
 p <- p + labs(x = 'System', y = 'Response', fill = 'Attributes', radius = 'Group')
 p
 ```
 
 #### Change category colours
 
-```{r colours, fig.align='center', fig.width=6, fig.height = 5}
+```{r colours, fig.align='center', fig.width=6, fig.height = 5, fig.alt="Pie-scatterplot with custom colours"}
 p + scale_fill_manual(values = c('#56B4E9', '#CC79A7', '#F0E442', '#D55E00'))
 ```
 
@@ -125,7 +125,7 @@ head(plot_data_stacked, 8)
 
 #### Create plot
 
-```{r stacked, fig.align='center', fig.width=6, fig.height = 5}
+```{r stacked, fig.align='center', fig.width=6, fig.height = 5, fig.alt="Pie-scatterplot with stacked data"}
 ggplot(data = plot_data_stacked, aes(x = system, y = response))+
   # Along with slices column, values column is also needed now
   geom_pie_glyph(slices = 'Attributes', values = 'values')+
@@ -138,7 +138,7 @@ It is also possible to create interactive pie-chart scatterplots using the `geom
 
 Hovering over a pie-chart glyph will show a tooltip containing information about the raw counts and percentages of the categories (system attributes in this example) shown in the pie-charts. All additional features by ggiraph are also supported. See the [ggiraph book](https://www.ardata.fr/ggiraph-book/) and `vignette("interactive-pie-glyphs")` for more information.
 
-```{r interactive, fig.align='center', fig.width=6, fig.height = 5}
+```{r interactive, fig.align='center', fig.width=6, fig.height = 5, fig.alt="Interactive pie-scatterplot"}
 plot_obj <- ggplot(data = plot_data)+
               geom_pie_interactive(aes(x = system, y = response,
                                        data_id = system),
