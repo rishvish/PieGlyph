@@ -1,3 +1,33 @@
+# Version 1.1.0
+
+## This is an update (v1.1.0) to the PieGlyph package.
+
+### R CMD check results
+
+There were no ERRORS or WARNINGS when building the package on my local machine. I encountered the following note.
+
+```
+❯ checking for future file timestamps ... NOTE
+  unable to verify current time
+```
+
+Neither of these notes are related to my package
+
+### Test environments
+
+Additionally, I checked that the package builds successfully on the following systems without any errors or warnings.
+
+- local Windows install, R 4.4.1
+- win-builder (devel and release)
+- macOS builder
+- rhub platforms
+  - debian
+  - linux
+  - ubuntu
+
+
+--------------------------------------------------------------------------------
+
 # Version 1.0.0
 
 ## This is an update (v1.0.0) to the PieGlyph package
